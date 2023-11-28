@@ -1,0 +1,28 @@
+
+
+- ESLint auto format - NEED TO RUN THIS ./node_modules/.bin/eslint --ini 
+	- but use settings in here: https://www.aleksandrhovhannisyan.com/blog/format-code-on-save-vs-code-eslint/#1-installing-eslint-optional-prettier
+	
+	
+- How to Typescript properly in React
+- MUI with Next - https://blog.logrocket.com/getting-started-mui-next-js/#why-combine-next-js-mui
+- Web Audio API
+- Testing libraries?
+
+
+States:
+	Time signature with Asymmetrical meter support
+	- Tempo (with text indicator)
+	- Playing or stopped
+	- Beat indicator
+	?Subdivisions
+	Tone type 
+	---tone frequency
+	---first note accent (or change accent type, sound type) 
+	tap for tempo5
+	- drone tone (is actually nice feature)
+	- voice control to stop, start 
+	- ability to change color theme?
+	
+	
+	
