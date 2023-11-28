@@ -17,12 +17,22 @@ States:
 	- Beat indicator
 	?Subdivisions
 	Tone type 
-	---tone frequency
-	---first note accent (or change accent type, sound type) 
 	tap for tempo5
 	- drone tone (is actually nice feature)
 	- voice control to stop, start 
 	- ability to change color theme?
-	
+modal
+- Preset sounds
+- sound type (sawtooth etc.)
+- drone pitch (dropdown for note and octave)
+- metro pitch (slider)
+- first note accent 
+- color theme
+
+Keyboard event listeners
+- spacebar to play
+- vertical arrow keys to increase tempo
+- horizontal arrow keys to change number of beats
+
 	
 	
