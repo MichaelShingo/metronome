@@ -28,6 +28,9 @@ modal
 - metro pitch (slider)
 - first note accent 
 - color theme
+- flash
+- metro volume (combine with snackbar if metro if turned on with volume 0)
+- drone volume
 
 Keyboard event listeners
 - spacebar to play

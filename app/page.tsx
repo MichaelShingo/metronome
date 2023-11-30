@@ -1,26 +1,46 @@
 'use client';
-import styles from './page.module.css';
-import Osc1 from './components/Osc1';
 import AppStateProvider from './context/AppStateContext';
 import Tempo from './components/Tempo';
 import StartButton from './components/StartButton';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import Settings from './components/Settings';
 import Drone from './components/Drone';
 
 export default function Home() {
 	return (
 		<AppStateProvider>
-			<div className={styles.container}>
-				<Tempo />
-				<div></div>
-				<StartButton />
-				<Osc1 />
-				<Stack direction="row">
-					<Settings />
-					<Drone />
-				</Stack>
-			</div>
+			<Box
+				sx={{
+					backgroundColor: 'white',
+					height: '90vh',
+					width: '90vw',
+					mt: '0px',
+					mb: '20px',
+					p: '50px',
+					ml: '50%',
+					mr: '50%',
+					transform: 'translate(-50%)',
+				}}
+			>
+				<Box
+					sx={{
+						bgColor: 'darkgrey',
+						color: 'white',
+						minHeight: 'fit-content',
+						maxHeight: '100%',
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+					}}
+				>
+					<Tempo />
+					<StartButton />
+					<Stack direction="row" sx={{ w: 'fit-content' }}>
+						<Settings />
+						<Drone />
+					</Stack>
+				</Box>
+			</Box>
 		</AppStateProvider>
 	);
 }

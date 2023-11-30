@@ -10,31 +10,50 @@ gain1.connect(filter);
 filter.connect(out);
 
 interface GlobalState {
-	on: boolean;
+	metro_on: boolean;
+	drone_on: boolean;
+	drone_pitch: string;
+	drone_octave: string;
 	freq: number;
 }
 const initialState: GlobalState = {
-	on: false,
+	metro_on: false,
+	drone_on: true,
+	drone_pitch: '9',
+	drone_octave: '4',
 	freq: 400,
 };
 
-type AppAction = { type: string };
+type AppAction = { type: string; payload?: string | number };
 
 interface AppStateContextType {
 	state: GlobalState;
 	dispatch: Dispatch<AppAction>;
 }
+
+export const actions: Record<string, string> = {
+	METRO_ON: 'METRO_ON',
+	DRONE_ON: 'DRONE_ON',
+	DRONE_PITCH: 'DRONE_PITCH',
+	DRONE_OCTAVE: 'DRONE_OCTAVE',
+};
+
 // Create a reducer function
 const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 	switch (action.type) {
-		case 'ON':
-			osc1.start();
-			console.log(state.on);
-			return { ...state, on: !state.on };
-		case 'FREQ':
+		case actions.METRO_ON:
+			// osc1.start();
+			return { ...state, metro_on: !state.metro_on };
+		case actions.DRONE_ON:
+			// turn off drone osc
 			return {
 				...state,
+				drone_on: !state.drone_on,
 			};
+		case actions.DRONE_PITCH:
+			return { ...state, drone_pitch: action.payload as string };
+		case actions.DRONE_OCTAVE:
+			return { ...state, drone_octave: action.payload as string };
 		default:
 			return state;
 	}

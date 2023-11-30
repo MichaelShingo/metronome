@@ -1,6 +1,16 @@
 import SettingsIcon from '@mui/icons-material/Settings';
-import { IconButton, Modal, Typography, Box } from '@mui/material';
-import { useState } from 'react';
+import {
+	IconButton,
+	Modal,
+	Typography,
+	Box,
+	MenuItem,
+	Select,
+	Tooltip,
+} from '@mui/material';
+import DroneSettings from './DroneSettings';
+import React, { useState } from 'react';
+import { iconStyles } from './Drone';
 
 const style = {
 	position: 'absolute' as const,
@@ -13,6 +23,7 @@ const style = {
 	boxShadow: 24,
 	p: 4,
 };
+
 const Settings: React.FC = () => {
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
@@ -20,9 +31,12 @@ const Settings: React.FC = () => {
 
 	return (
 		<>
-			<IconButton onClick={handleOpen}>
-				<SettingsIcon />
-			</IconButton>
+			<Tooltip title="Settings">
+				<IconButton onClick={handleOpen} sx={{ w: '100px', h: '100px' }}>
+					<SettingsIcon sx={iconStyles} />
+				</IconButton>
+			</Tooltip>
+
 			<Modal
 				open={open}
 				onClose={handleClose}
@@ -31,6 +45,13 @@ const Settings: React.FC = () => {
 			>
 				<Box sx={style}>
 					<Typography variant="h4">Settings</Typography>
+					<Select fullWidth>
+						<MenuItem>Sound 1</MenuItem>
+						<MenuItem>Sound 1</MenuItem>
+						<MenuItem>Sound 1</MenuItem>
+						<MenuItem>Sound 1</MenuItem>
+					</Select>
+					<DroneSettings />
 				</Box>
 			</Modal>
 		</>
