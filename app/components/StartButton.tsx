@@ -1,4 +1,4 @@
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import { actions, useAppState } from '../context/AppStateContext';
@@ -17,14 +17,15 @@ const StartButton: React.FC = () => {
 	};
 	return (
 		<>
-			<IconButton
-				color="primary"
-				size="large"
-				sx={{ width: 'fit-content', height: 'fit-content' }}
-				onClick={handleClick}
-			>
-				{on ? <PauseCircleIcon sx={iconStyles} /> : <PlayCircleIcon sx={iconStyles} />}
-			</IconButton>
+			<Tooltip title="Play (P)">
+				<IconButton
+					size="large"
+					sx={{ width: 'fit-content', height: 'fit-content', color: 'primary.light' }}
+					onClick={handleClick}
+				>
+					{on ? <PauseCircleIcon sx={iconStyles} /> : <PlayCircleIcon sx={iconStyles} />}
+				</IconButton>
+			</Tooltip>
 		</>
 	);
 };

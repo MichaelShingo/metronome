@@ -10,6 +10,11 @@
 - Testing libraries?
 
 
+
+import { actions, useAppState } from '../context/AppStateContext';
+const { state, dispatch } = useAppState();
+
+
 States:
 	Time signature with Asymmetrical meter support
 	- Tempo (with text indicator)

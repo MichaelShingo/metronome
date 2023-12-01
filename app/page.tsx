@@ -5,13 +5,14 @@ import StartButton from './components/StartButton';
 import { Box, Stack } from '@mui/material';
 import Settings from './components/Settings';
 import Drone from './components/Drone';
+import KeyPressHandler from './components/KeyPressHandler';
 
 export default function Home() {
 	return (
 		<AppStateProvider>
+			<KeyPressHandler />
 			<Box
 				sx={{
-					backgroundColor: 'white',
 					height: '90vh',
 					width: '90vw',
 					mt: '0px',
@@ -35,7 +36,7 @@ export default function Home() {
 				>
 					<Tempo />
 					<StartButton />
-					<Stack direction="row" sx={{ w: 'fit-content' }}>
+					<Stack direction="row" spacing={5} sx={{ w: 'fit-content' }}>
 						<Settings />
 						<Drone />
 					</Stack>

@@ -1,20 +1,18 @@
 import { createTheme } from '@mui/material/styles';
-import { colors } from '@mui/material';
+
 export const theme = createTheme({
 	palette: {
 		mode: 'light',
 		primary: {
-			main: colors.orange[500],
+			main: '#1976d2',
+			light: '#42a5f5',
+			dark: '#1565c0',
 		},
 	},
 	typography: {
 		fontFamily: 'Helvetica',
-		h1: {
-			color: 'black',
-		},
-		h3: {
-			color: 'black',
-		},
+		h1: {},
+		h3: {},
 		button: {
 			fontSize: '5rem',
 		},
