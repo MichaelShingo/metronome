@@ -17,7 +17,7 @@ const StartButton: React.FC = () => {
 	};
 	return (
 		<>
-			<Tooltip title="Play (P)">
+			<Tooltip title="Play (Ppp)">
 				<IconButton
 					size="large"
 					sx={{ width: 'fit-content', height: 'fit-content', color: 'primary.light' }}

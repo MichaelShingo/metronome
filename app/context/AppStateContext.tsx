@@ -1,16 +1,23 @@
 import React, { createContext, useReducer, useContext, Dispatch } from 'react';
+// import { controlDroneOsc } from './DroneAudio';
 
-const actx = new AudioContext();
-const out = actx.destination;
-const osc1 = actx.createOscillator();
-const gain1 = actx.createGain();
-const filter = actx.createBiquadFilter();
-osc1.connect(gain1);
-gain1.connect(filter);
-filter.connect(out);
+export const audioContext = new AudioContext();
+
+const droneOsc = audioContext.createOscillator();
+const droneGain = audioContext.createGain();
+const droneFilter = audioContext.createBiquadFilter();
+const out = audioContext.destination;
+const droneStarted = false;
+droneOsc.connect(droneGain);
+droneGain.connect(droneFilter);
+droneGain.gain.value = 1;
+droneFilter.connect(out);
 
 export const MAX_TEMPO = 250;
 export const MIN_TEMPO = 20;
+export const MAX_BEATS = 21;
+export const MIN_BEATS = 1;
+
 interface GlobalState {
 	metro_on: boolean;
 	drone_on: boolean;
@@ -20,16 +27,20 @@ interface GlobalState {
 	dark_mode: boolean;
 	tempo: number;
 	settings_open: boolean;
+	beats: number;
+	current_beat: number;
 }
 const initialState: GlobalState = {
 	metro_on: false,
-	drone_on: true,
+	drone_on: false,
 	drone_pitch: '9',
 	drone_octave: '4',
 	freq: 400,
 	dark_mode: true,
 	tempo: 60,
 	settings_open: false,
+	beats: 4,
+	current_beat: 1,
 };
 
 type AppAction = { type: string; payload?: string | number };
@@ -53,6 +64,8 @@ export const actions: Record<string, string> = {
 	INCREASE_OCTAVE: 'INCREASE_OCTAVE',
 	DECREASE_OCTAVE: 'DECREASE_OCTAVE',
 	SETTINGS_OPEN: 'SETTINGS_OPEN',
+	INCREASE_BEATS: 'INCREASE_BEATS',
+	DECREASE_BEATS: 'DECREASE_BEATS',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -68,7 +81,15 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			// osc1.start();
 			return { ...state, metro_on: !state.metro_on };
 		case actions.DRONE_ON:
-			// turn off drone osc
+			if (state.drone_on) {
+				droneGain.gain.value = 0;
+			} else {
+				try {
+					droneOsc.start();
+				} catch {
+					droneGain.gain.value = 1;
+				}
+			}
 			return {
 				...state,
 				drone_on: !state.drone_on,
@@ -91,6 +112,16 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 				return state;
 			}
 			return { ...state, tempo: state.tempo - 1 };
+		case actions.INCREASE_BEATS:
+			if (state.beats === MAX_BEATS) {
+				return state;
+			}
+			return { ...state, beats: state.beats + 1 };
+		case actions.DECREASE_BEATS:
+			if (state.beats === MIN_BEATS) {
+				return state;
+			}
+			return { ...state, beats: state.beats - 1 };
 		case actions.INCREASE_PITCH:
 			if (state.drone_pitch === '11') {
 				if (parseInt(state.drone_octave) < 7) {

@@ -1,14 +1,24 @@
-import { IconButton, Stack, Typography } from '@mui/material';
+import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { Slider } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { MAX_TEMPO, MIN_TEMPO, actions, useAppState } from '../context/AppStateContext';
 
-function getTempoMarking(tempo: number): string {
-	if (tempo < 20 || tempo > 250) {
-		throw new Error('Tempo out of range. Please provide a tempo between 20 and 250.');
-	}
+const arrowContainerStyles = {
+	width: '12vh',
+	height: '12vh',
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	textAlign: 'center',
+};
 
+const arrowStyles = {
+	width: '9vh',
+	height: '9vh',
+	textAlign: 'center',
+};
+function getTempoMarking(tempo: number): string {
 	if (tempo <= 40) {
 		return 'Grave';
 	} else if (tempo <= 60) {
@@ -30,24 +40,41 @@ const Tempo: React.FC = () => {
 	const handleChange = (e: Event, newValue: number | number[]): void => {
 		dispatch({ type: actions.TEMPO, payload: newValue as number });
 	};
+
+	const handleArrowClick = (increment: boolean) => {
+		if (increment) {
+			dispatch({ type: actions.INCREASE_TEMPO });
+		} else {
+			dispatch({ type: actions.DECREASE_TEMPO });
+		}
+	};
 	return (
 		<>
-			<Slider
-				min={MIN_TEMPO}
-				max={MAX_TEMPO}
-				valueLabelDisplay="off"
-				aria-label="Frequency"
-				value={tempo}
-				onChange={handleChange}
-			/>
-			<Stack direction="row">
-				<IconButton>
-					<ArrowBackIosIcon />
-				</IconButton>
+			<Box sx={{ width: '80vw', maxWidth: '300px' }}>
+				<Slider
+					min={MIN_TEMPO}
+					max={MAX_TEMPO}
+					valueLabelDisplay="off"
+					aria-label="Frequency"
+					value={tempo}
+					onChange={handleChange}
+					size="medium"
+				/>
+			</Box>
+			<Stack direction="row" alignItems="center" alignContent="center">
+				<Tooltip title="-Tempo (L Arrow Key)">
+					<IconButton onClick={() => handleArrowClick(false)} sx={arrowContainerStyles}>
+						<ArrowBackIosIcon
+							sx={{ ...arrowStyles, position: 'relative', left: '1.5vh' }}
+						/>
+					</IconButton>
+				</Tooltip>
 				<Typography variant="h1">{tempo}</Typography>
-				<IconButton>
-					<ArrowForwardIosIcon />
-				</IconButton>
+				<Tooltip title="+Tempo (R Arrow Key)">
+					<IconButton onClick={() => handleArrowClick(true)} sx={arrowContainerStyles}>
+						<ArrowForwardIosIcon sx={arrowStyles} />
+					</IconButton>
+				</Tooltip>
 			</Stack>
 			<Typography variant="h3">{getTempoMarking(tempo)}</Typography>
 		</>

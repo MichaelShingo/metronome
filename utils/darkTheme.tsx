@@ -1,4 +1,11 @@
 import { createTheme } from '@mui/material/styles';
+import { Righteous } from 'next/font/google';
+
+const righteous = Righteous({
+	weight: ['400'],
+	style: ['normal'],
+	subsets: ['latin'],
+});
 
 export const theme = createTheme({
 	palette: {
@@ -26,7 +33,7 @@ export const theme = createTheme({
 		},
 	},
 	typography: {
-		fontFamily: 'Helvetica',
+		fontFamily: righteous.style.fontFamily,
 		h1: {
 			fontSize: '18vh',
 		},

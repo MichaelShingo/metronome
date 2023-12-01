@@ -6,42 +6,47 @@ import { Box, Stack } from '@mui/material';
 import Settings from './components/Settings';
 import Drone from './components/Drone';
 import KeyPressHandler from './components/KeyPressHandler';
-
+import Beats from './components/Beats';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '@/utils/darkTheme';
 export default function Home() {
 	return (
-		<AppStateProvider>
-			<KeyPressHandler />
-			<Box
-				sx={{
-					height: '90vh',
-					width: '90vw',
-					mt: '0px',
-					mb: '20px',
-					p: '50px',
-					ml: '50%',
-					mr: '50%',
-					transform: 'translate(-50%)',
-				}}
-			>
+		<ThemeProvider theme={theme}>
+			<AppStateProvider>
+				<KeyPressHandler />
 				<Box
 					sx={{
-						bgColor: 'darkgrey',
-						color: 'white',
-						minHeight: 'fit-content',
-						maxHeight: '100%',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
+						height: '90vh',
+						width: '90vw',
+						mt: '0px',
+						mb: '20px',
+						p: '50px',
+						ml: '50%',
+						mr: '50%',
+						transform: 'translate(-50%)',
 					}}
 				>
-					<Tempo />
-					<StartButton />
-					<Stack direction="row" spacing={5} sx={{ w: 'fit-content' }}>
-						<Settings />
-						<Drone />
-					</Stack>
+					<Box
+						sx={{
+							bgColor: 'darkgrey',
+							color: 'white',
+							minHeight: 'fit-content',
+							maxHeight: '100%',
+							display: 'flex',
+							flexDirection: 'column',
+							alignItems: 'center',
+						}}
+					>
+						<Tempo />
+						<Beats />
+						<StartButton />
+						<Stack direction="row" spacing={5} sx={{ w: 'fit-content' }}>
+							<Settings />
+							<Drone />
+						</Stack>
+					</Box>
 				</Box>
-			</Box>
-		</AppStateProvider>
+			</AppStateProvider>
+		</ThemeProvider>
 	);
 }

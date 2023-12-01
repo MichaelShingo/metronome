@@ -1,3 +1,4 @@
+import { actions, useAppState } from '../context/AppStateContext';
 import {
 	Stack,
 	Switch,
@@ -5,8 +6,9 @@ import {
 	Typography,
 	Select,
 	SelectChangeEvent,
+	Tooltip,
 } from '@mui/material';
-import { actions, useAppState } from '../context/AppStateContext';
+
 const generateOctaves = (): React.JSX.Element[] => {
 	const res: React.JSX.Element[] = [];
 	for (let i = 1; i < 8; i++) {
@@ -41,7 +43,6 @@ const DroneSettings = () => {
 	const on: boolean = state.drone_on;
 	const pitch: string = state.drone_pitch;
 	const octave: string = state.drone_octave;
-	console.log(on, pitch, octave);
 
 	const handleToggle = () => {
 		dispatch({ type: actions.DRONE_ON });
@@ -58,12 +59,16 @@ const DroneSettings = () => {
 		<>
 			<Typography variant="h5">Drone</Typography>
 			<Stack direction="row">
-				<Select value={pitch} onChange={handlePitchChange} fullWidth>
-					{generatePitches()}
-				</Select>
-				<Select value={octave} onChange={handleOctaveChange} fullWidth>
-					{generateOctaves()}
-				</Select>
+				<Tooltip title="Pitch (Up/Down Arrow Keys)">
+					<Select value={pitch} onChange={handlePitchChange} fullWidth>
+						{generatePitches()}
+					</Select>
+				</Tooltip>
+				<Tooltip title="Octave (Shift + Up/Down Arrow Keys)">
+					<Select value={octave} onChange={handleOctaveChange} fullWidth>
+						{generateOctaves()}
+					</Select>
+				</Tooltip>
 			</Stack>
 			<Switch checked={on} onChange={handleToggle} />
 		</>
