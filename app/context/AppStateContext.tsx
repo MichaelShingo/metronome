@@ -1,17 +1,5 @@
 import React, { createContext, useReducer, useContext, Dispatch } from 'react';
-// import { controlDroneOsc } from './DroneAudio';
-
-export const audioContext = new AudioContext();
-
-const droneOsc = audioContext.createOscillator();
-const droneGain = audioContext.createGain();
-const droneFilter = audioContext.createBiquadFilter();
-const out = audioContext.destination;
-const droneStarted = false;
-droneOsc.connect(droneGain);
-droneGain.connect(droneFilter);
-droneGain.gain.value = 1;
-droneFilter.connect(out);
+// import { startDrone, stopDrone, changeDronePitch } from './AudioContext';
 
 export const MAX_TEMPO = 250;
 export const MIN_TEMPO = 20;
@@ -78,18 +66,8 @@ const incStr = (numericString: string, increment: boolean): string => {
 const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 	switch (action.type) {
 		case actions.METRO_ON:
-			// osc1.start();
 			return { ...state, metro_on: !state.metro_on };
 		case actions.DRONE_ON:
-			if (state.drone_on) {
-				droneGain.gain.value = 0;
-			} else {
-				try {
-					droneOsc.start();
-				} catch {
-					droneGain.gain.value = 1;
-				}
-			}
 			return {
 				...state,
 				drone_on: !state.drone_on,
