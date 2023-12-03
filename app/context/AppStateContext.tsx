@@ -1,5 +1,4 @@
 import React, { createContext, useReducer, useContext, Dispatch } from 'react';
-// import { startDrone, stopDrone, changeDronePitch } from './AudioContext';
 
 export const MAX_TEMPO = 250;
 export const MIN_TEMPO = 20;
@@ -16,7 +15,7 @@ interface GlobalState {
 	tempo: number;
 	settings_open: boolean;
 	beats: number;
-	current_beat: number;
+	current_beat: string;
 }
 const initialState: GlobalState = {
 	metro_on: false,
@@ -28,10 +27,10 @@ const initialState: GlobalState = {
 	tempo: 60,
 	settings_open: false,
 	beats: 4,
-	current_beat: 1,
+	current_beat: '-1',
 };
 
-type AppAction = { type: string; payload?: string | number };
+export type AppAction = { type: string; payload?: string | number };
 
 interface AppStateContextType {
 	state: GlobalState;
@@ -54,6 +53,7 @@ export const actions: Record<string, string> = {
 	SETTINGS_OPEN: 'SETTINGS_OPEN',
 	INCREASE_BEATS: 'INCREASE_BEATS',
 	DECREASE_BEATS: 'DECREASE_BEATS',
+	CURRENT_BEAT: 'CURRENT_BEAT',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -66,7 +66,11 @@ const incStr = (numericString: string, increment: boolean): string => {
 const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 	switch (action.type) {
 		case actions.METRO_ON:
-			return { ...state, metro_on: !state.metro_on };
+			if (state.metro_on) {
+				return { ...state, metro_on: !state.metro_on };
+			} else {
+				return { ...state, metro_on: !state.metro_on };
+			}
 		case actions.DRONE_ON:
 			return {
 				...state,
@@ -136,6 +140,9 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			return state;
 		case actions.SETTINGS_OPEN:
 			return { ...state, settings_open: !state.settings_open };
+		case actions.CURRENT_BEAT:
+			return { ...state, current_beat: action.payload as string };
+
 		default:
 			return state;
 	}

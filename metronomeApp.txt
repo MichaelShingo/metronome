@@ -1,3 +1,16 @@
+TODO
+- when you decrease beats while metro is running, the flash dissapears
+- first note accent 
+- Shift + arrow keys to change beats.
+
+- whole app flash on beat 
+- metro volume (combine with snackbar if metro if turned on with volume 0)
+- Metro sound type adjustments, metro pitch (slider)
+- drone volume
+- MUI bottom right + icon for my contact info, suggestions, etc. 
+- Tooltip on hover beats
+- Tooltip on beats adjustment + - 
+
 
 
 - ESLint auto format - NEED TO RUN THIS ./node_modules/.bin/eslint --ini 
@@ -27,20 +40,9 @@ States:
 	- voice control to stop, start 
 	- ability to change color theme?
 modal
-- Preset sounds
 - sound type (sawtooth etc.)
-- drone pitch (dropdown for note and octave)
-- metro pitch (slider)
-- first note accent 
 - color theme
-- flash
-- metro volume (combine with snackbar if metro if turned on with volume 0)
-- drone volume
 
-Keyboard event listeners
-- spacebar to play
-- vertical arrow keys to increase tempo
-- horizontal arrow keys to change number of beats
 
 	
 	

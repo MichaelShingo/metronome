@@ -12,20 +12,19 @@ const BeatCircle = styled.div`
 
 const Beats = () => {
 	const theme = useTheme();
-
 	const { state, dispatch } = useAppState();
 	const beats = state.beats;
 	const currentBeat = state.current_beat;
 
-	const displayBeats = (beats: number, currentBeat: number): JSX.Element[] => {
+	const displayBeats = (beats: number, currentBeat: string): JSX.Element[] => {
 		const res = [];
-		for (let i = 1; i <= beats; i++) {
+		for (let i = 0; i < beats; i++) {
 			res.push(
 				<BeatCircle
 					key={i}
 					style={{
 						backgroundColor:
-							i === currentBeat
+							i.toString() === currentBeat
 								? `${theme.palette.primary.light}`
 								: `${theme.palette.grey[300]}`,
 					}}
