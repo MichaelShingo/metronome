@@ -16,7 +16,7 @@ const Beats = () => {
 	const beats = state.beats;
 	const currentBeat = state.current_beat;
 
-	const displayBeats = (beats: number, currentBeat: string): JSX.Element[] => {
+	const displayBeats = (beats: number, currentBeat: number): JSX.Element[] => {
 		const res = [];
 		for (let i = 0; i < beats; i++) {
 			res.push(
@@ -24,7 +24,7 @@ const Beats = () => {
 					key={i}
 					style={{
 						backgroundColor:
-							i.toString() === currentBeat
+							i === currentBeat
 								? `${theme.palette.primary.light}`
 								: `${theme.palette.grey[300]}`,
 					}}

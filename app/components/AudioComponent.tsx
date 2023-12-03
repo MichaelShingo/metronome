@@ -23,24 +23,26 @@ const changeDronePitch = (pitch: string, octave: string) => {
 };
 
 const startMetronome = (dispatch: Dispatch<AppAction>) => {
-	const synth = new Tone.FMSynth().toDestination();
-	// const index = Tone.Transport.position % Tone.Time('4n').toSeconds();
+	const synth = new Tone.MembraneSynth().toDestination();
+	// const filter = new Tone.Filter(500, 'lowpass').toDestination();
+	synth.envelope.attack = 0.001;
+	// synth.connect(filter);
+	// const distortion = new Tone.Distortion(0.5).toDestination();
+	// synth.connect(distortion);
 
 	const loop = new Tone.Loop((time: number) => {
-		const index = 0;
-		if (index === 0) {
-			synth.triggerAttackRelease('D6', '.1', time);
+		const beat = parseInt(Tone.Transport.position.toString().split(':')[1]);
+		if (beat === 0) {
+			synth.triggerAttackRelease('D2', '.05', time);
 		} else {
-			synth.triggerAttackRelease('D5', '.1', time);
+			synth.triggerAttackRelease('D0', '.05', time);
 		}
-
-		const beat = Tone.Transport.position.toString().split(':')[1];
 
 		dispatch({ type: actions.CURRENT_BEAT, payload: beat });
 	}, '4n').start(0);
 
 	console.log(loop);
-	Tone.Transport.start(); // set first tone accent // set bpm
+	Tone.Transport.start();
 };
 
 const adjustTempo = (tempo: number) => {

@@ -1,16 +1,21 @@
 TODO
-- when you decrease beats while metro is running, the flash dissapears
-- first note accent 
+- Metro sound type adjustments, metro pitch (slider)
+	- have some standard presets
+	- be able to set first beat and other beat sounds separately.
+- why slight delay on first start, after not starting for a while
+- drone should use Tone as well
+- 4 pitch level options on each beat
+	- store in single piece of state that is an object. Object contains mapping <beatNum, pitchNum>
+	
 - Shift + arrow keys to change beats.
-
 - whole app flash on beat 
 - metro volume (combine with snackbar if metro if turned on with volume 0)
-- Metro sound type adjustments, metro pitch (slider)
 - drone volume
 - MUI bottom right + icon for my contact info, suggestions, etc. 
 - Tooltip on hover beats
 - Tooltip on beats adjustment + - 
-
+- Settings tooltip should appear above or something
+- can users upload their own samples? 
 
 
 - ESLint auto format - NEED TO RUN THIS ./node_modules/.bin/eslint --ini 

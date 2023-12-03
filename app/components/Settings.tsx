@@ -1,19 +1,12 @@
 import SettingsIcon from '@mui/icons-material/Settings';
-import {
-	IconButton,
-	Modal,
-	Typography,
-	Box,
-	MenuItem,
-	Select,
-	Tooltip,
-} from '@mui/material';
+import { IconButton, Modal, Typography, Box, Tooltip, Stack } from '@mui/material';
 import DroneSettings from './DroneSettings';
 import React from 'react';
 import { iconStyles } from './Drone';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { actions, useAppState } from '../context/AppStateContext';
+import MetroSettings from './MetroSettings';
 
 const modalStyle = {
 	position: 'absolute' as const,
@@ -53,17 +46,14 @@ const Settings: React.FC = () => {
 				aria-describedby="modal-modal-description"
 			>
 				<Box sx={modalStyle}>
-					<Typography variant="h4">Settings</Typography>
-					<Select fullWidth>
-						<MenuItem>Sound 1</MenuItem>
-						<MenuItem>Sound 1</MenuItem>
-						<MenuItem>Sound 1</MenuItem>
-						<MenuItem>Sound 1</MenuItem>
-					</Select>
-					<DroneSettings />
-					<IconButton onClick={handleModeToggle}>
-						{darkMode ? <LightModeIcon /> : <DarkModeIcon />}
-					</IconButton>
+					<Stack direction="column" spacing="10px">
+						<Typography variant="h4">Settings</Typography>
+						<MetroSettings />
+						<DroneSettings />
+						<IconButton onClick={handleModeToggle}>
+							{darkMode ? <LightModeIcon /> : <DarkModeIcon />}
+						</IconButton>
+					</Stack>
 				</Box>
 			</Modal>
 		</>

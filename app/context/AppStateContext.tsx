@@ -5,6 +5,16 @@ export const MIN_TEMPO = 20;
 export const MAX_BEATS = 21;
 export const MIN_BEATS = 1;
 
+type SoundType = 'Low Tap' | 'Click' | 'Electric Click' | 'Beep' | 'Woodblock' | 'Count';
+export const SOUND_TYPE: Record<string, SoundType> = {
+	LOW_TAP: 'Low Tap',
+	CLICK: 'Click',
+	ELECTRIC_CLICK: 'Electric Click',
+	BEEP: 'Beep',
+	WOODBLOCK: 'Woodblock',
+	COUNT: 'Count',
+};
+
 interface GlobalState {
 	metro_on: boolean;
 	drone_on: boolean;
@@ -15,7 +25,8 @@ interface GlobalState {
 	tempo: number;
 	settings_open: boolean;
 	beats: number;
-	current_beat: string;
+	current_beat: number;
+	sound_type: SoundType;
 }
 const initialState: GlobalState = {
 	metro_on: false,
@@ -27,7 +38,8 @@ const initialState: GlobalState = {
 	tempo: 60,
 	settings_open: false,
 	beats: 4,
-	current_beat: '-1',
+	current_beat: -1,
+	sound_type: SOUND_TYPE.LOW_TAP,
 };
 
 export type AppAction = { type: string; payload?: string | number };
@@ -54,6 +66,7 @@ export const actions: Record<string, string> = {
 	INCREASE_BEATS: 'INCREASE_BEATS',
 	DECREASE_BEATS: 'DECREASE_BEATS',
 	CURRENT_BEAT: 'CURRENT_BEAT',
+	SOUND_TYPE: 'SOUND_TYPE',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -67,7 +80,7 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 	switch (action.type) {
 		case actions.METRO_ON:
 			if (state.metro_on) {
-				return { ...state, metro_on: !state.metro_on };
+				return { ...state, current_beat: -1, metro_on: !state.metro_on };
 			} else {
 				return { ...state, metro_on: !state.metro_on };
 			}
@@ -141,8 +154,9 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 		case actions.SETTINGS_OPEN:
 			return { ...state, settings_open: !state.settings_open };
 		case actions.CURRENT_BEAT:
-			return { ...state, current_beat: action.payload as string };
-
+			return { ...state, current_beat: action.payload as number };
+		case actions.SOUND_TYPE:
+			return { ...state, sound_type: action.payload as SoundType };
 		default:
 			return state;
 	}
