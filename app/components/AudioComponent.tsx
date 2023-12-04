@@ -22,7 +22,11 @@ const changeDronePitch = (pitch: string, octave: string) => {
 	droneOsc.frequency.value = frequency;
 };
 
-const startMetronome = (soundType: SoundType, dispatch: Dispatch<AppAction>) => {
+const startMetronome = (
+	soundType: SoundType,
+	beatMap: Record<number, number>,
+	dispatch: Dispatch<AppAction>
+) => {
 	let synth: Tone.MonoSynth | Tone.MembraneSynth;
 
 	const getCurrentBeat = (): number => {
@@ -39,11 +43,10 @@ const startMetronome = (soundType: SoundType, dispatch: Dispatch<AppAction>) => 
 			// synth.connect(distortion);
 			new Tone.Loop((time: number) => {
 				const beat = getCurrentBeat();
-				if (beat === 0) {
-					synth.triggerAttackRelease('D2', '.05', time);
-				} else {
-					synth.triggerAttackRelease('D0', '.05', time);
-				}
+				const beatAccent = beatMap[beat];
+
+				synth.triggerAttackRelease(`D${beatAccent}`, '.05', time);
+
 				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
 			}, '4n').start(0);
 			break;
@@ -103,7 +106,7 @@ const AudioComponent = () => {
 	// toggle metronome
 	useEffect(() => {
 		if (state.metro_on) {
-			startMetronome(state.sound_type, dispatch);
+			startMetronome(state.sound_type, state.beat_map, dispatch);
 		} else {
 			Tone.Transport.stop();
 			Tone.Transport.cancel(0);
@@ -114,9 +117,9 @@ const AudioComponent = () => {
 		if (state.metro_on) {
 			Tone.Transport.stop();
 			Tone.Transport.cancel(0);
-			startMetronome(state.sound_type, dispatch);
+			startMetronome(state.sound_type, state.beat_map, dispatch);
 		}
-	}, [state.sound_type]);
+	}, [state.sound_type, state.beat_map]);
 
 	useEffect(() => {
 		adjustTempo(state.tempo);

@@ -1,8 +1,7 @@
-import { IconButton, Stack } from '@mui/material';
+import { Box, Button, IconButton, Stack } from '@mui/material';
 import { actions, useAppState } from '../context/AppStateContext';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import styled from 'styled-components';
 import { useTheme } from '@mui/material';
 
 const Beats = () => {
@@ -14,43 +13,46 @@ const Beats = () => {
 	const calculateBeatSize = (beatPitch: number): string => {
 		switch (beatPitch) {
 			case 0:
-				return '2.8';
+				return '10';
 			case 1:
-				return '3.2';
+				return '40';
 			case 2:
-				return '3.6';
+				return '70';
 			case 3:
-				return '4';
+				return '100';
 			default:
-				return '4';
+				return '100';
 		}
 	};
-	const BeatCircle = styled.div`
-		width: 4vh;
-		height: 4vh;
-		border-radius: 50%;
-	`;
 
 	const handleBeatClick = (beatNum: number) => {
 		dispatch({ type: actions.BEAT_MAP, payload: beatNum });
 	};
-	console.log(state.beat_map);
+
 	const displayBeats = (beats: number, currentBeat: number): JSX.Element[] => {
 		const res = [];
 		for (let i = 0; i < beats; i++) {
 			res.push(
-				<BeatCircle
+				<Button
 					key={i}
 					onClick={() => handleBeatClick(i)}
 					style={{
-						backgroundColor:
-							i === currentBeat
-								? `${theme.palette.primary.light}`
-								: `${theme.palette.grey[300]}`,
-						width: calculateBeatSize(state.beat_map[i]) + 'vh',
-						height: calculateBeatSize(state.beat_map[i]) + 'vh',
+						width: '6vh',
+						height: '6vh',
 					}}
-				></BeatCircle>
+				>
+					<Box
+						sx={{
+							width: '100%',
+							height: calculateBeatSize(state.beat_map[i]) + '%',
+							borderRadius: '4px',
+							backgroundColor:
+								i === currentBeat
+									? `${theme.palette.primary.light}`
+									: `${theme.palette.grey[300]}`,
+						}}
+					></Box>
+				</Button>
 			);
 		}
 		return res;
