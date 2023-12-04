@@ -1,5 +1,5 @@
 import { Dispatch, useEffect } from 'react';
-import { actions, useAppState } from '../context/AppStateContext';
+import { actions, useAppState, SoundType, SOUND_TYPE } from '../context/AppStateContext';
 import * as Tone from 'tone';
 import { AppAction } from '../context/AppStateContext';
 const audioContext = new AudioContext();
@@ -22,26 +22,50 @@ const changeDronePitch = (pitch: string, octave: string) => {
 	droneOsc.frequency.value = frequency;
 };
 
-const startMetronome = (dispatch: Dispatch<AppAction>) => {
-	const synth = new Tone.MembraneSynth().toDestination();
-	// const filter = new Tone.Filter(500, 'lowpass').toDestination();
-	synth.envelope.attack = 0.001;
-	// synth.connect(filter);
-	// const distortion = new Tone.Distortion(0.5).toDestination();
-	// synth.connect(distortion);
+const startMetronome = (soundType: SoundType, dispatch: Dispatch<AppAction>) => {
+	let synth: Tone.MonoSynth | Tone.MembraneSynth;
 
-	const loop = new Tone.Loop((time: number) => {
-		const beat = parseInt(Tone.Transport.position.toString().split(':')[1]);
-		if (beat === 0) {
-			synth.triggerAttackRelease('D2', '.05', time);
-		} else {
-			synth.triggerAttackRelease('D0', '.05', time);
-		}
+	const getCurrentBeat = (): number => {
+		return parseInt(Tone.Transport.position.toString().split(':')[1]);
+	};
 
-		dispatch({ type: actions.CURRENT_BEAT, payload: beat });
-	}, '4n').start(0);
+	switch (soundType) {
+		case SOUND_TYPE.LOW_TAP:
+			synth = new Tone.MembraneSynth().toDestination();
+			// const filter = new Tone.Filter(500, 'lowpass').toDestination();
+			synth.envelope.attack = 0.001;
+			// synth.connect(filter);
+			// const distortion = new Tone.Distortion(0.5).toDestination();
+			// synth.connect(distortion);
+			new Tone.Loop((time: number) => {
+				const beat = getCurrentBeat();
+				if (beat === 0) {
+					synth.triggerAttackRelease('D2', '.05', time);
+				} else {
+					synth.triggerAttackRelease('D0', '.05', time);
+				}
+				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
+			}, '4n').start(0);
+			break;
+		case SOUND_TYPE.BEEP:
+			synth = new Tone.MonoSynth().toDestination();
+			new Tone.Loop((time: number) => {
+				const beat = getCurrentBeat();
+				if (beat === 0) {
+					synth.triggerAttackRelease('D8', '.01', time);
+				} else {
+					synth.triggerAttackRelease('D7', '.01', time);
+				}
+				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
+			}, '4n').start(0);
+			break;
+		default:
+			new Tone.Loop(() => {
+				const beat = getCurrentBeat();
+				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
+			}, '4n').start(0);
+	}
 
-	console.log(loop);
 	Tone.Transport.start();
 };
 
@@ -79,12 +103,20 @@ const AudioComponent = () => {
 	// toggle metronome
 	useEffect(() => {
 		if (state.metro_on) {
-			startMetronome(dispatch);
+			startMetronome(state.sound_type, dispatch);
 		} else {
 			Tone.Transport.stop();
 			Tone.Transport.cancel(0);
 		}
-	}, [state.metro_on]);
+	}, [state.metro_on, dispatch]);
+
+	useEffect(() => {
+		if (state.metro_on) {
+			Tone.Transport.stop();
+			Tone.Transport.cancel(0);
+			startMetronome(state.sound_type, dispatch);
+		}
+	}, [state.sound_type]);
 
 	useEffect(() => {
 		adjustTempo(state.tempo);

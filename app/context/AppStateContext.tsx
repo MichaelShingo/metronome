@@ -4,8 +4,17 @@ export const MAX_TEMPO = 250;
 export const MIN_TEMPO = 20;
 export const MAX_BEATS = 21;
 export const MIN_BEATS = 1;
+export const BEAT_PITCH_MAX = 3;
+export const BEAT_PITCH_MIN = 0;
 
-type SoundType = 'Low Tap' | 'Click' | 'Electric Click' | 'Beep' | 'Woodblock' | 'Count';
+export type SoundType =
+	| 'Low Tap'
+	| 'Click'
+	| 'Electric Click'
+	| 'Beep'
+	| 'Woodblock'
+	| 'Count'
+	| 'Silent';
 export const SOUND_TYPE: Record<string, SoundType> = {
 	LOW_TAP: 'Low Tap',
 	CLICK: 'Click',
@@ -13,6 +22,7 @@ export const SOUND_TYPE: Record<string, SoundType> = {
 	BEEP: 'Beep',
 	WOODBLOCK: 'Woodblock',
 	COUNT: 'Count',
+	SILENT: 'Silent',
 };
 
 interface GlobalState {
@@ -27,6 +37,7 @@ interface GlobalState {
 	beats: number;
 	current_beat: number;
 	sound_type: SoundType;
+	beat_map: Record<number, number>;
 }
 const initialState: GlobalState = {
 	metro_on: false,
@@ -40,6 +51,12 @@ const initialState: GlobalState = {
 	beats: 4,
 	current_beat: -1,
 	sound_type: SOUND_TYPE.LOW_TAP,
+	beat_map: {
+		0: 3,
+		1: 1,
+		2: 1,
+		3: 1,
+	},
 };
 
 export type AppAction = { type: string; payload?: string | number };
@@ -67,6 +84,7 @@ export const actions: Record<string, string> = {
 	DECREASE_BEATS: 'DECREASE_BEATS',
 	CURRENT_BEAT: 'CURRENT_BEAT',
 	SOUND_TYPE: 'SOUND_TYPE',
+	BEAT_MAP: 'BEAT_MAP',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -107,16 +125,38 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 				return state;
 			}
 			return { ...state, tempo: state.tempo - 1 };
-		case actions.INCREASE_BEATS:
+		case actions.INCREASE_BEATS: {
 			if (state.beats === MAX_BEATS) {
 				return state;
 			}
-			return { ...state, beats: state.beats + 1 };
-		case actions.DECREASE_BEATS:
+			const newBeatMap = state.beat_map;
+			newBeatMap[state.beats] = 1;
+
+			return {
+				...state,
+				beats: state.beats + 1,
+				beat_map: newBeatMap,
+			};
+		}
+		case actions.DECREASE_BEATS: {
 			if (state.beats === MIN_BEATS) {
 				return state;
 			}
-			return { ...state, beats: state.beats - 1 };
+			const newBeatMap = state.beat_map;
+			delete newBeatMap[state.beats - 1];
+			return { ...state, beats: state.beats - 1, beat_map: newBeatMap };
+		}
+		case actions.BEAT_MAP: {
+			const newBeatMap = state.beat_map;
+			const key = action.payload as number;
+			const currentValue = newBeatMap[key];
+			if (currentValue >= BEAT_PITCH_MAX) {
+				newBeatMap[key] = 0;
+			} else {
+				newBeatMap[key]++;
+			}
+			return { ...state, beat_map: newBeatMap };
+		}
 		case actions.INCREASE_PITCH:
 			if (state.drone_pitch === '11') {
 				if (parseInt(state.drone_octave) < 7) {
