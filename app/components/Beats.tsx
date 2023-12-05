@@ -29,25 +29,6 @@ const Beats = () => {
 		dispatch({ type: actions.BEAT_MAP, payload: beatNum });
 	};
 
-	function mapRange(
-		value: number,
-		fromMin: number,
-		fromMax: number,
-		toMin: number,
-		toMax: number
-	): number {
-		// Ensure that the value is within the original range
-		const clampedValue = Math.max(fromMin, Math.min(value, fromMax));
-
-		// Calculate the normalized value in the original range (0 to 1)
-		const normalizedValue = (clampedValue - fromMin) / (fromMax - fromMin);
-
-		// Map the normalized value to the target range
-		const mappedValue = normalizedValue * (toMax - toMin) + toMin;
-
-		return mappedValue;
-	}
-
 	const displayBeats = (beats: number, currentBeat: number): JSX.Element[] => {
 		const res = [];
 		for (let i = 0; i < beats; i++) {
@@ -57,12 +38,12 @@ const Beats = () => {
 						key={i}
 						onClick={() => handleBeatClick(i)}
 						style={{
-							minWidth: `${mapRange(beats, 1, 21, 70, 15)}px`,
-							width: `${mapRange(beats, 1, 21, 70, 15)}px`,
-							paddingRight: '2px',
-							paddingLeft: '2px',
-							marginLeft: `${mapRange(beats, 1, 21, 4, 0)}px`,
-							marginRight: `${mapRange(beats, 1, 21, 4, 0)}px`,
+							minWidth: `${100 / beats}%`,
+							width: `${100 / beats}%`,
+							paddingLeft: i === 0 ? 0 : `${1 / beats}%`,
+							paddingRight: i === beats - 1 ? 0 : `${1 / beats}%`,
+							marginLeft: i === 0 ? 0 : `${5 / beats}%`,
+							marginRight: i === beats - 1 ? 0 : `${5 / beats}%`,
 							height: '6vh',
 						}}
 					>
@@ -93,7 +74,11 @@ const Beats = () => {
 	};
 	return (
 		<>
-			<Stack direction="row" spacing={2} sx={{ mt: '15px' }}>
+			<Stack
+				direction="row"
+				spacing={2}
+				sx={{ mt: '15px', width: '80%', maxWidth: '400px' }}
+			>
 				{displayBeats(beats, currentBeat)}
 			</Stack>
 			<Stack direction="row">

@@ -18,35 +18,30 @@ export default function Home() {
 				<AudioComponent />
 				<Box
 					sx={{
-						height: '90vh',
-						width: '90vw',
+						color: 'white',
+						height: '100vh',
+						width: '100vw',
+						maxHeight: '100%',
+						minHeight: 'fit-content',
 						mt: '0px',
-						mb: '20px',
-						p: '50px',
+						mb: '0px',
+						pt: '2vh',
+						pb: '2vh',
 						ml: '50%',
 						mr: '50%',
 						transform: 'translate(-50%)',
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
 					}}
 				>
-					<Box
-						sx={{
-							bgColor: 'darkgrey',
-							color: 'white',
-							minHeight: 'fit-content',
-							maxHeight: '100%',
-							display: 'flex',
-							flexDirection: 'column',
-							alignItems: 'center',
-						}}
-					>
-						<Tempo />
-						<Beats />
-						<StartButton />
-						<Stack direction="row" spacing={5} sx={{ w: 'fit-content' }}>
-							<Settings />
-							<Drone />
-						</Stack>
-					</Box>
+					<Tempo />
+					<Beats />
+					<StartButton />
+					<Stack direction="row" spacing={5} sx={{ w: 'fit-content' }}>
+						<Settings />
+						<Drone />
+					</Stack>
 				</Box>
 			</AppStateProvider>
 		</ThemeProvider>

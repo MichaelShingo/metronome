@@ -11,8 +11,19 @@ TODO
 - can you include a tuner on here as well?
 
 - polyrhythms and visualization would be fun.
+- subdivisions 
 - custom sound sample upload? 
-- MUI bottom right + icon for my contact info, suggestions, etc. 
+- MUI bottom right + icon for my contact info, suggestions, etc.
+
+
+
+minWidth: '15px',
+width: '15px',
+paddingRight: '2px',
+paddingLeft: '2px',
+marginLeft: '0px',
+marginRight: '0px',
+height: '6vh', 
 
 
 - ESLint auto format - NEED TO RUN THIS ./node_modules/.bin/eslint --ini 
