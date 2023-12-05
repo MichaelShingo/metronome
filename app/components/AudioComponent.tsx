@@ -2,17 +2,12 @@ import { Dispatch, useEffect } from 'react';
 import { actions, useAppState, SoundType, SOUND_TYPE } from '../context/AppStateContext';
 import * as Tone from 'tone';
 import { AppAction } from '../context/AppStateContext';
-const audioContext = new AudioContext();
 
-// DRONE FUNCTIONS
-const droneOsc = audioContext.createOscillator();
-const droneGain = audioContext.createGain();
-const droneFilter = audioContext.createBiquadFilter();
-const out = audioContext.destination;
-droneOsc.connect(droneGain);
-droneGain.connect(droneFilter);
-droneGain.gain.value = 1;
-droneFilter.connect(out);
+const droneOsc = new Tone.Oscillator({
+	frequency: 440,
+	type: 'sine',
+	volume: -20,
+}).toDestination();
 
 const changeDronePitch = (pitch: string, octave: string) => {
 	const BASE_FREQ = 440; // A4
@@ -54,11 +49,8 @@ const startMetronome = (
 			synth = new Tone.MonoSynth().toDestination();
 			new Tone.Loop((time: number) => {
 				const beat = getCurrentBeat();
-				if (beat === 0) {
-					synth.triggerAttackRelease('D8', '.01', time);
-				} else {
-					synth.triggerAttackRelease('D7', '.01', time);
-				}
+				const beatAccent = beatMap[beat];
+				synth.triggerAttackRelease(`D${beatAccent + 3}`, '.01', time);
 				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
 			}, '4n').start(0);
 			break;
@@ -87,14 +79,9 @@ const AudioComponent = () => {
 	// drone toggle
 	useEffect(() => {
 		if (state.drone_on) {
-			try {
-				droneOsc.start();
-				droneGain.gain.value = 1;
-			} catch {
-				droneGain.gain.value = 1;
-			}
+			droneOsc.start();
 		} else {
-			droneGain.gain.value = 0;
+			droneOsc.stop();
 		}
 	}, [state.drone_on]);
 
