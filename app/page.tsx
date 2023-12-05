@@ -10,10 +10,12 @@ import Beats from './components/Beats';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '@/utils/darkTheme';
 import AudioComponent from './components/AudioComponent';
+import Flash from './components/Flash';
 export default function Home() {
 	return (
 		<ThemeProvider theme={theme}>
 			<AppStateProvider>
+				<Flash />
 				<KeyPressHandler />
 				<AudioComponent />
 				<Box

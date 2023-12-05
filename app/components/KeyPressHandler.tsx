@@ -29,6 +29,8 @@ const KeyPressHandler: React.FC = () => {
 			dispatch({ type: actions.DECREASE_PITCH });
 		} else if (event.key === 's') {
 			dispatch({ type: actions.SETTINGS_OPEN });
+		} else if (event.key === 'f') {
+			dispatch({ type: actions.TOGGLE_FLASH });
 		}
 	};
 

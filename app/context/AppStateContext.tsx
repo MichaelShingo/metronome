@@ -38,6 +38,7 @@ interface GlobalState {
 	current_beat: number;
 	sound_type: SoundType;
 	beat_map: Record<number, number>;
+	flash: boolean;
 }
 const initialState: GlobalState = {
 	metro_on: false,
@@ -57,6 +58,7 @@ const initialState: GlobalState = {
 		2: 1,
 		3: 1,
 	},
+	flash: false,
 };
 
 export type AppAction = { type: string; payload?: string | number };
@@ -85,6 +87,7 @@ export const actions: Record<string, string> = {
 	CURRENT_BEAT: 'CURRENT_BEAT',
 	SOUND_TYPE: 'SOUND_TYPE',
 	BEAT_MAP: 'BEAT_MAP',
+	TOGGLE_FLASH: 'TOGGLE_FLASH',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -102,6 +105,8 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			} else {
 				return { ...state, metro_on: !state.metro_on };
 			}
+		case actions.TOGGLE_FLASH:
+			return { ...state, flash: !state.flash };
 		case actions.DRONE_ON:
 			return {
 				...state,
