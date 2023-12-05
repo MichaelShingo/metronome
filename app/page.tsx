@@ -33,12 +33,19 @@ export default function Home() {
 						display: 'flex',
 						flexDirection: 'column',
 						alignItems: 'center',
+						justifyContent: 'center',
 					}}
 				>
 					<Tempo />
 					<Beats />
 					<StartButton />
-					<Stack direction="row" spacing={5} sx={{ w: 'fit-content' }}>
+					<Stack
+						direction="row"
+						spacing={5}
+						sx={{
+							w: 'fit-content',
+						}}
+					>
 						<Settings />
 						<Drone />
 					</Stack>

@@ -40,10 +40,10 @@ const Beats = () => {
 						style={{
 							minWidth: `${100 / beats}%`,
 							width: `${100 / beats}%`,
-							paddingLeft: i === 0 ? 0 : `${1 / beats}%`,
-							paddingRight: i === beats - 1 ? 0 : `${1 / beats}%`,
-							marginLeft: i === 0 ? 0 : `${5 / beats}%`,
-							marginRight: i === beats - 1 ? 0 : `${5 / beats}%`,
+							paddingLeft: i === 0 ? 0 : `${7 / beats}%`,
+							paddingRight: i === beats - 1 ? 0 : `${7 / beats}%`,
+							marginLeft: '0px',
+							marginRight: '0px',
 							height: '6vh',
 						}}
 					>
@@ -77,7 +77,15 @@ const Beats = () => {
 			<Stack
 				direction="row"
 				spacing={2}
-				sx={{ mt: '15px', width: '80%', maxWidth: '400px' }}
+				sx={{
+					backgroundColor: 'none',
+					mt: '15px',
+					width: '80%',
+					maxWidth: '400px',
+					transform: 'translate(0%)',
+					ml: '50%',
+					mr: '50%',
+				}}
 			>
 				{displayBeats(beats, currentBeat)}
 			</Stack>

@@ -1,19 +1,20 @@
 TODO
 - why slight delay on first start, after not starting for a while
 - does drone sound interfere with metro sound? (yes if too loud, is there way to automatically ensure there's no clipping?)
-- beat width should adjust if there's a bunch of beats
 - whole app flash on beat 
 - more accurate tempo text
 - metro volume (combine with snackbar if metro if turned on with volume 0)
 - drone volume
-- can users upload their own samples? 
 - use localStorage to save last settings on device.
 - can you include a tuner on here as well?
+- MUI bottom right + icon for my contact info, suggestions, etc.
 
+Extra features
 - polyrhythms and visualization would be fun.
+- create click tracks
+- create practice sessions (after 4 beats, increase tempo...)
 - subdivisions 
 - custom sound sample upload? 
-- MUI bottom right + icon for my contact info, suggestions, etc.
 
 
 
