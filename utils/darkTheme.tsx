@@ -36,6 +36,7 @@ export const theme = createTheme({
 		fontFamily: righteous.style.fontFamily,
 		h1: {
 			fontSize: '18vh',
+			textAlign: 'center',
 		},
 		h3: {},
 		button: {

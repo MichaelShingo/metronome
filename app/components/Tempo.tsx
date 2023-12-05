@@ -62,15 +62,17 @@ const Tempo: React.FC = () => {
 				/>
 			</Box>
 			<Stack direction="row" alignItems="center" alignContent="center">
-				<Tooltip title="-Tempo (L Arrow Key)">
+				<Tooltip title="-Tempo (L Arrow)">
 					<IconButton onClick={() => handleArrowClick(false)} sx={arrowContainerStyles}>
 						<ArrowBackIosIcon
 							sx={{ ...arrowStyles, position: 'relative', left: '1.5vh' }}
 						/>
 					</IconButton>
 				</Tooltip>
-				<Typography variant="h1">{tempo}</Typography>
-				<Tooltip title="+Tempo (R Arrow Key)">
+				<Box sx={{ width: tempo < 200 ? '27vh' : '32vh' }}>
+					<Typography variant="h1">{tempo}</Typography>
+				</Box>
+				<Tooltip title="+Tempo (R Arrow)">
 					<IconButton onClick={() => handleArrowClick(true)} sx={arrowContainerStyles}>
 						<ArrowForwardIosIcon sx={arrowStyles} />
 					</IconButton>

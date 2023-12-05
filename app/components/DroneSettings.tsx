@@ -59,12 +59,12 @@ const DroneSettings = () => {
 		<>
 			<Typography variant="h5">Drone</Typography>
 			<Stack direction="row">
-				<Tooltip title="Pitch (Up/Down Arrow Keys)">
+				<Tooltip title="Pitch (Up/Down Arrow)" placement="left">
 					<Select value={pitch} onChange={handlePitchChange} fullWidth>
 						{generatePitches()}
 					</Select>
 				</Tooltip>
-				<Tooltip title="Octave (Shift + Up/Down Arrow Keys)">
+				<Tooltip title="Octave (Shift + Up/Down Arrow)" placement="right">
 					<Select value={octave} onChange={handleOctaveChange} fullWidth>
 						{generateOctaves()}
 					</Select>
