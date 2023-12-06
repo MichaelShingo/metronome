@@ -33,7 +33,7 @@ const Beats = () => {
 		const res = [];
 		for (let i = 0; i < beats; i++) {
 			res.push(
-				<Tooltip title={`(${i + 1})`} placement="top">
+				<Tooltip key={i} title={`(${i + 1})`} placement="top">
 					<Button
 						key={i}
 						onClick={() => handleBeatClick(i)}

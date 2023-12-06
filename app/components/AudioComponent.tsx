@@ -1,12 +1,25 @@
-import { Dispatch, useEffect } from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import { actions, useAppState, SoundType, SOUND_TYPE } from '../context/AppStateContext';
 import * as Tone from 'tone';
 import { AppAction } from '../context/AppStateContext';
 
+function mapRange(
+	value: number,
+	fromMin: number,
+	fromMax: number,
+	toMin: number,
+	toMax: number
+): number {
+	const clampedValue = Math.min(Math.max(value, fromMin), fromMax);
+	const mappedValue =
+		((clampedValue - fromMin) / (fromMax - fromMin)) * (toMax - toMin) + toMin;
+
+	return mappedValue;
+}
+
 const droneOsc = new Tone.Oscillator({
 	frequency: 440,
 	type: 'sine',
-	volume: -20,
 }).toDestination();
 
 const changeDronePitch = (pitch: string, octave: string) => {
@@ -17,42 +30,60 @@ const changeDronePitch = (pitch: string, octave: string) => {
 	droneOsc.frequency.value = frequency;
 };
 
+const limiter = new Tone.Limiter(-10);
+let synth: Tone.MonoSynth | Tone.MembraneSynth | Tone.NoiseSynth =
+	new Tone.MembraneSynth();
+
+limiter.toDestination();
+synth.connect(limiter);
+droneOsc.connect(limiter);
+
 const startMetronome = (
 	soundType: SoundType,
 	beatMap: Record<number, number>,
 	dispatch: Dispatch<AppAction>
 ) => {
-	let synth: Tone.MonoSynth | Tone.MembraneSynth;
+	// The AudioContext is "suspended". Invoke Tone.start() from a user action to start the audio.
 
 	const getCurrentBeat = (): number => {
 		return parseInt(Tone.Transport.position.toString().split(':')[1]);
 	};
 
+	const startLoop = (pitchOffset: number) => {
+		const loop = new Tone.Loop((time: number) => {
+			const beat = getCurrentBeat();
+			const beatAccent = beatMap[beat];
+			synth.triggerAttackRelease(`D${beatAccent + pitchOffset}`, '0.1', time);
+			dispatch({ type: actions.CURRENT_BEAT, payload: beat });
+		}, '4n');
+		loop.start();
+	};
+
 	switch (soundType) {
 		case SOUND_TYPE.LOW_TAP:
 			synth = new Tone.MembraneSynth().toDestination();
-			// const filter = new Tone.Filter(500, 'lowpass').toDestination();
+			synth.volume.value = -20;
 			synth.envelope.attack = 0.001;
-			// synth.connect(filter);
-			// const distortion = new Tone.Distortion(0.5).toDestination();
-			// synth.connect(distortion);
-			new Tone.Loop((time: number) => {
-				const beat = getCurrentBeat();
-				const beatAccent = beatMap[beat];
-
-				synth.triggerAttackRelease(`D${beatAccent}`, '.05', time);
-
-				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
-			}, '4n').start(0);
+			startLoop(1);
 			break;
 		case SOUND_TYPE.BEEP:
 			synth = new Tone.MonoSynth().toDestination();
-			new Tone.Loop((time: number) => {
-				const beat = getCurrentBeat();
-				const beatAccent = beatMap[beat];
-				synth.triggerAttackRelease(`D${beatAccent + 3}`, '.01', time);
-				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
-			}, '4n').start(0);
+			startLoop(5);
+			break;
+		case SOUND_TYPE.WOODBLOCK:
+			synth = new Tone.NoiseSynth({
+				noise: {
+					type: 'white',
+					playbackRate: 1,
+				},
+				envelope: {
+					attack: 0.001,
+					decay: 0.1,
+					sustain: 0,
+					release: 0.1,
+				},
+			});
+			startLoop(3);
 			break;
 		default:
 			new Tone.Loop(() => {
@@ -72,9 +103,12 @@ const adjustBeats = (beats: number) => {
 	Tone.Transport.timeSignature = beats;
 };
 
-// METRONOME FUNCTIONS
-const AudioComponent = () => {
+const AudioComponent: React.FC = () => {
 	const { state, dispatch } = useAppState();
+
+	if (Tone.context.state !== 'running') {
+		Tone.context.resume();
+	}
 
 	// drone toggle
 	useEffect(() => {
@@ -84,6 +118,11 @@ const AudioComponent = () => {
 			droneOsc.stop();
 		}
 	}, [state.drone_on]);
+
+	// drone volume
+	useEffect(() => {
+		droneOsc.volume.value = mapRange(state.drone_gain, 0, 100, -90, -20);
+	}, [state.drone_gain]);
 
 	// drone pitch
 	useEffect(() => {
@@ -100,6 +139,7 @@ const AudioComponent = () => {
 		}
 	}, [state.metro_on, dispatch]);
 
+	// change metro sound
 	useEffect(() => {
 		if (state.metro_on) {
 			Tone.Transport.stop();
@@ -108,10 +148,17 @@ const AudioComponent = () => {
 		}
 	}, [state.sound_type, state.beat_map]);
 
+	// metro volume
+	useEffect(() => {
+		synth.volume.value = mapRange(state.metro_gain, 0, 100, -90, 0);
+	}, [state.metro_gain]);
+
+	// tempo
 	useEffect(() => {
 		adjustTempo(state.tempo);
 	}, [state.tempo]);
 
+	// num of beats
 	useEffect(() => {
 		adjustBeats(state.beats);
 	}, [state.beats]);

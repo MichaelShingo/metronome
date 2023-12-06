@@ -1,12 +1,12 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
+
 const Flash: React.FC = () => {
 	const { state } = useAppState();
 	const [animationKey, setAnimationKey] = useState(0);
-	const currentBeat = state.current_beat;
 	const flash = state.flash;
-	console.log('flash');
+	const flashChange = state.flash_change;
 
 	const styles = {
 		visibility: flash ? 'visible' : 'hidden',
@@ -23,7 +23,7 @@ const Flash: React.FC = () => {
 				opacity: '0',
 			},
 			'1%': {
-				opacity: '1',
+				opacity: '.5',
 			},
 			'100%': {
 				opacity: '0',
@@ -33,7 +33,7 @@ const Flash: React.FC = () => {
 
 	useEffect(() => {
 		setAnimationKey((prevKey) => prevKey + 1);
-	}, [currentBeat]);
+	}, [flashChange]);
 	return <Box key={animationKey} sx={styles}></Box>;
 };
 

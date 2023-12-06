@@ -19,15 +19,41 @@ const arrowStyles = {
 	textAlign: 'center',
 };
 function getTempoMarking(tempo: number): string {
-	if (tempo <= 40) {
+	if (tempo < 20) {
+		return 'Larghissimo';
+	} else if (tempo <= 40) {
 		return 'Grave';
-	} else if (tempo <= 60) {
+	} else if (tempo <= 45) {
+		return 'Lento';
+	} else if (tempo <= 50) {
+		return 'Largo';
+	} else if (tempo <= 55) {
+		return 'Larghetto';
+	} else if (tempo <= 65) {
 		return 'Adagio';
-	} else if (tempo <= 80) {
+	} else if (tempo <= 69) {
+		return 'Adagietto';
+	} else if (tempo <= 72) {
+		return 'Andante moderato';
+	} else if (tempo <= 77) {
 		return 'Andante';
-	} else if (tempo <= 120) {
+	} else if (tempo <= 83) {
+		return 'Andantino';
+	} else if (tempo <= 85) {
+		return 'Marcia moderato';
+	} else if (tempo <= 97) {
+		return 'Moderato';
+	} else if (tempo <= 109) {
+		return 'Allegretto';
+	} else if (tempo <= 132) {
 		return 'Allegro';
-	} else if (tempo <= 168) {
+	} else if (tempo <= 140) {
+		return 'Vivace';
+	} else if (tempo <= 150) {
+		return 'Vivacissimo';
+	} else if (tempo <= 167) {
+		return 'Allegrissimo';
+	} else if (tempo <= 177) {
 		return 'Presto';
 	} else {
 		return 'Prestissimo';

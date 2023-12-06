@@ -7,6 +7,7 @@ import {
 	Select,
 	SelectChangeEvent,
 	Tooltip,
+	Slider,
 } from '@mui/material';
 
 const generateOctaves = (): React.JSX.Element[] => {
@@ -38,11 +39,13 @@ const generatePitches = (): React.JSX.Element[] => {
 	}
 	return res;
 };
+
 const DroneSettings = () => {
 	const { state, dispatch } = useAppState();
 	const on: boolean = state.drone_on;
 	const pitch: string = state.drone_pitch;
 	const octave: string = state.drone_octave;
+	const gain: number = state.drone_gain;
 
 	const handleToggle = () => {
 		dispatch({ type: actions.DRONE_ON });
@@ -55,9 +58,16 @@ const DroneSettings = () => {
 	const handleOctaveChange = (e: SelectChangeEvent) => {
 		dispatch({ type: actions.DRONE_OCTAVE, payload: e.target.value });
 	};
+
+	const handleGainChange = (e: Event, newValue: number | number[]) => {
+		dispatch({ type: actions.DRONE_GAIN, payload: newValue as number });
+	};
+
 	return (
 		<>
 			<Typography variant="h5">Drone</Typography>
+			<Typography variant="subtitle1">Pitch</Typography>
+
 			<Stack direction="row">
 				<Tooltip title="Pitch (Up/Down Arrow)" placement="left">
 					<Select value={pitch} onChange={handlePitchChange} fullWidth>
@@ -70,7 +80,25 @@ const DroneSettings = () => {
 					</Select>
 				</Tooltip>
 			</Stack>
-			<Switch checked={on} onChange={handleToggle} />
+			<Stack direction="row" sx={{ width: '100%' }}>
+				<Stack direction="column" sx={{ width: '50%' }}>
+					<Typography variant="subtitle1">Volume</Typography>
+					<Slider
+						sx={{ width: '85%', mt: '4px' }}
+						min={0}
+						max={100}
+						valueLabelDisplay="auto"
+						aria-label="Drone Gain"
+						value={gain}
+						onChange={handleGainChange}
+						size="medium"
+					/>
+				</Stack>
+				<Stack direction="column">
+					<Typography variant="subtitle1">Toggle Drone</Typography>
+					<Switch checked={on} onChange={handleToggle} />
+				</Stack>
+			</Stack>
 		</>
 	);
 };

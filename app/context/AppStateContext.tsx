@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useContext, Dispatch } from 'react';
 
 export const MAX_TEMPO = 250;
-export const MIN_TEMPO = 20;
+export const MIN_TEMPO = 10;
 export const MAX_BEATS = 21;
 export const MIN_BEATS = 1;
 export const BEAT_PITCH_MAX = 3;
@@ -39,6 +39,9 @@ interface GlobalState {
 	sound_type: SoundType;
 	beat_map: Record<number, number>;
 	flash: boolean;
+	flash_change: boolean;
+	metro_gain: number;
+	drone_gain: number;
 }
 const initialState: GlobalState = {
 	metro_on: false,
@@ -59,6 +62,9 @@ const initialState: GlobalState = {
 		3: 1,
 	},
 	flash: false,
+	flash_change: false,
+	metro_gain: 100,
+	drone_gain: 100,
 };
 
 export type AppAction = { type: string; payload?: string | number };
@@ -88,6 +94,9 @@ export const actions: Record<string, string> = {
 	SOUND_TYPE: 'SOUND_TYPE',
 	BEAT_MAP: 'BEAT_MAP',
 	TOGGLE_FLASH: 'TOGGLE_FLASH',
+	FLASH_CHANGE: 'FLASH_CHANGE',
+	METRO_GAIN: 'METRO_GAIN',
+	DRONE_GAIN: 'DRONE_GAIN',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -199,19 +208,23 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 		case actions.SETTINGS_OPEN:
 			return { ...state, settings_open: !state.settings_open };
 		case actions.CURRENT_BEAT:
-			return { ...state, current_beat: action.payload as number };
+			return {
+				...state,
+				current_beat: action.payload as number,
+				flash_change: !state.flash_change,
+			};
 		case actions.SOUND_TYPE:
 			return { ...state, sound_type: action.payload as SoundType };
+		case actions.DRONE_GAIN:
+			return { ...state, drone_gain: action.payload as number };
+		case actions.METRO_GAIN:
+			return { ...state, metro_gain: action.payload as number };
 		default:
 			return state;
 	}
 };
 
-// Create a context for the state
-
 export const AppStateContext = createContext<AppStateContextType | undefined>(undefined);
-
-// Step 4: Create a provider component
 
 interface Props {
 	children: React.ReactNode;
@@ -228,7 +241,6 @@ const AppStateProvider: React.FC<Props> = ({ children }) => {
 	);
 };
 
-// Create a custom hook for using the context
 export const useAppState = (): AppStateContextType => {
 	const context = useContext(AppStateContext);
 	if (!context) {
