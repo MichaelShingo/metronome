@@ -1,18 +1,19 @@
 TODO
 - why slight delay on first start, after not starting for a while
 - *** make good metronome sounds with synths
-
+- custom sound sample upload? ]
+- isn't there some crackle in the audio when you start drone or adjust volume? 
 
 - tap tempo
 - use localStorage to save last settings on device.
 - MUI bottom right + icon for my contact info, suggestions, etc.
 
 Extra features
+- light/dark modes
 - subdivisions 
 - polyrhythms and visualization would be fun.
 - create click tracks
 - create practice sessions (after 4 beats, increase tempo...)
-- custom sound sample upload? 
 - can you include a tuner on here as well?
 - can you collect user data (like how long they used the metronome, what tempos, etc., it could be anonymous)
 

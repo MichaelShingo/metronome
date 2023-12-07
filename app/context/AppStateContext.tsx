@@ -13,7 +13,7 @@ export type SoundType =
 	| 'Electric Click'
 	| 'Beep'
 	| 'Woodblock'
-	| 'Count'
+	| 'Hihat'
 	| 'Silent';
 export const SOUND_TYPE: Record<string, SoundType> = {
 	LOW_TAP: 'Low Tap',
@@ -21,7 +21,7 @@ export const SOUND_TYPE: Record<string, SoundType> = {
 	ELECTRIC_CLICK: 'Electric Click',
 	BEEP: 'Beep',
 	WOODBLOCK: 'Woodblock',
-	COUNT: 'Count',
+	HIHAT: 'Hihat',
 	SILENT: 'Silent',
 };
 

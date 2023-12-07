@@ -16,7 +16,7 @@ const Drone: React.FC = () => {
 	};
 	return (
 		<>
-			<Tooltip title="Toggle Drone (D)" placement="right" sx={{}}>
+			<Tooltip title="Toggle Drone (D)" placement="right">
 				<IconButton onClick={handleClick} size="large" sx={{ w: '72px', h: '72px' }}>
 					<GraphicEqIcon
 						sx={{

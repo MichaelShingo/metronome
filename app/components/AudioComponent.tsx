@@ -22,6 +22,27 @@ const droneOsc = new Tone.Oscillator({
 	type: 'sine',
 }).toDestination();
 
+const highpassFilter = new Tone.Filter({
+	type: 'highpass',
+	frequency: 500,
+}).toDestination();
+
+const limiter = new Tone.Limiter(-10);
+
+const samplePlayer: Tone.Player = new Tone.Player({
+	url: '/hihat.mp3',
+}).toDestination();
+let synth:
+	| Tone.MonoSynth
+	| Tone.MembraneSynth
+	| Tone.NoiseSynth
+	| Tone.Synth
+	| Tone.PolySynth = new Tone.MembraneSynth();
+
+limiter.toDestination();
+synth.connect(limiter);
+droneOsc.connect(limiter);
+
 const changeDronePitch = (pitch: string, octave: string) => {
 	const BASE_FREQ = 440; // A4
 	const a = Math.pow(2, 1 / 12);
@@ -30,19 +51,12 @@ const changeDronePitch = (pitch: string, octave: string) => {
 	droneOsc.frequency.value = frequency;
 };
 
-const limiter = new Tone.Limiter(-10);
-let synth: Tone.MonoSynth | Tone.MembraneSynth | Tone.NoiseSynth =
-	new Tone.MembraneSynth();
-
-limiter.toDestination();
-synth.connect(limiter);
-droneOsc.connect(limiter);
-
 const startMetronome = (
 	soundType: SoundType,
 	beatMap: Record<number, number>,
 	dispatch: Dispatch<AppAction>
 ) => {
+	Tone.start();
 	const getCurrentBeat = (): number => {
 		return parseInt(Tone.Transport.position.toString().split(':')[1]);
 	};
@@ -52,8 +66,12 @@ const startMetronome = (
 			const beat = getCurrentBeat();
 			const beatAccent = beatMap[beat];
 			if (soundType === SOUND_TYPE.WOODBLOCK) {
-				synth.triggerAttackRelease(0.1, time);
+				// highpassFilter.frequency.value = (beatAccent + 1) * 1000;
+				synth.triggerAttackRelease(0.5, time, (beatAccent + 1) * 2);
+			} else if (soundType === SOUND_TYPE.HIHAT) {
+				samplePlayer.start(time);
 			} else {
+				highpassFilter.disconnect();
 				synth.triggerAttackRelease(`D${beatAccent + pitchOffset}`, 0.1, time);
 			}
 			dispatch({ type: actions.CURRENT_BEAT, payload: beat });
@@ -69,8 +87,35 @@ const startMetronome = (
 			startLoop(1);
 			break;
 		case SOUND_TYPE.BEEP:
-			synth = new Tone.MonoSynth().toDestination();
-			startLoop(5);
+			synth = new Tone.Synth({
+				oscillator: {
+					type: 'triangle',
+				},
+				envelope: {
+					attack: 0.001,
+					decay: 0.05,
+					sustain: 0.1,
+					release: 0.1,
+				},
+			}).toDestination();
+			startLoop(4);
+			break;
+		case SOUND_TYPE.CLICK:
+			synth = new Tone.Synth({
+				oscillator: {
+					type: 'sine',
+				},
+				envelope: {
+					attack: 0.001,
+					decay: 0.05,
+					sustain: 0.9,
+					release: 0.5,
+				},
+			}).toDestination();
+			startLoop(3);
+			break;
+		case SOUND_TYPE.HIHAT:
+			startLoop(3);
 			break;
 		case SOUND_TYPE.WOODBLOCK:
 			synth = new Tone.NoiseSynth({
@@ -85,7 +130,8 @@ const startMetronome = (
 					release: 0.1,
 				},
 			}).toDestination();
-			startLoop(3);
+			synth.connect(highpassFilter);
+			startLoop(1);
 			break;
 		default:
 			new Tone.Loop(() => {
@@ -93,7 +139,6 @@ const startMetronome = (
 				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
 			}, '4n').start(0);
 	}
-	Tone.start();
 	Tone.Transport.start();
 };
 
@@ -162,19 +207,22 @@ const AudioComponent: React.FC = () => {
 	}, [state.beats]);
 
 	// resume audio context to prevent lag
-	// useEffect(() => {
-	// 	// Fix for The AudioContext is "suspended". Invoke Tone.start() from a user action to start the audio.
-
-	// 	const resumeAudioContext = () => {
-	// 		if (Tone.context.state !== 'running') {
-	// 			console.log('resuming audio context');
-	// 			Tone.context.resume();
-	// 		}
-	// 	};
-	// 	resumeAudioContext();
-	// 	const intervalId = setInterval(resumeAudioContext, 5000);
-	// 	return () => clearInterval(intervalId);
-	// });
+	useEffect(() => {
+		// Fix for The AudioContext is "suspended". Invoke Tone.start() from a user action to start the audio.
+		// even if it says it's running, there is a delay
+		const resumeAudioContext = () => {
+			Tone.start();
+			// console.log(Tone.context);
+			// console.log(Tone.context.state);
+			if (Tone.context.state !== 'running') {
+				// console.log('resuming audio context');
+				Tone.context.resume();
+			}
+		};
+		resumeAudioContext();
+		const intervalId = setInterval(resumeAudioContext, 5000);
+		return () => clearInterval(intervalId);
+	});
 	return <></>;
 };
 
