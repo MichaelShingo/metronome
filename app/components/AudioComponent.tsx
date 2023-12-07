@@ -43,8 +43,6 @@ const startMetronome = (
 	beatMap: Record<number, number>,
 	dispatch: Dispatch<AppAction>
 ) => {
-	// The AudioContext is "suspended". Invoke Tone.start() from a user action to start the audio.
-
 	const getCurrentBeat = (): number => {
 		return parseInt(Tone.Transport.position.toString().split(':')[1]);
 	};
@@ -53,7 +51,11 @@ const startMetronome = (
 		const loop = new Tone.Loop((time: number) => {
 			const beat = getCurrentBeat();
 			const beatAccent = beatMap[beat];
-			synth.triggerAttackRelease(`D${beatAccent + pitchOffset}`, '0.1', time);
+			if (soundType === SOUND_TYPE.WOODBLOCK) {
+				synth.triggerAttackRelease(0.1, time);
+			} else {
+				synth.triggerAttackRelease(`D${beatAccent + pitchOffset}`, 0.1, time);
+			}
 			dispatch({ type: actions.CURRENT_BEAT, payload: beat });
 		}, '4n');
 		loop.start();
@@ -78,11 +80,11 @@ const startMetronome = (
 				},
 				envelope: {
 					attack: 0.001,
-					decay: 0.1,
+					decay: 0.05,
 					sustain: 0,
 					release: 0.1,
 				},
-			});
+			}).toDestination();
 			startLoop(3);
 			break;
 		default:
@@ -91,7 +93,7 @@ const startMetronome = (
 				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
 			}, '4n').start(0);
 	}
-
+	Tone.start();
 	Tone.Transport.start();
 };
 
@@ -105,10 +107,6 @@ const adjustBeats = (beats: number) => {
 
 const AudioComponent: React.FC = () => {
 	const { state, dispatch } = useAppState();
-
-	if (Tone.context.state !== 'running') {
-		Tone.context.resume();
-	}
 
 	// drone toggle
 	useEffect(() => {
@@ -162,6 +160,21 @@ const AudioComponent: React.FC = () => {
 	useEffect(() => {
 		adjustBeats(state.beats);
 	}, [state.beats]);
+
+	// resume audio context to prevent lag
+	// useEffect(() => {
+	// 	// Fix for The AudioContext is "suspended". Invoke Tone.start() from a user action to start the audio.
+
+	// 	const resumeAudioContext = () => {
+	// 		if (Tone.context.state !== 'running') {
+	// 			console.log('resuming audio context');
+	// 			Tone.context.resume();
+	// 		}
+	// 	};
+	// 	resumeAudioContext();
+	// 	const intervalId = setInterval(resumeAudioContext, 5000);
+	// 	return () => clearInterval(intervalId);
+	// });
 	return <></>;
 };
 

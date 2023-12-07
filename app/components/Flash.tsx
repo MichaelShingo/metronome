@@ -34,7 +34,7 @@ const Flash: React.FC = () => {
 	useEffect(() => {
 		setAnimationKey((prevKey) => prevKey + 1);
 	}, [flashChange]);
-	return <Box key={animationKey} sx={styles}></Box>;
+	return <Box component="div" data-label="flash" key={animationKey} sx={styles}></Box>;
 };
 
 export default Flash;

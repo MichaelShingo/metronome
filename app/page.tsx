@@ -19,8 +19,12 @@ export default function Home() {
 				<KeyPressHandler />
 				<AudioComponent />
 				<Box
+					component="div"
+					data-label="app-container"
 					sx={{
 						color: 'white',
+						overflowX: 'hidden',
+						overflowY: 'hidden',
 						height: '100vh',
 						width: '100vw',
 						maxHeight: '100%',
@@ -45,7 +49,9 @@ export default function Home() {
 						direction="row"
 						spacing={5}
 						sx={{
-							w: 'fit-content',
+							width: 'fit-content',
+							overflowY: 'hidden',
+							overflowX: 'hidden',
 						}}
 					>
 						<Settings />

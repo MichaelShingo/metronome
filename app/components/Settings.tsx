@@ -30,7 +30,7 @@ const Settings: React.FC = () => {
 
 	return (
 		<>
-			<Tooltip title="Settings (S)">
+			<Tooltip title="Settings (S)" placement="left">
 				<IconButton
 					onClick={handleSettingsToggle}
 					sx={{ w: '150px', h: '150px', color: 'grey.300', p: '15px' }}
