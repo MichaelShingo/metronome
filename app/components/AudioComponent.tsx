@@ -2,6 +2,7 @@ import React, { Dispatch, useEffect } from 'react';
 import { actions, useAppState, SoundType, SOUND_TYPE } from '../context/AppStateContext';
 import * as Tone from 'tone';
 import { AppAction } from '../context/AppStateContext';
+import { beepSynthSettings, lowBeepSynthSettings } from './AudioSamples';
 
 function mapRange(
 	value: number,
@@ -22,16 +23,8 @@ const droneOsc = new Tone.Oscillator({
 	type: 'sine',
 }).toDestination();
 
-const highpassFilter = new Tone.Filter({
-	type: 'highpass',
-	frequency: 500,
-}).toDestination();
-
 const limiter = new Tone.Limiter(-10);
 
-const samplePlayer: Tone.Player = new Tone.Player({
-	url: '/hihat.mp3',
-}).toDestination();
 let synth:
 	| Tone.MonoSynth
 	| Tone.MembraneSynth
@@ -51,97 +44,6 @@ const changeDronePitch = (pitch: string, octave: string) => {
 	droneOsc.frequency.value = frequency;
 };
 
-const startMetronome = (
-	soundType: SoundType,
-	beatMap: Record<number, number>,
-	dispatch: Dispatch<AppAction>
-) => {
-	Tone.start();
-	const getCurrentBeat = (): number => {
-		return parseInt(Tone.Transport.position.toString().split(':')[1]);
-	};
-
-	const startLoop = (pitchOffset: number) => {
-		const loop = new Tone.Loop((time: number) => {
-			const beat = getCurrentBeat();
-			const beatAccent = beatMap[beat];
-			if (soundType === SOUND_TYPE.WOODBLOCK) {
-				// highpassFilter.frequency.value = (beatAccent + 1) * 1000;
-				synth.triggerAttackRelease(0.5, time, (beatAccent + 1) * 2);
-			} else if (soundType === SOUND_TYPE.HIHAT) {
-				samplePlayer.start(time);
-			} else {
-				highpassFilter.disconnect();
-				synth.triggerAttackRelease(`D${beatAccent + pitchOffset}`, 0.1, time);
-			}
-			dispatch({ type: actions.CURRENT_BEAT, payload: beat });
-		}, '4n');
-		loop.start();
-	};
-
-	switch (soundType) {
-		case SOUND_TYPE.LOW_TAP:
-			synth = new Tone.MembraneSynth().toDestination();
-			synth.volume.value = -20;
-			synth.envelope.attack = 0.001;
-			startLoop(1);
-			break;
-		case SOUND_TYPE.BEEP:
-			synth = new Tone.Synth({
-				oscillator: {
-					type: 'triangle',
-				},
-				envelope: {
-					attack: 0.001,
-					decay: 0.05,
-					sustain: 0.1,
-					release: 0.1,
-				},
-			}).toDestination();
-			startLoop(4);
-			break;
-		case SOUND_TYPE.CLICK:
-			synth = new Tone.Synth({
-				oscillator: {
-					type: 'sine',
-				},
-				envelope: {
-					attack: 0.001,
-					decay: 0.05,
-					sustain: 0.9,
-					release: 0.5,
-				},
-			}).toDestination();
-			startLoop(3);
-			break;
-		case SOUND_TYPE.HIHAT:
-			startLoop(3);
-			break;
-		case SOUND_TYPE.WOODBLOCK:
-			synth = new Tone.NoiseSynth({
-				noise: {
-					type: 'white',
-					playbackRate: 1,
-				},
-				envelope: {
-					attack: 0.001,
-					decay: 0.05,
-					sustain: 0,
-					release: 0.1,
-				},
-			}).toDestination();
-			synth.connect(highpassFilter);
-			startLoop(1);
-			break;
-		default:
-			new Tone.Loop(() => {
-				const beat = getCurrentBeat();
-				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
-			}, '4n').start(0);
-	}
-	Tone.Transport.start();
-};
-
 const adjustTempo = (tempo: number) => {
 	Tone.Transport.bpm.value = tempo;
 };
@@ -150,8 +52,96 @@ const adjustBeats = (beats: number) => {
 	Tone.Transport.timeSignature = beats;
 };
 
+const recordedSamples: Set<string> = new Set([
+	SOUND_TYPE.TAP,
+	SOUND_TYPE.HIHAT,
+	SOUND_TYPE.RING,
+]);
+
 const AudioComponent: React.FC = () => {
 	const { state, dispatch } = useAppState();
+	const recordedSample: boolean = recordedSamples.has(state.sound_type);
+	const defaultSound: string = '/tap2.mp3';
+	const samplePlayer0: Tone.Player = new Tone.Player({
+		url: recordedSample ? `/${state.sound_type.toLowerCase()}0.mp3` : defaultSound,
+	}).toDestination();
+	const samplePlayer1: Tone.Player = new Tone.Player({
+		url: recordedSample ? `/${state.sound_type.toLowerCase()}1.mp3` : defaultSound,
+	}).toDestination();
+	const samplePlayer2: Tone.Player = new Tone.Player({
+		url: recordedSample ? `/${state.sound_type.toLowerCase()}2.mp3` : defaultSound,
+	}).toDestination();
+	const samplePlayer3: Tone.Player = new Tone.Player({
+		url: recordedSample ? `/${state.sound_type.toLowerCase()}3.mp3` : defaultSound,
+	}).toDestination();
+
+	const startMetronome = (
+		soundType: SoundType,
+		beatMap: Record<number, number>,
+		dispatch: Dispatch<AppAction>
+	) => {
+		Tone.start();
+		const getCurrentBeat = (): number => {
+			return parseInt(Tone.Transport.position.toString().split(':')[1]);
+		};
+
+		const startLoop = (pitchOffset: number) => {
+			const loop = new Tone.Loop((time: number) => {
+				const beat = getCurrentBeat();
+				const beatAccent = beatMap[beat];
+				if (soundType === SOUND_TYPE.SILENT) {
+					console.log('silent');
+				} else if (recordedSamples.has(soundType)) {
+					switch (beatAccent) {
+						case 0:
+							samplePlayer0.start(time);
+							break;
+						case 1:
+							samplePlayer1.start(time);
+							break;
+						case 2:
+							samplePlayer2.start(time);
+							break;
+						case 3:
+							samplePlayer3.start(time);
+							break;
+					}
+				} else {
+					synth.triggerAttackRelease(`D${beatAccent + pitchOffset}`, 0.1, time);
+				}
+				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
+			}, '4n');
+			loop.start();
+		};
+
+		if (recordedSamples.has(soundType)) {
+			startLoop(1);
+		} else {
+			switch (soundType) {
+				case SOUND_TYPE.BEEP:
+					synth = new Tone.Synth(beepSynthSettings).toDestination();
+					startLoop(4);
+					break;
+				case SOUND_TYPE.LOW_BEEP:
+					synth = new Tone.Synth(lowBeepSynthSettings).toDestination();
+					startLoop(3);
+					break;
+				case SOUND_TYPE.HIHAT:
+					startLoop(3);
+					break;
+				case SOUND_TYPE.WOODBLOCK:
+					startLoop(1);
+					break;
+				default:
+					startLoop;
+					new Tone.Loop(() => {
+						const beat = getCurrentBeat();
+						dispatch({ type: actions.CURRENT_BEAT, payload: beat });
+					}, '4n').start(0);
+			}
+		}
+		Tone.Transport.start();
+	};
 
 	// drone toggle
 	useEffect(() => {
@@ -193,7 +183,12 @@ const AudioComponent: React.FC = () => {
 
 	// metro volume
 	useEffect(() => {
-		synth.volume.value = mapRange(state.metro_gain, 0, 100, -90, 0);
+		const mappedVolume: number = mapRange(state.metro_gain, 0, 100, -90, 0);
+		synth.volume.value = mappedVolume;
+		samplePlayer0.volume.value = mappedVolume;
+		samplePlayer1.volume.value = mappedVolume;
+		samplePlayer2.volume.value = mappedVolume;
+		samplePlayer3.volume.value = mappedVolume;
 	}, [state.metro_gain]);
 
 	// tempo
@@ -207,22 +202,22 @@ const AudioComponent: React.FC = () => {
 	}, [state.beats]);
 
 	// resume audio context to prevent lag
-	useEffect(() => {
-		// Fix for The AudioContext is "suspended". Invoke Tone.start() from a user action to start the audio.
-		// even if it says it's running, there is a delay
-		const resumeAudioContext = () => {
-			Tone.start();
-			// console.log(Tone.context);
-			// console.log(Tone.context.state);
-			if (Tone.context.state !== 'running') {
-				// console.log('resuming audio context');
-				Tone.context.resume();
-			}
-		};
-		resumeAudioContext();
-		const intervalId = setInterval(resumeAudioContext, 5000);
-		return () => clearInterval(intervalId);
-	});
+	// useEffect(() => {
+	// 	// Fix for The AudioContext is "suspended". Invoke Tone.start() from a user action to start the audio.
+	// 	// even if it says it's running, there is a delay
+	// 	const resumeAudioContext = () => {
+	// 		Tone.start();
+	// 		// console.log(Tone.context);
+	// 		// console.log(Tone.context.state);
+	// 		if (Tone.context.state !== 'running') {
+	// 			// console.log('resuming audio context');
+	// 			Tone.context.resume();
+	// 		}
+	// 	};
+	// 	resumeAudioContext();
+	// 	const intervalId = setInterval(resumeAudioContext, 5000);
+	// 	return () => clearInterval(intervalId);
+	// });
 	return <></>;
 };
 

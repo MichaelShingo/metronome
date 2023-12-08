@@ -1,6 +1,6 @@
 TODO
 - why slight delay on first start, after not starting for a while
-- *** make good metronome sounds with synths
+- make sure volume works with sample sounds 
 - custom sound sample upload? ]
 - isn't there some crackle in the audio when you start drone or adjust volume? 
 
@@ -22,9 +22,6 @@ Extra features
 	- but use settings in here: https://www.aleksandrhovhannisyan.com/blog/format-code-on-save-vs-code-eslint/#1-installing-eslint-optional-prettier
 	
 	
-- How to Typescript properly in React
-- MUI with Next - https://blog.logrocket.com/getting-started-mui-next-js/#why-combine-next-js-mui
-- Web Audio API
 - Testing libraries?
 
 

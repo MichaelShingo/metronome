@@ -8,18 +8,18 @@ export const BEAT_PITCH_MAX = 3;
 export const BEAT_PITCH_MIN = 0;
 
 export type SoundType =
-	| 'Low Tap'
-	| 'Click'
-	| 'Electric Click'
+	| 'Tap'
+	| 'Low Beep'
+	| 'Ring'
 	| 'Beep'
 	| 'Woodblock'
 	| 'Hihat'
 	| 'Silent';
 export const SOUND_TYPE: Record<string, SoundType> = {
-	LOW_TAP: 'Low Tap',
-	CLICK: 'Click',
-	ELECTRIC_CLICK: 'Electric Click',
+	TAP: 'Tap',
 	BEEP: 'Beep',
+	LOW_BEEP: 'Low Beep',
+	RING: 'Ring',
 	WOODBLOCK: 'Woodblock',
 	HIHAT: 'Hihat',
 	SILENT: 'Silent',
@@ -54,7 +54,7 @@ const initialState: GlobalState = {
 	settings_open: false,
 	beats: 4,
 	current_beat: -1,
-	sound_type: SOUND_TYPE.LOW_TAP,
+	sound_type: SOUND_TYPE.TAP,
 	beat_map: {
 		0: 3,
 		1: 1,

@@ -13,7 +13,11 @@ import {
 const generateOctaves = (): React.JSX.Element[] => {
 	const res: React.JSX.Element[] = [];
 	for (let i = 1; i < 8; i++) {
-		res.push(<MenuItem value={i}>{i}</MenuItem>);
+		res.push(
+			<MenuItem key={i} value={i}>
+				{i}
+			</MenuItem>
+		);
 	}
 	return res;
 };
@@ -35,7 +39,11 @@ const generatePitches = (): React.JSX.Element[] => {
 		'B',
 	];
 	for (let i: number = 0; i < pitchList.length; i++) {
-		res.push(<MenuItem value={i}>{pitchList[i]}</MenuItem>);
+		res.push(
+			<MenuItem key={i} value={i}>
+				{pitchList[i]}
+			</MenuItem>
+		);
 	}
 	return res;
 };

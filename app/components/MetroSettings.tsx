@@ -13,7 +13,11 @@ import { actions, useAppState, SOUND_TYPE } from '../context/AppStateContext';
 const generateSoundTypes = (): JSX.Element[] => {
 	const res: JSX.Element[] = [];
 	for (const soundType of Object.values(SOUND_TYPE)) {
-		res.push(<MenuItem value={soundType}>{soundType}</MenuItem>);
+		res.push(
+			<MenuItem key={soundType} value={soundType}>
+				{soundType}
+			</MenuItem>
+		);
 	}
 	return res;
 };
