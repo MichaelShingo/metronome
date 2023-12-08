@@ -11,6 +11,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from '@/utils/darkTheme';
 import AudioComponent from './components/AudioComponent';
 import Flash from './components/Flash';
+import DroneAudio from './components/DroneAudio';
 export default function Home() {
 	return (
 		<ThemeProvider theme={theme}>
@@ -18,6 +19,7 @@ export default function Home() {
 				<Flash />
 				<KeyPressHandler />
 				<AudioComponent />
+				<DroneAudio />
 				<Box
 					component="div"
 					data-label="app-container"

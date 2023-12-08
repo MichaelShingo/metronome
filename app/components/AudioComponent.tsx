@@ -3,8 +3,9 @@ import { actions, useAppState, SoundType, SOUND_TYPE } from '../context/AppState
 import * as Tone from 'tone';
 import { AppAction } from '../context/AppStateContext';
 import { beepSynthSettings, lowBeepSynthSettings } from './AudioSamples';
+import { droneOsc } from './DroneAudio';
 
-function mapRange(
+export function mapRange(
 	value: number,
 	fromMin: number,
 	fromMax: number,
@@ -18,11 +19,6 @@ function mapRange(
 	return mappedValue;
 }
 
-const droneOsc = new Tone.Oscillator({
-	frequency: 440,
-	type: 'sine',
-}).toDestination();
-
 const limiter = new Tone.Limiter(-10);
 
 let synth:
@@ -35,14 +31,6 @@ let synth:
 limiter.toDestination();
 synth.connect(limiter);
 droneOsc.connect(limiter);
-
-const changeDronePitch = (pitch: string, octave: string) => {
-	const BASE_FREQ = 440; // A4
-	const a = Math.pow(2, 1 / 12);
-	const semitoneDist: number = parseInt(pitch) - 9 + (parseInt(octave) - 4) * 12;
-	const frequency = BASE_FREQ * Math.pow(a, semitoneDist);
-	droneOsc.frequency.value = frequency;
-};
 
 const adjustTempo = (tempo: number) => {
 	Tone.Transport.bpm.value = tempo;
@@ -142,25 +130,6 @@ const AudioComponent: React.FC = () => {
 		}
 		Tone.Transport.start();
 	};
-
-	// drone toggle
-	useEffect(() => {
-		if (state.drone_on) {
-			droneOsc.start();
-		} else {
-			droneOsc.stop();
-		}
-	}, [state.drone_on]);
-
-	// drone volume
-	useEffect(() => {
-		droneOsc.volume.value = mapRange(state.drone_gain, 0, 100, -90, -20);
-	}, [state.drone_gain]);
-
-	// drone pitch
-	useEffect(() => {
-		changeDronePitch(state.drone_pitch, state.drone_octave);
-	}, [state.drone_pitch, state.drone_octave]);
 
 	// toggle metronome
 	useEffect(() => {
