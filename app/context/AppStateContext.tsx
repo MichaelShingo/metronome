@@ -7,20 +7,12 @@ export const MIN_BEATS = 1;
 export const BEAT_PITCH_MAX = 3;
 export const BEAT_PITCH_MIN = 0;
 
-export type SoundType =
-	| 'Tap'
-	| 'Low Beep'
-	| 'Ring'
-	| 'Beep'
-	| 'Woodblock'
-	| 'Hihat'
-	| 'Silent';
+export type SoundType = 'Tap' | 'Low Beep' | 'Ring' | 'Beep' | 'Hihat' | 'Silent';
 export const SOUND_TYPE: Record<string, SoundType> = {
 	TAP: 'Tap',
 	BEEP: 'Beep',
 	LOW_BEEP: 'Low Beep',
 	RING: 'Ring',
-	WOODBLOCK: 'Woodblock',
 	HIHAT: 'Hihat',
 	SILENT: 'Silent',
 };
