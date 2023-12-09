@@ -52,15 +52,16 @@ const urls: Record<string, string> = {
 };
 const buffers: Tone.ToneAudioBuffers = new Tone.Buffers(urls);
 
+const defaultSound: string = 'tap2';
+const samplePlayer: Tone.Player = new Tone.Player({
+	url: `/${defaultSound}.mp3`,
+}).toDestination();
+
+const samplePlayerTest = new Tone.Player();
 const AudioComponent: React.FC = () => {
 	const { state, dispatch } = useAppState();
 	const recordedSample: boolean = recordedSamples.has(state.sound_type);
-	const defaultSound: string = 'tap2';
-	const samplePlayer: Tone.Player = new Tone.Player({
-		url: recordedSample
-			? buffers.get(`${state.sound_type.toLowerCase()}0`)
-			: buffers.get(defaultSound),
-	}).toDestination();
+	const mappedVolume: number = mapRange(state.metro_gain, 0, 100, -90, 0);
 
 	const startMetronome = (
 		soundType: SoundType,
@@ -95,10 +96,12 @@ const AudioComponent: React.FC = () => {
 			switch (soundType) {
 				case SOUND_TYPE.BEEP:
 					synth = new Tone.Synth(beepSynthSettings).toDestination();
+					synth.volume.value = mappedVolume;
 					startLoop(4);
 					break;
 				case SOUND_TYPE.LOW_BEEP:
 					synth = new Tone.Synth(lowBeepSynthSettings).toDestination();
+					synth.volume.value = mappedVolume;
 					startLoop(3);
 					break;
 				default:
@@ -130,8 +133,9 @@ const AudioComponent: React.FC = () => {
 
 	// metro volume
 	useEffect(() => {
-		const mappedVolume: number = mapRange(state.metro_gain, 0, 100, -90, 0);
 		synth.volume.value = mappedVolume;
+		samplePlayer.volume.value = mappedVolume;
+		samplePlayerTest.volume.value = mappedVolume;
 	}, [state.metro_gain]);
 
 	// tempo
@@ -144,6 +148,11 @@ const AudioComponent: React.FC = () => {
 		Tone.Transport.timeSignature = state.beats;
 	}, [state.beats]);
 
+	useEffect(() => {
+		samplePlayer.buffer = recordedSample
+			? buffers.get(`${state.sound_type.toLowerCase()}0`)
+			: buffers.get(defaultSound);
+	}, [state.sound_type]);
 	return <></>;
 };
 

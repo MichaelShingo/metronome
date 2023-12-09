@@ -46,5 +46,25 @@ modal
 - color theme
 
 
+
+// resume audio context to prevent lag
+	// useEffect(() => {
+	// 	// Fix for The AudioContext is "suspended". Invoke Tone.start() from a user action to start the audio.
+	// 	// even if it says it's running, there is a delay
+	// 	const resumeAudioContext = () => {
+	// 		Tone.start();
+	// 		// console.log(Tone.context);
+	// 		// console.log(Tone.context.state);
+	// 		if (Tone.context.state !== 'running') {
+	// 			// console.log('resuming audio context');
+	// 			Tone.context.resume();
+	// 		}
+	// 	};
+	// 	resumeAudioContext();
+	// 	const intervalId = setInterval(resumeAudioContext, 5000);
+	// 	return () => clearInterval(intervalId);
+	// });
+
+
 	
 	
