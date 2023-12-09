@@ -3,6 +3,7 @@ import { Slider } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { MAX_TEMPO, MIN_TEMPO, actions, useAppState } from '../context/AppStateContext';
+import TapTempo from './TapTempo';
 
 const arrowContainerStyles = {
 	width: '12vh',
@@ -96,7 +97,7 @@ const Tempo: React.FC = () => {
 					</IconButton>
 				</Tooltip>
 				<Box sx={{ width: tempo < 200 ? '27vh' : '32vh' }}>
-					<Typography variant="h1">{tempo}</Typography>
+					<TapTempo />
 				</Box>
 				<Tooltip title="+Tempo (R Arrow)">
 					<IconButton onClick={() => handleArrowClick(true)} sx={arrowContainerStyles}>

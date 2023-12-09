@@ -1,10 +1,8 @@
 TODO
 - why slight delay on first start, after not starting for a while
-- make sure volume works with sample sounds 
-- custom sound sample upload? ]
+- custom sound sample upload?
 - isn't there some crackle in the audio when you start drone or adjust volume? 
 
-- tap tempo
 - use localStorage to save last settings on device.
 - MUI bottom right + icon for my contact info, suggestions, etc.
 

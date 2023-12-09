@@ -12,11 +12,13 @@ import theme from '@/utils/darkTheme';
 import AudioComponent from './components/AudioComponent';
 import Flash from './components/Flash';
 import DroneAudio from './components/DroneAudio';
+import TapTempoTimeout from './components/TapTempoTimeout';
 export default function Home() {
 	return (
 		<ThemeProvider theme={theme}>
 			<AppStateProvider>
 				<Flash />
+				<TapTempoTimeout />
 				<KeyPressHandler />
 				<AudioComponent />
 				<DroneAudio />

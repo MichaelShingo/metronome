@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, Dispatch } from 'react';
 
-export const MAX_TEMPO = 250;
+export const MAX_TEMPO = 600;
 export const MIN_TEMPO = 10;
 export const MAX_BEATS = 21;
 export const MIN_BEATS = 1;
@@ -34,6 +34,8 @@ interface GlobalState {
 	flash_change: boolean;
 	metro_gain: number;
 	drone_gain: number;
+	tap_times: Date[] | [];
+	tapped: boolean;
 }
 const initialState: GlobalState = {
 	metro_on: false,
@@ -57,6 +59,8 @@ const initialState: GlobalState = {
 	flash_change: false,
 	metro_gain: 100,
 	drone_gain: 100,
+	tap_times: [],
+	tapped: false,
 };
 
 export type AppAction = { type: string; payload?: string | number };
@@ -89,6 +93,8 @@ export const actions: Record<string, string> = {
 	FLASH_CHANGE: 'FLASH_CHANGE',
 	METRO_GAIN: 'METRO_GAIN',
 	DRONE_GAIN: 'DRONE_GAIN',
+	RESET_TAPS: 'RESET_TAPS',
+	DETECT_TAP: 'DETECT_TAP',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -211,6 +217,11 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			return { ...state, drone_gain: action.payload as number };
 		case actions.METRO_GAIN:
 			return { ...state, metro_gain: action.payload as number };
+		case actions.RESET_TAPS:
+			console.log('CLEARED');
+			return { ...state, tap_times: [] };
+		case actions.DETECT_TAP:
+			return { ...state, tapped: !state.tapped };
 		default:
 			return state;
 	}
