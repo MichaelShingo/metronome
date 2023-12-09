@@ -19,7 +19,7 @@ const changeDronePitch = (pitch: string, octave: string) => {
 const DroneAudio = () => {
 	const { state } = useAppState();
 
-	// drone toggle
+	// toggle
 	useEffect(() => {
 		if (state.drone_on) {
 			droneOsc.start();
@@ -28,15 +28,16 @@ const DroneAudio = () => {
 		}
 	}, [state.drone_on]);
 
-	// drone volume
+	// volume
 	useEffect(() => {
 		droneOsc.volume.value = mapRange(state.drone_gain, 0, 100, -90, -20);
 	}, [state.drone_gain]);
 
-	// drone pitch
+	// pitch
 	useEffect(() => {
 		changeDronePitch(state.drone_pitch, state.drone_octave);
 	}, [state.drone_pitch, state.drone_octave]);
+
 	return <></>;
 };
 
