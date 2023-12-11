@@ -1,15 +1,17 @@
 TODO
 - why slight delay on first start, after not starting for a while
-- custom sound sample upload?
+
+- subdivisions 
+- polyrhythms and visualization would be fun.
 - isn't there some crackle in the audio when you start drone or adjust volume? 
 
-- use localStorage to save last settings on device.
-- MUI bottom right + icon for my contact info, suggestions, etc.
+
 
 Extra features
 - light/dark modes
-- subdivisions 
-- polyrhythms and visualization would be fun.
+- use localStorage to save last settings on device.
+- custom sound sample upload?
+- MUI bottom right + icon for my contact info, suggestions, etc.
 - create click tracks
 - create practice sessions (after 4 beats, increase tempo...)
 - can you include a tuner on here as well?

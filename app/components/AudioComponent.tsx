@@ -1,7 +1,12 @@
-import React, { Dispatch, useEffect } from 'react';
-import { actions, useAppState, SoundType, SOUND_TYPE } from '../context/AppStateContext';
+import React, { useEffect } from 'react';
+import {
+	actions,
+	useAppState,
+	SOUND_TYPE,
+	SUBDIVISION,
+	Subdivision,
+} from '../context/AppStateContext';
 import * as Tone from 'tone';
-import { AppAction } from '../context/AppStateContext';
 import { beepSynthSettings, lowBeepSynthSettings } from './AudioSamples';
 import { droneOsc } from './DroneAudio';
 
@@ -26,14 +31,18 @@ const recordedSamples: Set<string> = new Set([
 ]);
 
 const limiter = new Tone.Limiter(-10);
-let synth:
+type SynthType =
 	| Tone.MonoSynth
 	| Tone.MembraneSynth
 	| Tone.NoiseSynth
 	| Tone.Synth
-	| Tone.PolySynth = new Tone.MembraneSynth();
+	| Tone.PolySynth;
+
+let synth: SynthType = new Tone.MembraneSynth();
+let synthSub: SynthType = new Tone.MembraneSynth();
 limiter.toDestination();
 synth.connect(limiter);
+synthSub.connect(limiter);
 droneOsc.connect(limiter);
 
 const urls: Record<string, string> = {
@@ -56,6 +65,9 @@ const defaultSound: string = 'tap2';
 const samplePlayer: Tone.Player = new Tone.Player({
 	url: `/${defaultSound}.mp3`,
 }).toDestination();
+const samplePlayerSub: Tone.Player = new Tone.Player({
+	url: `/${defaultSound}.mp3`,
+}).toDestination();
 
 const samplePlayerTest = new Tone.Player();
 const AudioComponent: React.FC = () => {
@@ -63,45 +75,85 @@ const AudioComponent: React.FC = () => {
 	const recordedSample: boolean = recordedSamples.has(state.sound_type);
 	const mappedVolume: number = mapRange(state.metro_gain, 0, 100, -90, 0);
 
-	const startMetronome = (
-		soundType: SoundType,
-		beatMap: Record<number, number>,
-		dispatch: Dispatch<AppAction>
-	) => {
+	const startMetronome = () => {
 		Tone.start();
 		const getCurrentBeat = (): number => {
 			return parseInt(Tone.Transport.position.toString().split(':')[1]);
+		};
+		const getSubbeat = (): number => {
+			const subbeat = parseInt(Tone.Transport.position.toString().split(':')[2]);
+			return subbeat;
+		};
+		const calcNoteDuration = (subdivision: Subdivision): string => {
+			switch (subdivision) {
+				case SUBDIVISION.EIGHTHS:
+					return '8';
+				case SUBDIVISION.SIXTEENTHS:
+					return '16';
+				case SUBDIVISION.TRIPLETS:
+					return '12';
+				case SUBDIVISION.QUINTUPLETS:
+					return '20';
+				default:
+					return '0';
+			}
 		};
 
 		const startLoop = (pitchOffset: number) => {
 			const loop = new Tone.Loop((time: number) => {
 				const beat = getCurrentBeat();
-				const beatAccent = beatMap[beat];
-				if (recordedSamples.has(soundType)) {
+				const beatAccent = state.beat_map[beat];
+				if (recordedSamples.has(state.sound_type)) {
 					samplePlayer.buffer = buffers.get(
 						`${state.sound_type.toLowerCase() + beatAccent}`
 					);
 					samplePlayer.start(time);
-				} else if (soundType !== SOUND_TYPE.SILENT) {
+				} else if (state.sound_type !== SOUND_TYPE.SILENT) {
 					synth.triggerAttackRelease(`D${beatAccent + pitchOffset}`, 0.1, time);
 				}
 				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
 			}, '4n');
 			loop.start();
+			console.log(calcNoteDuration(state.subdivision));
+
+			if (state.subdivision !== SUBDIVISION.NONE) {
+				const subdivisionLoop = new Tone.Loop(
+					(time: number): void => {
+						const subbeat = getSubbeat();
+						console.log(Tone.Transport.position, subbeat);
+						if (subbeat > 0) {
+							if (recordedSamples.has(state.sound_type)) {
+								samplePlayerSub.buffer = buffers.get(
+									`${state.sound_type.toLowerCase() + '0'}`
+								);
+								samplePlayerSub.start(time);
+							} else if (state.sound_type !== SOUND_TYPE.SILENT) {
+								synthSub.triggerAttackRelease(`D${0 + pitchOffset}`, 0.1, time);
+							}
+						}
+					},
+					`${calcNoteDuration(state.subdivision)}n`
+				);
+				subdivisionLoop.start();
+			}
 		};
 
-		if (recordedSamples.has(soundType)) {
+		if (recordedSamples.has(state.sound_type)) {
 			startLoop(1);
 		} else {
-			switch (soundType) {
+			switch (state.sound_type) {
 				case SOUND_TYPE.BEEP:
 					synth = new Tone.Synth(beepSynthSettings).toDestination();
+					synthSub = new Tone.Synth(beepSynthSettings).toDestination();
 					synth.volume.value = mappedVolume;
+					synthSub.volume.value = mappedVolume;
 					startLoop(4);
 					break;
 				case SOUND_TYPE.LOW_BEEP:
 					synth = new Tone.Synth(lowBeepSynthSettings).toDestination();
+					synthSub = new Tone.Synth(lowBeepSynthSettings).toDestination();
 					synth.volume.value = mappedVolume;
+					synthSub.volume.value = mappedVolume;
 					startLoop(3);
 					break;
 				default:
@@ -115,7 +167,7 @@ const AudioComponent: React.FC = () => {
 	// toggle metronome
 	useEffect(() => {
 		if (state.metro_on) {
-			startMetronome(state.sound_type, state.beat_map, dispatch);
+			startMetronome();
 		} else {
 			Tone.Transport.stop();
 			Tone.Transport.cancel(0);
@@ -127,9 +179,9 @@ const AudioComponent: React.FC = () => {
 		if (state.metro_on) {
 			Tone.Transport.stop();
 			Tone.Transport.cancel(0);
-			startMetronome(state.sound_type, state.beat_map, dispatch);
+			startMetronome();
 		}
-	}, [state.sound_type, state.beat_map]);
+	}, [state.sound_type, state.beat_map, state.subdivision]);
 
 	// metro volume
 	useEffect(() => {
@@ -153,6 +205,7 @@ const AudioComponent: React.FC = () => {
 			? buffers.get(`${state.sound_type.toLowerCase()}0`)
 			: buffers.get(defaultSound);
 	}, [state.sound_type]);
+
 	return <></>;
 };
 

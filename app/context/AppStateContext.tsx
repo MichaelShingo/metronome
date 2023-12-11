@@ -17,6 +17,24 @@ export const SOUND_TYPE: Record<string, SoundType> = {
 	SILENT: 'Silent',
 };
 
+export type Subdivision =
+	| 'None'
+	| 'Eighths'
+	| 'Sixteenths'
+	| 'Triplets'
+	| 'Dotted'
+	| 'Quintuplets'
+	| 'Syncopated';
+export const SUBDIVISION: Record<string, Subdivision> = {
+	NONE: 'None',
+	EIGHTHS: 'Eighths',
+	SIXTEENTHS: 'Sixteenths',
+	TRIPLETS: 'Triplets',
+	DOTTED: 'Dotted',
+	QUINTUPLETS: 'Quintuplets',
+	SYNCOPATED: 'Syncopated',
+};
+
 interface GlobalState {
 	metro_on: boolean;
 	drone_on: boolean;
@@ -36,6 +54,7 @@ interface GlobalState {
 	drone_gain: number;
 	tap_times: Date[] | [];
 	tapped: boolean;
+	subdivision: Subdivision;
 }
 const initialState: GlobalState = {
 	metro_on: false,
@@ -61,6 +80,7 @@ const initialState: GlobalState = {
 	drone_gain: 100,
 	tap_times: [],
 	tapped: false,
+	subdivision: SUBDIVISION.NONE,
 };
 
 export type AppAction = { type: string; payload?: string | number };
@@ -95,6 +115,7 @@ export const actions: Record<string, string> = {
 	DRONE_GAIN: 'DRONE_GAIN',
 	RESET_TAPS: 'RESET_TAPS',
 	DETECT_TAP: 'DETECT_TAP',
+	SUBDIVISION: 'SUBDIVISION',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -222,6 +243,8 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			return { ...state, tap_times: [] };
 		case actions.DETECT_TAP:
 			return { ...state, tapped: !state.tapped };
+		case actions.SUBDIVISION:
+			return { ...state, subdivision: action.payload as Subdivision };
 		default:
 			return state;
 	}

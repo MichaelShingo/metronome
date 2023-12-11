@@ -54,7 +54,6 @@ const DroneSettings = () => {
 	const pitch: string = state.drone_pitch;
 	const octave: string = state.drone_octave;
 	const gain: number = state.drone_gain;
-
 	const handleToggle = () => {
 		dispatch({ type: actions.DRONE_ON });
 	};
@@ -75,8 +74,7 @@ const DroneSettings = () => {
 		<>
 			<Typography variant="h5">Drone</Typography>
 			<Typography variant="subtitle1">Pitch</Typography>
-
-			<Stack direction="row">
+			<Stack direction="row" sx={{ width: '50%' }}>
 				<Tooltip title="Pitch (Up/Down Arrow)" placement="left">
 					<Select value={pitch} onChange={handlePitchChange} fullWidth>
 						{generatePitches()}
