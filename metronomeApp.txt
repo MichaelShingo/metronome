@@ -1,13 +1,17 @@
 TODO
 - why slight delay on first start, after not starting for a while
-
-- subdivisions 
+- subdivision volume? 
 - polyrhythms and visualization would be fun.
-- isn't there some crackle in the audio when you start drone or adjust volume? 
 
 
+
+Transport.PPQ
+Transport.position
+Transport.swing 
+Transport.ticks 
 
 Extra features
+- isn't there some crackle in the audio when you start drone or adjust volume? 
 - light/dark modes
 - use localStorage to save last settings on device.
 - custom sound sample upload?
@@ -16,6 +20,7 @@ Extra features
 - create practice sessions (after 4 beats, increase tempo...)
 - can you include a tuner on here as well?
 - can you collect user data (like how long they used the metronome, what tempos, etc., it could be anonymous)
+- subdivisions of more speciifc rhythms, like syncopated
 
 
 - ESLint auto format - NEED TO RUN THIS ./node_modules/.bin/eslint --ini 

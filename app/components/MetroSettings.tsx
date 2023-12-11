@@ -49,6 +49,10 @@ const MetroSettings: React.FC = () => {
 		dispatch({ type: actions.METRO_GAIN, payload: newValue as number });
 	};
 
+	const handleSubGainChange = (e: Event, newValue: number | number[]) => {
+		dispatch({ type: actions.SUBDIVISION_GAIN, payload: newValue as number });
+	};
+
 	return (
 		<>
 			<Typography variant="h5">Metronome</Typography>
@@ -68,7 +72,7 @@ const MetroSettings: React.FC = () => {
 			</Stack>
 			<Stack direction="row" sx={{ width: '100%' }}>
 				<Stack direction="column" sx={{ width: '50%' }}>
-					<Typography variant="subtitle1">Volume</Typography>
+					<Typography variant="subtitle1">Main Beat Volume</Typography>
 					<Slider
 						sx={{ width: '85%', mt: '4px' }}
 						min={0}
@@ -80,10 +84,24 @@ const MetroSettings: React.FC = () => {
 						size="medium"
 					/>
 				</Stack>
-				<Stack direction="column">
-					<Typography variant="subtitle1">Flash on Beat</Typography>
-					<Switch checked={flash} onChange={handleFlashToggle} />
+				<Stack direction="column" sx={{ width: '50%' }}>
+					<Typography variant="subtitle1">Subdivision Volume</Typography>
+					<Slider
+						sx={{ width: '85%', mt: '4px' }}
+						min={0}
+						max={100}
+						valueLabelDisplay="auto"
+						aria-label="Drone Gain"
+						value={state.subdivision_gain}
+						onChange={handleSubGainChange}
+						size="medium"
+					/>
 				</Stack>
+			</Stack>
+
+			<Stack direction="column">
+				<Typography variant="subtitle1">Flash on Beat</Typography>
+				<Switch checked={flash} onChange={handleFlashToggle} />
 			</Stack>
 		</>
 	);

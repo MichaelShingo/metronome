@@ -22,17 +22,18 @@ export type Subdivision =
 	| 'Eighths'
 	| 'Sixteenths'
 	| 'Triplets'
+	| 'Swung'
 	| 'Dotted'
 	| 'Quintuplets'
 	| 'Syncopated';
 export const SUBDIVISION: Record<string, Subdivision> = {
 	NONE: 'None',
 	EIGHTHS: 'Eighths',
-	SIXTEENTHS: 'Sixteenths',
 	TRIPLETS: 'Triplets',
+	SWUNG: 'Swung',
+	SIXTEENTHS: 'Sixteenths',
 	DOTTED: 'Dotted',
 	QUINTUPLETS: 'Quintuplets',
-	SYNCOPATED: 'Syncopated',
 };
 
 interface GlobalState {
@@ -51,6 +52,7 @@ interface GlobalState {
 	flash: boolean;
 	flash_change: boolean;
 	metro_gain: number;
+	subdivision_gain: number;
 	drone_gain: number;
 	tap_times: Date[] | [];
 	tapped: boolean;
@@ -77,6 +79,7 @@ const initialState: GlobalState = {
 	flash: false,
 	flash_change: false,
 	metro_gain: 100,
+	subdivision_gain: 100,
 	drone_gain: 100,
 	tap_times: [],
 	tapped: false,
@@ -112,6 +115,7 @@ export const actions: Record<string, string> = {
 	TOGGLE_FLASH: 'TOGGLE_FLASH',
 	FLASH_CHANGE: 'FLASH_CHANGE',
 	METRO_GAIN: 'METRO_GAIN',
+	SUBDIVISION_GAIN: 'SUBDIVISION_GAIN',
 	DRONE_GAIN: 'DRONE_GAIN',
 	RESET_TAPS: 'RESET_TAPS',
 	DETECT_TAP: 'DETECT_TAP',
@@ -238,8 +242,9 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			return { ...state, drone_gain: action.payload as number };
 		case actions.METRO_GAIN:
 			return { ...state, metro_gain: action.payload as number };
+		case actions.SUBDIVISION_GAIN:
+			return { ...state, subdivision_gain: action.payload as number };
 		case actions.RESET_TAPS:
-			console.log('CLEARED');
 			return { ...state, tap_times: [] };
 		case actions.DETECT_TAP:
 			return { ...state, tapped: !state.tapped };

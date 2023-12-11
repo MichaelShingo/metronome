@@ -37,13 +37,27 @@ type SynthType =
 	| Tone.NoiseSynth
 	| Tone.Synth
 	| Tone.PolySynth;
-
 let synth: SynthType = new Tone.MembraneSynth();
 let synthSub: SynthType = new Tone.MembraneSynth();
 limiter.toDestination();
 synth.connect(limiter);
 synthSub.connect(limiter);
 droneOsc.connect(limiter);
+
+const calcNoteDuration = (subdivision: Subdivision): string => {
+	switch (subdivision) {
+		case SUBDIVISION.EIGHTHS:
+		case SUBDIVISION.SWUNG:
+		case SUBDIVISION.DOTTED:
+			return '8';
+		case SUBDIVISION.TRIPLETS:
+			return '12';
+		case SUBDIVISION.QUINTUPLETS:
+			return '20';
+		default:
+			return '16';
+	}
+};
 
 const urls: Record<string, string> = {
 	tap0: '/tap0.mp3',
@@ -69,11 +83,11 @@ const samplePlayerSub: Tone.Player = new Tone.Player({
 	url: `/${defaultSound}.mp3`,
 }).toDestination();
 
-const samplePlayerTest = new Tone.Player();
 const AudioComponent: React.FC = () => {
 	const { state, dispatch } = useAppState();
 	const recordedSample: boolean = recordedSamples.has(state.sound_type);
 	const mappedVolume: number = mapRange(state.metro_gain, 0, 100, -90, 0);
+	const mappedVolumeSub: number = mapRange(state.subdivision_gain, 0, 100, -90, 0);
 
 	const startMetronome = () => {
 		Tone.start();
@@ -81,28 +95,15 @@ const AudioComponent: React.FC = () => {
 			return parseInt(Tone.Transport.position.toString().split(':')[1]);
 		};
 		const getSubbeat = (): number => {
-			const subbeat = parseInt(Tone.Transport.position.toString().split(':')[2]);
+			const subbeat = parseFloat(Tone.Transport.position.toString().split(':')[2]);
 			return subbeat;
-		};
-		const calcNoteDuration = (subdivision: Subdivision): string => {
-			switch (subdivision) {
-				case SUBDIVISION.EIGHTHS:
-					return '8';
-				case SUBDIVISION.SIXTEENTHS:
-					return '16';
-				case SUBDIVISION.TRIPLETS:
-					return '12';
-				case SUBDIVISION.QUINTUPLETS:
-					return '20';
-				default:
-					return '0';
-			}
 		};
 
 		const startLoop = (pitchOffset: number) => {
-			const loop = new Tone.Loop((time: number) => {
+			const loop = new Tone.Loop((time) => {
 				const beat = getCurrentBeat();
 				const beatAccent = state.beat_map[beat];
+
 				if (recordedSamples.has(state.sound_type)) {
 					samplePlayer.buffer = buffers.get(
 						`${state.sound_type.toLowerCase() + beatAccent}`
@@ -114,14 +115,12 @@ const AudioComponent: React.FC = () => {
 				dispatch({ type: actions.CURRENT_BEAT, payload: beat });
 			}, '4n');
 			loop.start();
-			console.log(calcNoteDuration(state.subdivision));
 
 			if (state.subdivision !== SUBDIVISION.NONE) {
 				const subdivisionLoop = new Tone.Loop(
-					(time: number): void => {
+					(time): void => {
 						const subbeat = getSubbeat();
-						console.log(Tone.Transport.position, subbeat);
-						if (subbeat > 0) {
+						if (subbeat > 0.5) {
 							if (recordedSamples.has(state.sound_type)) {
 								samplePlayerSub.buffer = buffers.get(
 									`${state.sound_type.toLowerCase() + '0'}`
@@ -176,6 +175,16 @@ const AudioComponent: React.FC = () => {
 
 	// change metro sound
 	useEffect(() => {
+		Tone.Transport.PPQ = parseInt(calcNoteDuration(state.subdivision)) / 4;
+		if (state.subdivision === SUBDIVISION.SWUNG) {
+			Tone.Transport.swing = 0.5;
+			Tone.Transport.swingSubdivision = '8n';
+		} else if (state.subdivision === SUBDIVISION.DOTTED) {
+			Tone.Transport.swing = 0.75;
+			Tone.Transport.swingSubdivision = '8n';
+		} else {
+			Tone.Transport.swing = 0;
+		}
 		if (state.metro_on) {
 			Tone.Transport.stop();
 			Tone.Transport.cancel(0);
@@ -187,9 +196,13 @@ const AudioComponent: React.FC = () => {
 	useEffect(() => {
 		synth.volume.value = mappedVolume;
 		samplePlayer.volume.value = mappedVolume;
-		samplePlayerTest.volume.value = mappedVolume;
 	}, [state.metro_gain]);
 
+	// subdivision volume
+	useEffect(() => {
+		synthSub.volume.value = mappedVolumeSub;
+		samplePlayerSub.volume.value = mappedVolumeSub;
+	}, [state.subdivision_gain]);
 	// tempo
 	useEffect(() => {
 		Tone.Transport.bpm.value = state.tempo;
