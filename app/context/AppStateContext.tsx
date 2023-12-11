@@ -57,6 +57,7 @@ interface GlobalState {
 	tap_times: Date[] | [];
 	tapped: boolean;
 	subdivision: Subdivision;
+	polyrhythm: string;
 }
 const initialState: GlobalState = {
 	metro_on: false,
@@ -84,6 +85,7 @@ const initialState: GlobalState = {
 	tap_times: [],
 	tapped: false,
 	subdivision: SUBDIVISION.NONE,
+	polyrhythm: '0',
 };
 
 export type AppAction = { type: string; payload?: string | number };
@@ -120,6 +122,7 @@ export const actions: Record<string, string> = {
 	RESET_TAPS: 'RESET_TAPS',
 	DETECT_TAP: 'DETECT_TAP',
 	SUBDIVISION: 'SUBDIVISION',
+	POLYRHYTHM: 'POLYRHYTHM',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -250,6 +253,8 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			return { ...state, tapped: !state.tapped };
 		case actions.SUBDIVISION:
 			return { ...state, subdivision: action.payload as Subdivision };
+		case actions.POLYRHYTHM:
+			return { ...state, polyrhythm: action.payload as number };
 		default:
 			return state;
 	}

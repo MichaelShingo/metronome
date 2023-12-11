@@ -1,7 +1,6 @@
 TODO
-- why slight delay on first start, after not starting for a while
-- subdivision volume? 
 - polyrhythms and visualization would be fun.
+- why slight delay on first start, after not starting for a while
 
 
 

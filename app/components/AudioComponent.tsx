@@ -39,8 +39,11 @@ type SynthType =
 	| Tone.PolySynth;
 let synth: SynthType = new Tone.MembraneSynth();
 let synthSub: SynthType = new Tone.MembraneSynth();
+const synthPoly: SynthType = new Tone.Synth(beepSynthSettings).toDestination();
+
 limiter.toDestination();
 synth.connect(limiter);
+synthPoly.connect(limiter);
 synthSub.connect(limiter);
 droneOsc.connect(limiter);
 
@@ -135,6 +138,14 @@ const AudioComponent: React.FC = () => {
 				);
 				subdivisionLoop.start();
 			}
+
+			if (state.polyrhythm !== '0') {
+				const polyrhythmLoop = new Tone.Loop((time): void => {
+					synthPoly.triggerAttackRelease(`D${5 + pitchOffset}`, 0.1, time);
+				}, '3n');
+				// what kind of fractional values can Loop take for rhythm??
+				polyrhythmLoop.start();
+			}
 		};
 
 		if (recordedSamples.has(state.sound_type)) {
@@ -190,7 +201,7 @@ const AudioComponent: React.FC = () => {
 			Tone.Transport.cancel(0);
 			startMetronome();
 		}
-	}, [state.sound_type, state.beat_map, state.subdivision]);
+	}, [state.sound_type, state.beat_map, state.subdivision, state.polyrhythm]);
 
 	// metro volume
 	useEffect(() => {

@@ -28,6 +28,18 @@ const generateMenuItems = (items: Record<string, string>): JSX.Element[] => {
 	return res;
 };
 
+const generatePolyrhythmMenu = (): JSX.Element[] => {
+	const res: JSX.Element[] = [];
+
+	for (let i = 0; i <= 9; i++) {
+		res.push(
+			<MenuItem key={i} value={i}>
+				{i === 0 ? 'None' : i.toString()}
+			</MenuItem>
+		);
+	}
+	return res;
+};
 const MetroSettings: React.FC = () => {
 	const { state, dispatch } = useAppState();
 	const flash: boolean = state.flash;
@@ -51,6 +63,10 @@ const MetroSettings: React.FC = () => {
 
 	const handleSubGainChange = (e: Event, newValue: number | number[]) => {
 		dispatch({ type: actions.SUBDIVISION_GAIN, payload: newValue as number });
+	};
+
+	const handlePolyrhythmChange = (e: SelectChangeEvent) => {
+		dispatch({ type: actions.POLYRHYTHM, payload: e.target.value });
 	};
 
 	return (
@@ -98,10 +114,21 @@ const MetroSettings: React.FC = () => {
 					/>
 				</Stack>
 			</Stack>
-
-			<Stack direction="column">
-				<Typography variant="subtitle1">Flash on Beat</Typography>
-				<Switch checked={flash} onChange={handleFlashToggle} />
+			<Stack direction="row" sx={{ width: '100%' }}>
+				<Stack direction="column" sx={{ width: '50%' }}>
+					<Typography variant="subtitle1">Flash on Beat</Typography>
+					<Switch checked={flash} onChange={handleFlashToggle} />
+				</Stack>
+				<Stack direction="column" sx={{ width: '50%' }}>
+					<Typography variant="subtitle1">Polyrhythm</Typography>
+					<Select
+						value={state.polyrhythm.toString()}
+						onChange={handlePolyrhythmChange}
+						fullWidth
+					>
+						{generatePolyrhythmMenu()}
+					</Select>
+				</Stack>
 			</Stack>
 		</>
 	);
