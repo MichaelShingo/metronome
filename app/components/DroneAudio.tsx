@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useAppState } from '../context/AppStateContext';
 import * as Tone from 'tone';
-import { mapRange } from './AudioComponent';
+import { mapRange } from './AudioResources';
 
 export const droneOsc = new Tone.Oscillator({
 	frequency: 440,

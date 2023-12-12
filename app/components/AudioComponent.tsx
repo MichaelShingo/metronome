@@ -1,93 +1,37 @@
 import React, { useEffect } from 'react';
+import * as Tone from 'tone';
+import { droneOsc } from './DroneAudio';
 import {
 	actions,
 	useAppState,
 	SOUND_TYPE,
 	SUBDIVISION,
-	Subdivision,
 } from '../context/AppStateContext';
-import * as Tone from 'tone';
-import { beepSynthSettings, lowBeepSynthSettings } from './AudioSamples';
-import { droneOsc } from './DroneAudio';
-
-export function mapRange(
-	value: number,
-	fromMin: number,
-	fromMax: number,
-	toMin: number,
-	toMax: number
-): number {
-	const clampedValue = Math.min(Math.max(value, fromMin), fromMax);
-	const mappedValue =
-		((clampedValue - fromMin) / (fromMax - fromMin)) * (toMax - toMin) + toMin;
-
-	return mappedValue;
-}
-
-const recordedSamples: Set<string> = new Set([
-	SOUND_TYPE.TAP,
-	SOUND_TYPE.HIHAT,
-	SOUND_TYPE.RING,
-]);
-
-const limiter = new Tone.Limiter(-10);
-type SynthType =
-	| Tone.MonoSynth
-	| Tone.MembraneSynth
-	| Tone.NoiseSynth
-	| Tone.Synth
-	| Tone.PolySynth;
-let synth: SynthType = new Tone.MembraneSynth();
-let synthSub: SynthType = new Tone.MembraneSynth();
-const synthPoly: SynthType = new Tone.Synth(beepSynthSettings).toDestination();
-
-limiter.toDestination();
-synth.connect(limiter);
-synthPoly.connect(limiter);
-synthSub.connect(limiter);
-droneOsc.connect(limiter);
-
-const calcNoteDuration = (subdivision: Subdivision): string => {
-	switch (subdivision) {
-		case SUBDIVISION.EIGHTHS:
-		case SUBDIVISION.SWUNG:
-		case SUBDIVISION.DOTTED:
-			return '8';
-		case SUBDIVISION.TRIPLETS:
-			return '12';
-		case SUBDIVISION.QUINTUPLETS:
-			return '20';
-		default:
-			return '16';
-	}
-};
-
-const urls: Record<string, string> = {
-	tap0: '/tap0.mp3',
-	tap1: '/tap1.mp3',
-	tap2: '/tap2.mp3',
-	tap3: '/tap3.mp3',
-	ring0: '/ring0.mp3',
-	ring1: '/ring1.mp3',
-	ring2: '/ring2.mp3',
-	ring3: '/ring3.mp3',
-	hihat0: '/hihat0.mp3',
-	hihat1: '/hihat1.mp3',
-	hihat2: '/hihat2.mp3',
-	hihat3: '/hihat3.mp3',
-};
-const buffers: Tone.ToneAudioBuffers = new Tone.Buffers(urls);
+import {
+	beepSynthSettings,
+	lowBeepSynthSettings,
+	mapRange,
+	recordedSamples,
+	SynthType,
+	calcNoteDuration,
+	bufferUrls,
+} from './AudioResources';
 
 const defaultSound: string = 'tap2';
+const limiter = new Tone.Limiter(-10).toDestination();
+let synth: SynthType = new Tone.MembraneSynth().connect(limiter);
+let synthSub: SynthType = new Tone.MembraneSynth().connect(limiter);
+const synthPoly: SynthType = new Tone.Synth(beepSynthSettings).connect(limiter);
+const buffers: Tone.ToneAudioBuffers = new Tone.Buffers(bufferUrls);
 const samplePlayer: Tone.Player = new Tone.Player({
 	url: `/${defaultSound}.mp3`,
 }).toDestination();
 const samplePlayerSub: Tone.Player = new Tone.Player({
 	url: `/${defaultSound}.mp3`,
 }).toDestination();
+droneOsc.connect(limiter);
 
 const AudioComponent: React.FC = () => {
-	console.log(Tone.Transport.timeSignature);
 	const { state, dispatch } = useAppState();
 	const recordedSample: boolean = recordedSamples.has(state.sound_type);
 	const mappedVolume: number = mapRange(state.metro_gain, 0, 100, -90, 0);
@@ -110,8 +54,6 @@ const AudioComponent: React.FC = () => {
 
 		const startLoop = (pitchOffset: number) => {
 			const loop = new Tone.Loop((time) => {
-				console.log('main time', time);
-
 				const beat = getCurrentBeat();
 				const beatAccent = state.beat_map[beat];
 
@@ -146,16 +88,11 @@ const AudioComponent: React.FC = () => {
 				);
 				subdivisionLoop.start();
 			}
-			const polystate = `polystate = ${state.polyrhythm}`;
-			console.log(polystate, typeof polystate);
 			if (state.polyrhythm !== '0') {
-				console.log('why is it in the poly if block?');
 				const interval = calcPolyInterval();
-				console.log(`Poly interval: ${interval}`);
 
 				const polyrhythmLoop = new Tone.Loop((time): void => {
 					synthPoly.triggerAttackRelease('D5', 0.1, time);
-					console.log('poly time', time);
 				}, interval);
 				polyrhythmLoop.start();
 			}
@@ -197,10 +134,9 @@ const AudioComponent: React.FC = () => {
 		}
 	}, [state.metro_on, dispatch]);
 
-	// change metro sound
+	// change metro sound, time sig, subdivision, polyrhythm, beat accent
 	useEffect(() => {
 		Tone.Transport.timeSignature = state.beats;
-
 		const subOn = state.subdivision !== SUBDIVISION.NONE;
 		const polyOn = state.polyrhythm !== '0';
 		const polyVal = parseInt(state.polyrhythm);
