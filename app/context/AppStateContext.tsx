@@ -254,7 +254,7 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 		case actions.SUBDIVISION:
 			return { ...state, subdivision: action.payload as Subdivision };
 		case actions.POLYRHYTHM:
-			return { ...state, polyrhythm: action.payload as number };
+			return { ...state, polyrhythm: action.payload as string };
 		default:
 			return state;
 	}

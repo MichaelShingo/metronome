@@ -87,23 +87,31 @@ const samplePlayerSub: Tone.Player = new Tone.Player({
 }).toDestination();
 
 const AudioComponent: React.FC = () => {
+	console.log(Tone.Transport.timeSignature);
 	const { state, dispatch } = useAppState();
 	const recordedSample: boolean = recordedSamples.has(state.sound_type);
 	const mappedVolume: number = mapRange(state.metro_gain, 0, 100, -90, 0);
 	const mappedVolumeSub: number = mapRange(state.subdivision_gain, 0, 100, -90, 0);
 
-	const startMetronome = () => {
-		Tone.start();
+	const calcPolyInterval = (): number => {
+		const polyVal = parseInt(state.polyrhythm);
+		const secondsPerBeat: number = 60 / state.tempo;
+		return (secondsPerBeat * state.beats) / polyVal;
+	};
+
+	const startMetronome = async () => {
+		await Tone.start();
 		const getCurrentBeat = (): number => {
 			return parseInt(Tone.Transport.position.toString().split(':')[1]);
 		};
 		const getSubbeat = (): number => {
-			const subbeat = parseFloat(Tone.Transport.position.toString().split(':')[2]);
-			return subbeat;
+			return parseFloat(Tone.Transport.position.toString().split(':')[2]);
 		};
 
 		const startLoop = (pitchOffset: number) => {
 			const loop = new Tone.Loop((time) => {
+				console.log('main time', time);
+
 				const beat = getCurrentBeat();
 				const beatAccent = state.beat_map[beat];
 
@@ -138,12 +146,17 @@ const AudioComponent: React.FC = () => {
 				);
 				subdivisionLoop.start();
 			}
-
+			const polystate = `polystate = ${state.polyrhythm}`;
+			console.log(polystate, typeof polystate);
 			if (state.polyrhythm !== '0') {
+				console.log('why is it in the poly if block?');
+				const interval = calcPolyInterval();
+				console.log(`Poly interval: ${interval}`);
+
 				const polyrhythmLoop = new Tone.Loop((time): void => {
-					synthPoly.triggerAttackRelease(`D${5 + pitchOffset}`, 0.1, time);
-				}, '3n');
-				// what kind of fractional values can Loop take for rhythm??
+					synthPoly.triggerAttackRelease('D5', 0.1, time);
+					console.log('poly time', time);
+				}, interval);
 				polyrhythmLoop.start();
 			}
 		};
@@ -186,7 +199,24 @@ const AudioComponent: React.FC = () => {
 
 	// change metro sound
 	useEffect(() => {
-		Tone.Transport.PPQ = parseInt(calcNoteDuration(state.subdivision)) / 4;
+		Tone.Transport.timeSignature = state.beats;
+
+		const subOn = state.subdivision !== SUBDIVISION.NONE;
+		const polyOn = state.polyrhythm !== '0';
+		const polyVal = parseInt(state.polyrhythm);
+		const subVal = parseInt(calcNoteDuration(state.subdivision)) / 4;
+		let ppq: number;
+		if (subOn && polyOn) {
+			ppq = subVal * polyVal;
+		} else if (subOn && !polyOn) {
+			ppq = subVal;
+		} else if (!subOn && polyOn) {
+			ppq = polyVal;
+		} else {
+			ppq = 1;
+		}
+
+		Tone.Transport.PPQ = ppq;
 		if (state.subdivision === SUBDIVISION.SWUNG) {
 			Tone.Transport.swing = 0.5;
 			Tone.Transport.swingSubdivision = '8n';
@@ -201,7 +231,13 @@ const AudioComponent: React.FC = () => {
 			Tone.Transport.cancel(0);
 			startMetronome();
 		}
-	}, [state.sound_type, state.beat_map, state.subdivision, state.polyrhythm]);
+	}, [
+		state.sound_type,
+		state.beat_map,
+		state.subdivision,
+		state.polyrhythm,
+		state.beats,
+	]);
 
 	// metro volume
 	useEffect(() => {
@@ -214,16 +250,13 @@ const AudioComponent: React.FC = () => {
 		synthSub.volume.value = mappedVolumeSub;
 		samplePlayerSub.volume.value = mappedVolumeSub;
 	}, [state.subdivision_gain]);
+
 	// tempo
 	useEffect(() => {
 		Tone.Transport.bpm.value = state.tempo;
 	}, [state.tempo]);
 
-	// num of beats
-	useEffect(() => {
-		Tone.Transport.timeSignature = state.beats;
-	}, [state.beats]);
-
+	// sound type
 	useEffect(() => {
 		samplePlayer.buffer = recordedSample
 			? buffers.get(`${state.sound_type.toLowerCase()}0`)

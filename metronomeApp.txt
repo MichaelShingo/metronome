@@ -1,5 +1,7 @@
 TODO
 - polyrhythms and visualization would be fun.
+	- polyrhythm will just use standard metronome sound (for now)
+	- 
 - why slight delay on first start, after not starting for a while
 
 

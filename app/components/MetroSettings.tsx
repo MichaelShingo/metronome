@@ -30,10 +30,9 @@ const generateMenuItems = (items: Record<string, string>): JSX.Element[] => {
 
 const generatePolyrhythmMenu = (): JSX.Element[] => {
 	const res: JSX.Element[] = [];
-
 	for (let i = 0; i <= 9; i++) {
 		res.push(
-			<MenuItem key={i} value={i}>
+			<MenuItem key={i} value={i.toString()}>
 				{i === 0 ? 'None' : i.toString()}
 			</MenuItem>
 		);
