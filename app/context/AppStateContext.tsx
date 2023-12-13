@@ -58,6 +58,8 @@ interface GlobalState {
 	tapped: boolean;
 	subdivision: Subdivision;
 	polyrhythm: string;
+	current_beat_poly: number;
+	beat_map_poly: Record<number, number>;
 }
 const initialState: GlobalState = {
 	metro_on: false,
@@ -86,6 +88,13 @@ const initialState: GlobalState = {
 	tapped: false,
 	subdivision: SUBDIVISION.NONE,
 	polyrhythm: '0',
+	current_beat_poly: -1,
+	beat_map_poly: {
+		0: 3,
+		1: 1,
+		2: 1,
+		3: 1,
+	},
 };
 
 export type AppAction = { type: string; payload?: string | number };
@@ -123,6 +132,8 @@ export const actions: Record<string, string> = {
 	DETECT_TAP: 'DETECT_TAP',
 	SUBDIVISION: 'SUBDIVISION',
 	POLYRHYTHM: 'POLYRHYTHM',
+	CURRENT_BEAT_POLY: 'CURRENT_BEAT_POLY',
+	BEAT_MAP_POLY: 'BEAT_MAP_POLY',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -130,6 +141,28 @@ const incStr = (numericString: string, increment: boolean): string => {
 		return (parseInt(numericString) + 1).toString();
 	}
 	return (parseInt(numericString) - 1).toString();
+};
+
+const generatePolyBeatMap = (numOfBeats: number): Record<number, number> => {
+	const res: Record<number, number> = { 0: 3 };
+	for (let i = 1; i < numOfBeats; i++) {
+		res[i] = 1;
+	}
+	return res;
+};
+
+const createBeatMap = (
+	beatMap: Record<number, number>,
+	key: number
+): Record<number, number> => {
+	const newBeatMap = beatMap;
+	const currentValue = newBeatMap[key];
+	if (currentValue >= BEAT_PITCH_MAX) {
+		newBeatMap[key] = 0;
+	} else {
+		newBeatMap[key]++;
+	}
+	return newBeatMap;
 };
 // Create a reducer function
 const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
@@ -187,14 +220,7 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			return { ...state, beats: state.beats - 1, beat_map: newBeatMap };
 		}
 		case actions.BEAT_MAP: {
-			const newBeatMap = state.beat_map;
-			const key = action.payload as number;
-			const currentValue = newBeatMap[key];
-			if (currentValue >= BEAT_PITCH_MAX) {
-				newBeatMap[key] = 0;
-			} else {
-				newBeatMap[key]++;
-			}
+			const newBeatMap = createBeatMap(state.beat_map, action.payload as number);
 			return { ...state, beat_map: newBeatMap };
 		}
 		case actions.INCREASE_PITCH:
@@ -254,7 +280,18 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 		case actions.SUBDIVISION:
 			return { ...state, subdivision: action.payload as Subdivision };
 		case actions.POLYRHYTHM:
-			return { ...state, polyrhythm: action.payload as string };
+			// needs to set number of beats in beatmap as well??
+			return {
+				...state,
+				beat_map_poly: generatePolyBeatMap(action.payload as number),
+				polyrhythm: action.payload as string,
+			};
+		case actions.CURRENT_BEAT_POLY:
+			return { ...state, current_beat_poly: action.payload as number };
+		case actions.BEAT_MAP_POLY: {
+			const newBeatMap = createBeatMap(state.beat_map_poly, action.payload as number);
+			return { ...state, beat_map_poly: newBeatMap };
+		}
 		default:
 			return state;
 	}

@@ -1,14 +1,23 @@
-import { Box, Button, IconButton, Stack, Tooltip } from '@mui/material';
-import { actions, useAppState } from '../context/AppStateContext';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { useTheme } from '@mui/material';
+import { Box, Button, Stack, Tooltip } from '@mui/material';
+import { useAppState } from '../context/AppStateContext';
 
-const Beats = () => {
-	const theme = useTheme();
-	const { state, dispatch } = useAppState();
-	const beats = state.beats;
-	const currentBeat = state.current_beat;
+interface BeatsProps {
+	beats: number;
+	currentBeat: number;
+	beatMap: Record<number, number>;
+	beatMapAction: string;
+	colorDefault: string;
+	colorActive: string;
+}
+const Beats: React.FC<BeatsProps> = ({
+	beats,
+	currentBeat,
+	beatMap,
+	beatMapAction,
+	colorActive,
+	colorDefault,
+}) => {
+	const { dispatch } = useAppState();
 
 	const calculateBeatSize = (beatPitch: number): string => {
 		switch (beatPitch) {
@@ -26,7 +35,7 @@ const Beats = () => {
 	};
 
 	const handleBeatClick = (beatNum: number) => {
-		dispatch({ type: actions.BEAT_MAP, payload: beatNum });
+		dispatch({ type: beatMapAction, payload: beatNum });
 	};
 
 	const displayBeats = (beats: number, currentBeat: number): JSX.Element[] => {
@@ -44,18 +53,16 @@ const Beats = () => {
 							paddingRight: i === beats - 1 ? 0 : `${7 / beats}%`,
 							marginLeft: '0px',
 							marginRight: '0px',
+							marginBottom: '-15px',
 							height: '6vh',
 						}}
 					>
 						<Box
 							sx={{
 								width: '100%',
-								height: calculateBeatSize(state.beat_map[i]) + '%',
+								height: calculateBeatSize(beatMap[i]) + '%',
 								borderRadius: '4px',
-								backgroundColor:
-									i === currentBeat
-										? `${theme.palette.primary.light}`
-										: `${theme.palette.grey[300]}`,
+								backgroundColor: i === currentBeat ? colorActive : colorDefault,
 							}}
 						></Box>
 					</Button>
@@ -65,13 +72,6 @@ const Beats = () => {
 		return res;
 	};
 
-	const handleClick = (increment: boolean) => {
-		if (increment) {
-			dispatch({ type: actions.INCREASE_BEATS });
-		} else {
-			dispatch({ type: actions.DECREASE_BEATS });
-		}
-	};
 	return (
 		<>
 			<Stack
@@ -88,18 +88,6 @@ const Beats = () => {
 				}}
 			>
 				{displayBeats(beats, currentBeat)}
-			</Stack>
-			<Stack direction="row">
-				<Tooltip title="-Beat (Shift + L Arrow)">
-					<IconButton size="large" onClick={() => handleClick(false)}>
-						<RemoveCircleIcon />
-					</IconButton>
-				</Tooltip>
-				<Tooltip title="+Beat (Shift + R Arrow)">
-					<IconButton size="large" onClick={() => handleClick(true)}>
-						<AddCircleIcon />
-					</IconButton>
-				</Tooltip>
 			</Stack>
 		</>
 	);

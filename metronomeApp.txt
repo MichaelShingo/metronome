@@ -1,5 +1,4 @@
 TODO before V1 Deploy
-- clean up AudioComponent code
 - polyrhythm visualization
 	- polyrhthm volume, sound type, beat accent
 - responsive and nonscroll on all screens

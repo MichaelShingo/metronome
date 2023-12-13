@@ -6,13 +6,13 @@ import { Box, Stack } from '@mui/material';
 import Settings from './components/Settings';
 import Drone from './components/Drone';
 import KeyPressHandler from './components/KeyPressHandler';
-import Beats from './components/Beats';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '@/utils/darkTheme';
 import AudioComponent from './components/AudioComponent';
 import Flash from './components/Flash';
 import DroneAudio from './components/DroneAudio';
 import TapTempoTimeout from './components/TapTempoTimeout';
+import BeatsContainer from './components/BeatsContainer';
 export default function Home() {
 	return (
 		<ThemeProvider theme={theme}>
@@ -47,7 +47,7 @@ export default function Home() {
 					}}
 				>
 					<Tempo />
-					<Beats />
+					<BeatsContainer />
 					<StartButton />
 					<Stack
 						direction="row"

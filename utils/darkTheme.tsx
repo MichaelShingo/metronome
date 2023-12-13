@@ -15,6 +15,11 @@ export const theme = createTheme({
 			light: '#42a5f5',
 			dark: '#1565c0',
 		},
+		error: {
+			main: '#1976d2',
+			light: '#42a5f5',
+			dark: '#8f3d3d',
+		},
 		background: {
 			paper: '#001429',
 			default: '#001429',
