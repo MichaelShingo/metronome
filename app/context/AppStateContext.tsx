@@ -60,6 +60,7 @@ interface GlobalState {
 	polyrhythm: string;
 	current_beat_poly: number;
 	sound_type_poly: string;
+	poly_gain: number;
 	beat_map_poly: Record<number, number>;
 }
 const initialState: GlobalState = {
@@ -91,6 +92,7 @@ const initialState: GlobalState = {
 	polyrhythm: '0',
 	current_beat_poly: -1,
 	sound_type_poly: SOUND_TYPE.BEEP,
+	poly_gain: 100,
 	beat_map_poly: {
 		0: 3,
 		1: 1,
@@ -137,6 +139,7 @@ export const actions: Record<string, string> = {
 	CURRENT_BEAT_POLY: 'CURRENT_BEAT_POLY',
 	BEAT_MAP_POLY: 'BEAT_MAP_POLY',
 	SOUND_TYPE_POLY: 'SOUND_TYPE_POLY',
+	POLY_GAIN: 'POLY_GAIN',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -281,6 +284,8 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			return { ...state, metro_gain: action.payload as number };
 		case actions.SUBDIVISION_GAIN:
 			return { ...state, subdivision_gain: action.payload as number };
+		case actions.POLY_GAIN:
+			return { ...state, poly_gain: action.payload as number };
 		case actions.RESET_TAPS:
 			return { ...state, tap_times: [] };
 		case actions.DETECT_TAP:
@@ -288,7 +293,6 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 		case actions.SUBDIVISION:
 			return { ...state, subdivision: action.payload as Subdivision };
 		case actions.POLYRHYTHM:
-			// needs to set number of beats in beatmap as well??
 			return {
 				...state,
 				beat_map_poly: generatePolyBeatMap(action.payload as number),

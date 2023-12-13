@@ -1,9 +1,9 @@
 TODO before V1 Deploy
-- polyrhythm visualization
-	- polyrhthm volume, sound type, beat accent
-- responsive and nonscroll on all screens
-- why slight delay on first start, after not starting for a while
-- add keyboard shortcuts to all functions
+	- responsive and nonscroll on all screens
+	- why slight delay on first start, after not starting for a while
+	- add keyboard shortcuts to all functions
+
+
 
 Extra features
 - isn't there some crackle in the audio when you start drone or adjust volume? 

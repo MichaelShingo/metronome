@@ -29,13 +29,19 @@ const samplePlayer: Tone.Player = new Tone.Player({
 const samplePlayerSub: Tone.Player = new Tone.Player({
 	url: `/${defaultSound}.mp3`,
 }).toDestination();
+const samplePlayerPoly: Tone.Player = new Tone.Player({
+	url: `/${defaultSound}.mp3`,
+}).toDestination();
+
 droneOsc.connect(limiter);
 
 const AudioComponent: React.FC = () => {
 	const { state, dispatch } = useAppState();
 	const recordedSample: boolean = recordedSamples.has(state.sound_type);
+	const recordedSamplePoly: boolean = recordedSamples.has(state.sound_type_poly);
 	const mappedVolume: number = mapRange(state.metro_gain, 0, 100, -90, 0);
 	const mappedVolumeSub: number = mapRange(state.subdivision_gain, 0, 100, -90, 0);
+	const mappedVolumePoly: number = mapRange(state.poly_gain, 0, 100, -90, 0);
 
 	const calcPolyInterval = (): number => {
 		const polyVal = parseInt(state.polyrhythm);
@@ -94,13 +100,14 @@ const AudioComponent: React.FC = () => {
 				const polyrhythmLoop = new Tone.Loop((time): void => {
 					const beatAccent = state.beat_map_poly[beat];
 					if (recordedSamples.has(state.sound_type_poly)) {
-						// need poly sample player
-						samplePlayer.buffer = buffers.get(
+						samplePlayerPoly.buffer = buffers.get(
 							`${state.sound_type_poly.toLowerCase() + beatAccent}`
 						);
-						samplePlayer.start(time);
+						samplePlayerPoly.start(time);
 					} else if (state.sound_type_poly !== SOUND_TYPE.SILENT) {
-						synthPoly.triggerAttackRelease(`D${beatAccent + pitchOffset}`, 0.1, time);
+						state.sound_type_poly === SOUND_TYPE.BEEP
+							? synthPoly.triggerAttackRelease(`D${beatAccent + 3}`, 0.1, time)
+							: synthPoly.triggerAttackRelease(`D${beatAccent + 1}`, 0.1, time);
 					}
 					dispatch({ type: actions.CURRENT_BEAT_POLY, payload: beat });
 					if (beat === parseInt(state.polyrhythm) - 1) {
@@ -122,6 +129,7 @@ const AudioComponent: React.FC = () => {
 					synthSub = new Tone.Synth(beepSynthSettings).toDestination();
 					synth.volume.value = mappedVolume;
 					synthSub.volume.value = mappedVolume;
+					synthPoly.volume.value = mappedVolumePoly;
 					startLoop(4);
 					break;
 				case SOUND_TYPE.LOW_BEEP:
@@ -129,6 +137,7 @@ const AudioComponent: React.FC = () => {
 					synthSub = new Tone.Synth(lowBeepSynthSettings).toDestination();
 					synth.volume.value = mappedVolume;
 					synthSub.volume.value = mappedVolume;
+					synthPoly.volume.value = mappedVolumePoly;
 					startLoop(3);
 					break;
 				default:
@@ -184,6 +193,7 @@ const AudioComponent: React.FC = () => {
 		}
 	}, [
 		state.sound_type,
+		state.sound_type_poly,
 		state.beat_map,
 		state.subdivision,
 		state.polyrhythm,
@@ -202,6 +212,12 @@ const AudioComponent: React.FC = () => {
 		samplePlayerSub.volume.value = mappedVolumeSub;
 	}, [state.subdivision_gain]);
 
+	// polyrhythm volume
+	useEffect(() => {
+		synthPoly.volume.value = mappedVolumePoly;
+		samplePlayerPoly.volume.value = mappedVolumePoly;
+	}, [state.poly_gain]);
+
 	// tempo
 	useEffect(() => {
 		Tone.Transport.bpm.value = state.tempo;
@@ -213,6 +229,13 @@ const AudioComponent: React.FC = () => {
 			? buffers.get(`${state.sound_type.toLowerCase()}0`)
 			: buffers.get(defaultSound);
 	}, [state.sound_type]);
+
+	// sound type polyrhythm
+	useEffect(() => {
+		samplePlayerPoly.buffer = recordedSamplePoly
+			? buffers.get(`${state.sound_type_poly.toLowerCase()}0`)
+			: buffers.get(defaultSound);
+	}, [state.sound_type_poly]);
 
 	return <></>;
 };

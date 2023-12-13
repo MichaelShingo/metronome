@@ -52,6 +52,10 @@ const MetroSettings: React.FC = () => {
 		dispatch({ type: actions.SOUND_TYPE, payload: e.target.value });
 	};
 
+	const handlePolySoundTypeChange = (e: SelectChangeEvent) => {
+		dispatch({ type: actions.SOUND_TYPE_POLY, payload: e.target.value });
+	};
+
 	const handleSubdivisionChange = (e: SelectChangeEvent) => {
 		dispatch({ type: actions.SUBDIVISION, payload: e.target.value });
 	};
@@ -62,6 +66,10 @@ const MetroSettings: React.FC = () => {
 
 	const handleSubGainChange = (e: Event, newValue: number | number[]) => {
 		dispatch({ type: actions.SUBDIVISION_GAIN, payload: newValue as number });
+	};
+
+	const handlePolyGainChange = (e: Event, newValue: number | number[]) => {
+		dispatch({ type: actions.POLY_GAIN, payload: newValue as number });
 	};
 
 	const handlePolyrhythmChange = (e: SelectChangeEvent) => {
@@ -97,7 +105,7 @@ const MetroSettings: React.FC = () => {
 					handleGainChange={handleSubGainChange}
 				/>
 			</Stack>
-			<Stack direction="row" sx={{ width: '100%' }}>
+			<Stack spacing="5px" direction="row" sx={{ width: '100%' }}>
 				<Stack direction="column" sx={{ width: '50%' }}>
 					<Typography variant="subtitle1">Polyrhythm</Typography>
 					<Select
@@ -108,10 +116,27 @@ const MetroSettings: React.FC = () => {
 						{generatePolyrhythmMenu()}
 					</Select>
 				</Stack>
+				<Box sx={{ width: '50%' }}>
+					<Typography variant="subtitle1">Polyrhythm Sound</Typography>
+					<Select
+						value={state.sound_type_poly}
+						onChange={handlePolySoundTypeChange}
+						fullWidth
+					>
+						{generateMenuItems(SOUND_TYPE)}
+					</Select>
+				</Box>
 			</Stack>
-			<Stack direction="column" sx={{ width: '50%' }}>
-				<Typography variant="subtitle1">Flash on Beat</Typography>
-				<Switch checked={flash} onChange={handleFlashToggle} />
+			<Stack direction="row" sx={{ width: '100%' }}>
+				<GainSlider
+					title="Polyrhythm Volume"
+					gain={state.poly_gain}
+					handleGainChange={handlePolyGainChange}
+				/>
+				<Stack direction="column" sx={{ width: '50%' }}>
+					<Typography variant="subtitle1">Flash on Beat</Typography>
+					<Switch checked={flash} onChange={handleFlashToggle} />
+				</Stack>
 			</Stack>
 		</>
 	);
