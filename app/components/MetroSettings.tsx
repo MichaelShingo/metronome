@@ -3,7 +3,6 @@ import {
 	MenuItem,
 	Select,
 	SelectChangeEvent,
-	Slider,
 	Stack,
 	Switch,
 	Typography,
@@ -15,6 +14,7 @@ import {
 	SOUND_TYPE,
 	SUBDIVISION,
 } from '../context/AppStateContext';
+import GainSlider from './GainSlider';
 
 const generateMenuItems = (items: Record<string, string>): JSX.Element[] => {
 	const res: JSX.Element[] = [];
@@ -86,38 +86,18 @@ const MetroSettings: React.FC = () => {
 				</Box>
 			</Stack>
 			<Stack direction="row" sx={{ width: '100%' }}>
-				<Stack direction="column" sx={{ width: '50%' }}>
-					<Typography variant="subtitle1">Main Beat Volume</Typography>
-					<Slider
-						sx={{ width: '85%', mt: '4px' }}
-						min={0}
-						max={100}
-						valueLabelDisplay="auto"
-						aria-label="Drone Gain"
-						value={gain}
-						onChange={handleGainChange}
-						size="medium"
-					/>
-				</Stack>
-				<Stack direction="column" sx={{ width: '50%' }}>
-					<Typography variant="subtitle1">Subdivision Volume</Typography>
-					<Slider
-						sx={{ width: '85%', mt: '4px' }}
-						min={0}
-						max={100}
-						valueLabelDisplay="auto"
-						aria-label="Drone Gain"
-						value={state.subdivision_gain}
-						onChange={handleSubGainChange}
-						size="medium"
-					/>
-				</Stack>
+				<GainSlider
+					title="Main Beat Volume"
+					gain={gain}
+					handleGainChange={handleGainChange}
+				/>
+				<GainSlider
+					title="Subdivision Volume"
+					gain={state.subdivision_gain}
+					handleGainChange={handleSubGainChange}
+				/>
 			</Stack>
 			<Stack direction="row" sx={{ width: '100%' }}>
-				<Stack direction="column" sx={{ width: '50%' }}>
-					<Typography variant="subtitle1">Flash on Beat</Typography>
-					<Switch checked={flash} onChange={handleFlashToggle} />
-				</Stack>
 				<Stack direction="column" sx={{ width: '50%' }}>
 					<Typography variant="subtitle1">Polyrhythm</Typography>
 					<Select
@@ -128,6 +108,10 @@ const MetroSettings: React.FC = () => {
 						{generatePolyrhythmMenu()}
 					</Select>
 				</Stack>
+			</Stack>
+			<Stack direction="column" sx={{ width: '50%' }}>
+				<Typography variant="subtitle1">Flash on Beat</Typography>
+				<Switch checked={flash} onChange={handleFlashToggle} />
 			</Stack>
 		</>
 	);

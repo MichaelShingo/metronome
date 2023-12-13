@@ -90,9 +90,24 @@ const AudioComponent: React.FC = () => {
 			}
 			if (state.polyrhythm !== '0') {
 				const interval = calcPolyInterval();
-
+				let beat = 0;
 				const polyrhythmLoop = new Tone.Loop((time): void => {
-					synthPoly.triggerAttackRelease('D5', 0.1, time);
+					const beatAccent = state.beat_map_poly[beat];
+					if (recordedSamples.has(state.sound_type_poly)) {
+						// need poly sample player
+						samplePlayer.buffer = buffers.get(
+							`${state.sound_type_poly.toLowerCase() + beatAccent}`
+						);
+						samplePlayer.start(time);
+					} else if (state.sound_type_poly !== SOUND_TYPE.SILENT) {
+						synthPoly.triggerAttackRelease(`D${beatAccent + pitchOffset}`, 0.1, time);
+					}
+					dispatch({ type: actions.CURRENT_BEAT_POLY, payload: beat });
+					if (beat === parseInt(state.polyrhythm) - 1) {
+						beat = 0;
+					} else {
+						beat++;
+					}
 				}, interval);
 				polyrhythmLoop.start();
 			}

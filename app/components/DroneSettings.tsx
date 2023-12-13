@@ -7,8 +7,8 @@ import {
 	Select,
 	SelectChangeEvent,
 	Tooltip,
-	Slider,
 } from '@mui/material';
+import GainSlider from './GainSlider';
 
 const generateOctaves = (): React.JSX.Element[] => {
 	const res: React.JSX.Element[] = [];
@@ -87,19 +87,7 @@ const DroneSettings = () => {
 				</Tooltip>
 			</Stack>
 			<Stack direction="row" sx={{ width: '100%' }}>
-				<Stack direction="column" sx={{ width: '50%' }}>
-					<Typography variant="subtitle1">Volume</Typography>
-					<Slider
-						sx={{ width: '85%', mt: '4px' }}
-						min={0}
-						max={100}
-						valueLabelDisplay="auto"
-						aria-label="Drone Gain"
-						value={gain}
-						onChange={handleGainChange}
-						size="medium"
-					/>
-				</Stack>
+				<GainSlider title="Volume" gain={gain} handleGainChange={handleGainChange} />
 				<Stack direction="column">
 					<Typography variant="subtitle1">Toggle Drone</Typography>
 					<Switch checked={on} onChange={handleToggle} />

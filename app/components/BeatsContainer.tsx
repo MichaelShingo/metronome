@@ -43,8 +43,8 @@ const BeatsContainer: React.FC = () => {
 				currentBeat={state.current_beat_poly}
 				beatMap={state.beat_map_poly}
 				beatMapAction={actions.BEAT_MAP_POLY}
-				colorDefault={theme.palette.error.dark}
-				colorActive={theme.palette.error.light}
+				colorDefault={theme.palette.common.darkBlue}
+				colorActive={theme.palette.common.mediumLight}
 			/>
 		</>
 	);

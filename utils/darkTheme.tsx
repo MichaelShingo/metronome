@@ -1,6 +1,5 @@
 import { createTheme } from '@mui/material/styles';
 import { Righteous } from 'next/font/google';
-
 const righteous = Righteous({
 	weight: ['400'],
 	style: ['normal'],
@@ -10,10 +9,14 @@ const righteous = Righteous({
 export const theme = createTheme({
 	palette: {
 		mode: 'dark',
+		common: {
+			darkBlue: '#0d3c72',
+			mediumLight: '#337bb5',
+		},
 		primary: {
 			main: '#1976d2',
 			light: '#42a5f5',
-			dark: '#1565c0',
+			dark: '#0d3c72',
 		},
 		error: {
 			main: '#1976d2',

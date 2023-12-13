@@ -59,6 +59,7 @@ interface GlobalState {
 	subdivision: Subdivision;
 	polyrhythm: string;
 	current_beat_poly: number;
+	sound_type_poly: string;
 	beat_map_poly: Record<number, number>;
 }
 const initialState: GlobalState = {
@@ -89,6 +90,7 @@ const initialState: GlobalState = {
 	subdivision: SUBDIVISION.NONE,
 	polyrhythm: '0',
 	current_beat_poly: -1,
+	sound_type_poly: SOUND_TYPE.BEEP,
 	beat_map_poly: {
 		0: 3,
 		1: 1,
@@ -134,6 +136,7 @@ export const actions: Record<string, string> = {
 	POLYRHYTHM: 'POLYRHYTHM',
 	CURRENT_BEAT_POLY: 'CURRENT_BEAT_POLY',
 	BEAT_MAP_POLY: 'BEAT_MAP_POLY',
+	SOUND_TYPE_POLY: 'SOUND_TYPE_POLY',
 };
 
 const incStr = (numericString: string, increment: boolean): string => {
@@ -169,7 +172,12 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 	switch (action.type) {
 		case actions.METRO_ON:
 			if (state.metro_on) {
-				return { ...state, current_beat: -1, metro_on: !state.metro_on };
+				return {
+					...state,
+					current_beat: -1,
+					current_beat_poly: -1,
+					metro_on: !state.metro_on,
+				};
 			} else {
 				return { ...state, metro_on: !state.metro_on };
 			}
@@ -288,6 +296,8 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			};
 		case actions.CURRENT_BEAT_POLY:
 			return { ...state, current_beat_poly: action.payload as number };
+		case actions.SOUND_TYPE_POLY:
+			return { ...state, sound_type_poly: action.payload as SoundType };
 		case actions.BEAT_MAP_POLY: {
 			const newBeatMap = createBeatMap(state.beat_map_poly, action.payload as number);
 			return { ...state, beat_map_poly: newBeatMap };
