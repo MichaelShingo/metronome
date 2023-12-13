@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, Dispatch } from 'react';
 
-export const MAX_TEMPO = 600;
+export const MAX_TEMPO = 300;
 export const MIN_TEMPO = 10;
 export const MAX_BEATS = 21;
 export const MIN_BEATS = 1;

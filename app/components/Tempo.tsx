@@ -1,4 +1,11 @@
-import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import {
+	Box,
+	IconButton,
+	Stack,
+	Tooltip,
+	Typography,
+	useMediaQuery,
+} from '@mui/material';
 import { Slider } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -14,11 +21,6 @@ const arrowContainerStyles = {
 	textAlign: 'center',
 };
 
-const arrowStyles = {
-	width: '9vh',
-	height: '9vh',
-	textAlign: 'center',
-};
 function getTempoMarking(tempo: number): string {
 	if (tempo < 20) {
 		return 'Larghissimo';
@@ -61,11 +63,25 @@ function getTempoMarking(tempo: number): string {
 	}
 }
 const Tempo: React.FC = () => {
+	const isSmallScreen = useMediaQuery('(max-width:430px)');
 	const { state, dispatch } = useAppState();
 	const tempo: number = state.tempo;
 
+	const calcRespWidth = (): string => {
+		if (isSmallScreen) {
+			return '25vh';
+		} else {
+			return tempo < 200 ? '27vh' : '32vh';
+		}
+	};
 	const handleChange = (e: Event, newValue: number | number[]): void => {
 		dispatch({ type: actions.TEMPO, payload: newValue as number });
+	};
+
+	const arrowStyles = {
+		width: isSmallScreen ? '8vh' : '9vh',
+		height: isSmallScreen ? '8vh' : '9vh',
+		textAlign: 'center',
 	};
 
 	const handleArrowClick = (increment: boolean) => {
@@ -77,7 +93,7 @@ const Tempo: React.FC = () => {
 	};
 	return (
 		<>
-			<Box sx={{ width: '80vw', maxWidth: '300px' }}>
+			<Box sx={{ width: '80vw', maxWidth: '300px', mb: '5px', zIndex: 3 }}>
 				<Slider
 					min={MIN_TEMPO}
 					max={MAX_TEMPO}
@@ -88,7 +104,13 @@ const Tempo: React.FC = () => {
 					size="medium"
 				/>
 			</Box>
-			<Stack direction="row" alignItems="center" alignContent="center">
+			<Stack
+				direction="row"
+				alignItems="center"
+				alignContent="center"
+				spacing="none"
+				sx={{ mt: '0px', h: 'fit-content' }}
+			>
 				<Tooltip title="-Tempo (L Arrow)">
 					<IconButton onClick={() => handleArrowClick(false)} sx={arrowContainerStyles}>
 						<ArrowBackIosIcon
@@ -96,7 +118,7 @@ const Tempo: React.FC = () => {
 						/>
 					</IconButton>
 				</Tooltip>
-				<Box sx={{ width: tempo < 200 ? '27vh' : '32vh' }}>
+				<Box sx={{ height: 'fit-content', width: calcRespWidth() }}>
 					<TapTempo />
 				</Box>
 				<Tooltip title="+Tempo (R Arrow)">
@@ -105,7 +127,9 @@ const Tempo: React.FC = () => {
 					</IconButton>
 				</Tooltip>
 			</Stack>
-			<Typography variant="h3">{getTempoMarking(tempo)}</Typography>
+			<Typography sx={{ mt: '10px', fontSize: '6vh' }} variant="h3">
+				{getTempoMarking(tempo)}
+			</Typography>
 		</>
 	);
 };

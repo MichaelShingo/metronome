@@ -1,24 +1,26 @@
-import { Button, Tooltip, Typography } from '@mui/material';
+import { Button, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { MAX_TEMPO, actions, useAppState } from '../context/AppStateContext';
 import { useEffect, useRef } from 'react';
-const styles = {
-	width: '100%',
-	height: 'fit-content',
-	color: 'white',
-	zIndex: '5',
-	borderRadius: '25%',
-	'&:hover': {
-		color: 'primary.light',
-		backgroundColor: 'none',
-	},
-	// backgroundColor: 'grey[600]',
-};
+
 const TapTempo = () => {
+	const isSmallScreen = useMediaQuery('(max-width:430px)');
 	const { state, dispatch } = useAppState();
 	const tempo = state.tempo;
 	const tapTimes: Date[] = state.tap_times;
 	const buttonRef = useRef(null);
 
+	const styles = {
+		width: '100%',
+		height: '17vh',
+		color: 'white',
+		zIndex: '5',
+		borderRadius: '25%',
+		padding: isSmallScreen ? '0px' : '5px',
+		'&:hover': {
+			color: 'primary.light',
+			backgroundColor: 'none',
+		},
+	};
 	const handleTap = () => {
 		dispatch({ type: actions.DETECT_TAP });
 
@@ -57,7 +59,14 @@ const TapTempo = () => {
 		<>
 			<Tooltip title="Tap Tempo (T)" placement="bottom">
 				<Button ref={buttonRef} sx={styles} onClick={handleTap}>
-					<Typography sx={{ ml: '20px', mr: '20px' }} variant="h1">
+					<Typography
+						sx={{
+							ml: isSmallScreen ? '0px' : '20px',
+							mr: isSmallScreen ? '0px' : '20px',
+							fontSize: isSmallScreen ? '15vh' : '18vh',
+						}}
+						variant="h1"
+					>
 						{tempo}
 					</Typography>
 				</Button>

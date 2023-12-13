@@ -4,8 +4,8 @@ import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import { actions, useAppState } from '../context/AppStateContext';
 
 const iconStyles = {
-	width: 225,
-	height: 225,
+	width: '25vh',
+	height: '25vh',
 };
 
 const StartButton: React.FC = () => {
@@ -19,8 +19,7 @@ const StartButton: React.FC = () => {
 		<>
 			<Tooltip title="Play (P)">
 				<IconButton
-					size="large"
-					sx={{ width: 'fit-content', height: 'fit-content', color: 'primary.light' }}
+					sx={{ width: '25vh', height: '25vh', color: 'primary.light' }}
 					onClick={handleClick}
 				>
 					{on ? <PauseCircleIcon sx={iconStyles} /> : <PlayCircleIcon sx={iconStyles} />}

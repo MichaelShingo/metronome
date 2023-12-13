@@ -2,6 +2,9 @@ TODO before V1 Deploy
 	- responsive and nonscroll on all screens
 	- why slight delay on first start, after not starting for a while
 	- add keyboard shortcuts to all functions
+	- settings should be scrollab
+	- settings needs close button
+	- sample start time doesn't match synth start time
 
 
 
