@@ -1,10 +1,11 @@
 import { IconButton, Tooltip } from '@mui/material';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import { actions, useAppState } from '../context/AppStateContext';
+import { Box } from '@mui/system';
 
 export const iconStyles: Record<string, string | number> = {
-	width: '72px',
-	height: '72px',
+	width: '100%',
+	height: '100%',
 };
 
 const Drone: React.FC = () => {
@@ -15,19 +16,18 @@ const Drone: React.FC = () => {
 		dispatch({ type: actions.DRONE_ON });
 	};
 	return (
-		<>
+		<Box sx={{ width: 'fit-content', height: '100%' }}>
 			<Tooltip title="Toggle Drone (D)" placement="right">
-				<IconButton onClick={handleClick} size="large" sx={{ w: '72px', h: '72px' }}>
+				<IconButton onClick={handleClick} sx={{ width: 'fit-content', height: '100%' }}>
 					<GraphicEqIcon
 						sx={{
 							...iconStyles,
-							width: '77px',
 							color: on ? 'primary.light' : 'grey.300',
 						}}
 					/>
 				</IconButton>
 			</Tooltip>
-		</>
+		</Box>
 	);
 };
 

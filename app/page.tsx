@@ -26,24 +26,23 @@ export default function Home() {
 					component="div"
 					data-label="app-container"
 					sx={{
+						backgroundColor: 'none',
 						color: 'white',
 						overflowX: 'hidden',
 						overflowY: 'hidden',
 						height: '100vh',
 						width: '100vw',
-						maxHeight: '100%',
-						minHeight: 'fit-content',
 						mt: '0px',
 						mb: '0px',
-						pt: '2vh',
-						pb: '2vh',
+						pt: '1%',
+						pb: '0%',
 						ml: '50%',
 						mr: '50%',
-						transform: 'translate(-50%)',
+						transform: 'translateX(-50%)',
 						display: 'flex',
 						flexDirection: 'column',
 						alignItems: 'center',
-						justifyContent: 'center',
+						justifyContent: 'space-between',
 					}}
 				>
 					<Tempo />
@@ -51,11 +50,16 @@ export default function Home() {
 					<StartButton />
 					<Stack
 						direction="row"
-						spacing={5}
+						spacing={'8%'}
+						alignItems="center"
+						justifyContent="center"
 						sx={{
-							width: 'fit-content',
+							backgroundColor: 'none',
+							width: '100%',
+							height: '14vh',
 							overflowY: 'hidden',
 							overflowX: 'hidden',
+							pb: '0.5%',
 						}}
 					>
 						<Settings />

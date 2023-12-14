@@ -42,7 +42,7 @@ const Beats: React.FC<BeatsProps> = ({
 		const res = [];
 		for (let i = 0; i < beats; i++) {
 			res.push(
-				<Tooltip key={i} title={`(${i + 1})`} placement="top">
+				<Tooltip key={i} title={`(${i + 1})`} placement="bottom">
 					<Button
 						key={i}
 						onClick={() => handleBeatClick(i)}
@@ -54,7 +54,7 @@ const Beats: React.FC<BeatsProps> = ({
 							marginLeft: '0px',
 							marginRight: '0px',
 							marginBottom: '-15px',
-							height: '6vh',
+							height: '100%',
 						}}
 					>
 						<Box
@@ -73,23 +73,22 @@ const Beats: React.FC<BeatsProps> = ({
 	};
 
 	return (
-		<>
-			<Stack
-				direction="row"
-				spacing={2}
-				sx={{
-					backgroundColor: 'none',
-					mt: '15px',
-					width: '80%',
-					maxWidth: '400px',
-					transform: 'translate(0%)',
-					ml: '50%',
-					mr: '50%',
-				}}
-			>
-				{displayBeats(beats, currentBeat)}
-			</Stack>
-		</>
+		<Stack
+			direction="row"
+			spacing={2}
+			sx={{
+				backgroundColor: 'none',
+				height: '60%',
+				mt: '0px',
+				width: '95%',
+				maxWidth: '400px',
+				transform: 'translate(0%)',
+				ml: '50%',
+				mr: '50%',
+			}}
+		>
+			{displayBeats(beats, currentBeat)}
+		</Stack>
 	);
 };
 

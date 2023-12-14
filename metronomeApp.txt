@@ -6,8 +6,6 @@ TODO before V1 Deploy
 	- settings needs close button
 	- sample start time doesn't match synth start time
 
-
-
 Extra features
 - isn't there some crackle in the audio when you start drone or adjust volume? 
 - light/dark modes

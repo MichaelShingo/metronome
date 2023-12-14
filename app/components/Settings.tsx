@@ -29,11 +29,11 @@ const Settings: React.FC = () => {
 	};
 
 	return (
-		<>
+		<Box sx={{ width: 'fit-content', height: '100%' }}>
 			<Tooltip title="Settings (S)" placement="left">
 				<IconButton
 					onClick={handleSettingsToggle}
-					sx={{ w: '150px', h: '150px', color: 'grey.300', p: '15px' }}
+					sx={{ width: 'fit-content', height: '100%', color: 'grey.300' }}
 				>
 					<SettingsIcon sx={iconStyles} />
 				</IconButton>
@@ -44,6 +44,7 @@ const Settings: React.FC = () => {
 				onClose={handleSettingsToggle}
 				aria-labelledby="modal-modal-title"
 				aria-describedby="modal-modal-description"
+				sx={{ position: 'absolute' }}
 			>
 				<Box sx={modalStyle}>
 					<Stack direction="column" spacing="10px">
@@ -56,7 +57,7 @@ const Settings: React.FC = () => {
 					</Stack>
 				</Box>
 			</Modal>
-		</>
+		</Box>
 	);
 };
 

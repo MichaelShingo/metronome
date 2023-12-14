@@ -9,7 +9,7 @@ const TapTempo = () => {
 	const tapTimes: Date[] = state.tap_times;
 	const buttonRef = useRef(null);
 
-	const styles = {
+	const buttonStyles = {
 		width: '100%',
 		height: '17vh',
 		color: 'white',
@@ -58,12 +58,12 @@ const TapTempo = () => {
 	return (
 		<>
 			<Tooltip title="Tap Tempo (T)" placement="bottom">
-				<Button ref={buttonRef} sx={styles} onClick={handleTap}>
+				<Button ref={buttonRef} sx={buttonStyles} onClick={handleTap}>
 					<Typography
 						sx={{
 							ml: isSmallScreen ? '0px' : '20px',
 							mr: isSmallScreen ? '0px' : '20px',
-							fontSize: isSmallScreen ? '15vh' : '18vh',
+							fontSize: isSmallScreen ? '15vh' : '200%',
 						}}
 						variant="h1"
 					>
