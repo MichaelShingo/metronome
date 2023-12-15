@@ -6,6 +6,7 @@ export const MAX_BEATS = 21;
 export const MIN_BEATS = 1;
 export const BEAT_PITCH_MAX = 3;
 export const BEAT_PITCH_MIN = 0;
+export const H_BREAKPOINT = 440;
 
 export type SoundType = 'Tap' | 'Low Beep' | 'Ring' | 'Beep' | 'Hihat' | 'Silent';
 export const SOUND_TYPE: Record<string, SoundType> = {
@@ -37,6 +38,8 @@ export const SUBDIVISION: Record<string, Subdivision> = {
 };
 
 interface GlobalState {
+	window_height: number;
+	window_width: number;
 	metro_on: boolean;
 	drone_on: boolean;
 	drone_pitch: string;
@@ -64,6 +67,8 @@ interface GlobalState {
 	beat_map_poly: Record<number, number>;
 }
 const initialState: GlobalState = {
+	window_height: window.innerHeight,
+	window_width: window.innerWidth,
 	metro_on: false,
 	drone_on: false,
 	drone_pitch: '9',
@@ -109,6 +114,8 @@ interface AppStateContextType {
 }
 
 export const actions: Record<string, string> = {
+	SET_WIN_WIDTH: 'SET_WIN_WIDTH',
+	SET_WIN_HEIGHT: 'SET_WIN_HEIGHT',
 	METRO_ON: 'METRO_ON',
 	DRONE_ON: 'DRONE_ON',
 	DRONE_PITCH: 'DRONE_PITCH',
@@ -170,9 +177,13 @@ const createBeatMap = (
 	}
 	return newBeatMap;
 };
-// Create a reducer function
+
 const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 	switch (action.type) {
+		case actions.SET_WIN_HEIGHT:
+			return { ...state, window_height: action.payload as number };
+		case actions.SET_WIN_WIDTH:
+			return { ...state, window_width: action.payload as number };
 		case actions.METRO_ON:
 			if (state.metro_on) {
 				return {

@@ -24,7 +24,7 @@ const StartButton: React.FC = () => {
 					sx={{
 						backgroundColor: 'none',
 						width: 'fit-content',
-						height: state.polyrhythm !== '0' ? '34%' : '37%',
+						height: state.polyrhythm !== '0' ? '32%' : '35%',
 					}}
 				>
 					<IconButton

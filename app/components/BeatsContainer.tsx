@@ -1,8 +1,8 @@
 import Beats from './Beats';
-import { actions, useAppState } from '../context/AppStateContext';
-import { Stack, Tooltip, IconButton } from '@mui/material';
+import { H_BREAKPOINT, actions, useAppState } from '../context/AppStateContext';
+import { Stack, Tooltip, IconButton, Typography } from '@mui/material';
 import { useTheme } from '@mui/material';
-
+import { getTempoMarking } from './Tempo';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
@@ -15,17 +15,27 @@ const iconButtonStyles = {
 	padding: '5px',
 };
 
-const iconStyles = {
-	maxWidth: '30px',
-	minWidth: '20px',
-	minHeight: '20px',
-	width: '100%',
-	height: '100%',
-};
+export const beatsContainerMaxWidth: number = 420;
 
 const BeatsContainer: React.FC = () => {
 	const theme = useTheme();
 	const { state, dispatch } = useAppState();
+
+	const iconStyles = {
+		maxWidth: '30px',
+		minWidth: '20px',
+		minHeight: '20px',
+		width: state.window_height < H_BREAKPOINT ? '4vh' : '100%',
+		height: state.window_height < H_BREAKPOINT ? '4vh' : '100%',
+	};
+
+	const calcFontSize = (): string => {
+		if (state.window_height < 750) {
+			return '5vh';
+		}
+		return state.window_width > beatsContainerMaxWidth ? '40px' : '8vw';
+	};
+
 	const handleClick = (increment: boolean) => {
 		if (increment) {
 			dispatch({ type: actions.INCREASE_BEATS });
@@ -33,6 +43,7 @@ const BeatsContainer: React.FC = () => {
 			dispatch({ type: actions.DECREASE_BEATS });
 		}
 	};
+
 	return (
 		<Stack
 			direction="column"
@@ -50,9 +61,9 @@ const BeatsContainer: React.FC = () => {
 				justifyContent="space-between"
 				sx={{
 					mb: '0px',
-					height: state.polyrhythm !== '0' ? '40%' : '50%',
+					height: state.polyrhythm !== '0' ? '40%' : '60%',
 					width: '95%',
-					maxWidth: '400px',
+					maxWidth: `${beatsContainerMaxWidth}px`,
 					backgroundColor: 'none',
 				}}
 			>
@@ -65,6 +76,17 @@ const BeatsContainer: React.FC = () => {
 						<RemoveCircleIcon sx={iconStyles} />
 					</IconButton>
 				</Tooltip>
+				<Typography
+					sx={{
+						mt: '10px',
+						fontSize: calcFontSize(),
+						transform: 'translateY(-18px)',
+						textAlign: 'center',
+					}}
+					variant="h3"
+				>
+					{getTempoMarking(state.tempo)}
+				</Typography>
 				<Tooltip title="+Beat (Shift + R Arrow)" placement="top">
 					<IconButton
 						sx={iconButtonStyles}

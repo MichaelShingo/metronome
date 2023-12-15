@@ -34,10 +34,17 @@ const KeyPressHandler: React.FC = () => {
 		}
 	};
 
+	const handleResize = () => {
+		dispatch({ type: actions.SET_WIN_WIDTH, payload: window.innerWidth });
+		dispatch({ type: actions.SET_WIN_HEIGHT, payload: window.innerHeight });
+	};
+
 	useEffect(() => {
 		window.addEventListener('keydown', handleKeyPress);
+		window.addEventListener('resize', handleResize);
 		return () => {
 			window.removeEventListener('keydown', handleKeyPress);
+			window.removeEventListener('resize', handleResize);
 		};
 	});
 	return <></>;

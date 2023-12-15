@@ -12,6 +12,7 @@ export const theme = createTheme({
 		common: {
 			darkBlue: '#0d3c72',
 			mediumLight: '#337bb5',
+			shadow: '#071e38',
 		},
 		primary: {
 			main: '#1976d2',

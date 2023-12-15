@@ -1,5 +1,6 @@
 import { Box, Button, Stack, Tooltip } from '@mui/material';
 import { useAppState } from '../context/AppStateContext';
+import { beatsContainerMaxWidth } from './BeatsContainer';
 
 interface BeatsProps {
 	beats: number;
@@ -17,7 +18,7 @@ const Beats: React.FC<BeatsProps> = ({
 	colorActive,
 	colorDefault,
 }) => {
-	const { dispatch } = useAppState();
+	const { state, dispatch } = useAppState();
 
 	const calculateBeatSize = (beatPitch: number): string => {
 		switch (beatPitch) {
@@ -78,13 +79,11 @@ const Beats: React.FC<BeatsProps> = ({
 			spacing={2}
 			sx={{
 				backgroundColor: 'none',
-				height: '60%',
+				height: state.polyrhythm !== '0' ? '60%' : '70%',
+				maxHeight: state.polyrhythm !== '0' ? '90px' : '100px',
 				mt: '0px',
 				width: '95%',
-				maxWidth: '400px',
-				transform: 'translate(0%)',
-				ml: '50%',
-				mr: '50%',
+				maxWidth: `${beatsContainerMaxWidth}px`,
 			}}
 		>
 			{displayBeats(beats, currentBeat)}

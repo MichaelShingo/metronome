@@ -3,5 +3,6 @@ declare module '@mui/material/styles/createPalette' {
 	interface CommonColors {
 		darkBlue: string;
 		mediumLight: string;
+		shadow: string;
 	}
 }

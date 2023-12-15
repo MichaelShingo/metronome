@@ -1,27 +1,11 @@
-import {
-	Box,
-	IconButton,
-	Stack,
-	Tooltip,
-	Typography,
-	useMediaQuery,
-} from '@mui/material';
+import { Stack } from '@mui/material';
 import { Slider } from '@mui/material';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
 import { MAX_TEMPO, MIN_TEMPO, actions, useAppState } from '../context/AppStateContext';
 import TapTempo from './TapTempo';
+import TempoArrow from './TempoArrow';
 
-const arrowContainerStyles = {
-	width: 'fit-content',
-	height: 'fit-content',
-	display: 'flex',
-	alignItems: 'center',
-	justifyContent: 'center',
-	textAlign: 'center',
-};
-
-function getTempoMarking(tempo: number): string {
+export const getTempoMarking = (tempo: number): string => {
 	if (tempo < 20) {
 		return 'Larghissimo';
 	} else if (tempo <= 40) {
@@ -36,8 +20,6 @@ function getTempoMarking(tempo: number): string {
 		return 'Adagio';
 	} else if (tempo <= 69) {
 		return 'Adagietto';
-	} else if (tempo <= 72) {
-		return 'Andante moderato';
 	} else if (tempo <= 77) {
 		return 'Andante';
 	} else if (tempo <= 83) {
@@ -61,44 +43,42 @@ function getTempoMarking(tempo: number): string {
 	} else {
 		return 'Prestissimo';
 	}
-}
+};
+
 const Tempo: React.FC = () => {
-	const isSmallScreen = useMediaQuery('(max-width:430px)');
 	const { state, dispatch } = useAppState();
 	const tempo: number = state.tempo;
 
-	const calcTapBoxWidth = (): string => {
-		if (isSmallScreen) {
-			return '100%';
-		} else {
-			return tempo < 200 ? '27vh' : '32vh';
-		}
-	};
 	const handleChange = (e: Event, newValue: number | number[]): void => {
 		dispatch({ type: actions.TEMPO, payload: newValue as number });
 	};
 
-	const arrowStyles = {
-		width: isSmallScreen ? '8vh' : '9vh',
-		height: isSmallScreen ? '8vh' : '9vh',
-		textAlign: 'center',
-	};
-
-	const handleArrowClick = (increment: boolean) => {
-		if (increment) {
-			dispatch({ type: actions.INCREASE_TEMPO });
-		} else {
-			dispatch({ type: actions.DECREASE_TEMPO });
-		}
-	};
 	return (
 		<Stack
 			direction="column"
 			alignItems="center"
-			justifyContent="space-between"
-			sx={{ height: '35%', width: '100%', backgroundColor: 'none' }}
+			justifyContent="end"
+			spacing="2%"
+			sx={{
+				height: '29%',
+				width: '100%',
+				backgroundColor: 'none',
+			}}
 		>
-			<Box sx={{ height: '4%', width: '80vw', maxWidth: '300px', mb: '5px', zIndex: 3 }}>
+			<Stack
+				justifyContent="center"
+				direction="row"
+				alignItems="center"
+				sx={{
+					height: '25%',
+					width: '95vw',
+					maxWidth: '450px',
+					marginBottom: '0px',
+					zIndex: 3,
+					backgroundColor: 'none',
+				}}
+			>
+				<TempoArrow increment={false} />
 				<Slider
 					min={MIN_TEMPO}
 					max={MAX_TEMPO}
@@ -106,48 +86,42 @@ const Tempo: React.FC = () => {
 					aria-label="Frequency"
 					value={tempo}
 					onChange={handleChange}
-					size="medium"
+					size={state.window_height < 500 ? 'small' : 'medium'}
+					sx={{ width: '80%', marginLeft: '10px', marginRight: '10px' }}
 				/>
-			</Box>
+				<TempoArrow increment={true} />
+			</Stack>
 			<Stack
+				data-label="tempo-container"
 				alignItems="center"
 				alignContent="center"
-				sx={{ width: '80%', backgroundColor: 'none' }}
+				sx={{
+					width: '100%',
+					height: '75%',
+					backgroundColor: 'none',
+					marginTop: '0px !important',
+				}}
 			>
 				<Stack
+					data-label="tempo-row"
 					direction="row"
 					alignItems="center"
-					alignContent="center"
-					spacing="none"
+					justifyContent="space-evenly"
+					spacing="5"
 					sx={{
 						mt: '0px',
 						height: '100%',
-						width: '50%',
+						width: '95%',
+						maxWidth: `700px`,
 						backgroundColor: 'none',
+						border: '1px solid none',
 						alignItems: 'center',
 						justifyContent: 'center',
 					}}
 				>
-					<Tooltip title="-Tempo (L Arrow)">
-						<IconButton onClick={() => handleArrowClick(false)} sx={arrowContainerStyles}>
-							<ArrowBackIosIcon
-								sx={{ ...arrowStyles, position: 'relative', left: '1.5vh' }}
-							/>
-						</IconButton>
-					</Tooltip>
-					<Box sx={{ height: 'fit-content', minWidth: '2vh', width: calcTapBoxWidth() }}>
-						<TapTempo />
-					</Box>
-					<Tooltip title="+Tempo (R Arrow)">
-						<IconButton onClick={() => handleArrowClick(true)} sx={arrowContainerStyles}>
-							<ArrowForwardIosIcon sx={arrowStyles} />
-						</IconButton>
-					</Tooltip>
+					<TapTempo />
 				</Stack>
 			</Stack>
-			<Typography sx={{ mt: '10px', fontSize: '300%' }} variant="h3">
-				{getTempoMarking(tempo)}
-			</Typography>
 		</Stack>
 	);
 };

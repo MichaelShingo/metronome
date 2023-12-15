@@ -2,9 +2,7 @@
 import AppStateProvider from './context/AppStateContext';
 import Tempo from './components/Tempo';
 import StartButton from './components/StartButton';
-import { Box, Stack } from '@mui/material';
-import Settings from './components/Settings';
-import Drone from './components/Drone';
+import { Box } from '@mui/material';
 import KeyPressHandler from './components/KeyPressHandler';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '@/utils/darkTheme';
@@ -13,6 +11,7 @@ import Flash from './components/Flash';
 import DroneAudio from './components/DroneAudio';
 import TapTempoTimeout from './components/TapTempoTimeout';
 import BeatsContainer from './components/BeatsContainer';
+import SettingsDroneRow from './components/SettingsDroneRow';
 export default function Home() {
 	return (
 		<ThemeProvider theme={theme}>
@@ -23,8 +22,8 @@ export default function Home() {
 				<AudioComponent />
 				<DroneAudio />
 				<Box
-					component="div"
 					data-label="app-container"
+					component="div"
 					sx={{
 						backgroundColor: 'none',
 						color: 'white',
@@ -34,7 +33,7 @@ export default function Home() {
 						width: '100vw',
 						mt: '0px',
 						mb: '0px',
-						pt: '1%',
+						pt: '0%',
 						pb: '0%',
 						ml: '50%',
 						mr: '50%',
@@ -42,29 +41,13 @@ export default function Home() {
 						display: 'flex',
 						flexDirection: 'column',
 						alignItems: 'center',
-						justifyContent: 'space-between',
+						justifyContent: 'center',
 					}}
 				>
 					<Tempo />
 					<BeatsContainer />
 					<StartButton />
-					<Stack
-						direction="row"
-						spacing={'8%'}
-						alignItems="center"
-						justifyContent="center"
-						sx={{
-							backgroundColor: 'none',
-							width: '100%',
-							height: '14vh',
-							overflowY: 'hidden',
-							overflowX: 'hidden',
-							pb: '0.5%',
-						}}
-					>
-						<Settings />
-						<Drone />
-					</Stack>
+					<SettingsDroneRow />
 				</Box>
 			</AppStateProvider>
 		</ThemeProvider>

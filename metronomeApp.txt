@@ -1,14 +1,20 @@
 TODO before V1 Deploy
-	- responsive and nonscroll on all screens
-	- why slight delay on first start, after not starting for a while
-	- add keyboard shortcuts to all functions
 	- settings should be scrollab
 	- settings needs close button
+	- beat margins consistent to show poly relationship
+
+	
+	- dropdown on tempo text
+	- add keyboard shortcuts to all functions
+
+	- why slight delay on first start, after not starting for a while
 	- sample start time doesn't match synth start time
+
 
 Extra features
 - isn't there some crackle in the audio when you start drone or adjust volume? 
 - light/dark modes
+- dropdown menu for tempo texts?
 - use localStorage to save last settings on device.
 - custom sound sample upload?
 - MUI bottom right + icon for my contact info, suggestions, etc.

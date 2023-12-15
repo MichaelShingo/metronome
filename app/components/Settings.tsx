@@ -3,9 +3,9 @@ import { IconButton, Modal, Typography, Box, Tooltip, Stack } from '@mui/materia
 import DroneSettings from './DroneSettings';
 import React from 'react';
 import { iconStyles } from './Drone';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import { actions, useAppState } from '../context/AppStateContext';
+// import DarkModeIcon from '@mui/icons-material/DarkMode';
+// import LightModeIcon from '@mui/icons-material/LightMode';
+import { H_BREAKPOINT, actions, useAppState } from '../context/AppStateContext';
 import MetroSettings from './MetroSettings';
 
 const modalStyle = {
@@ -21,19 +21,24 @@ const modalStyle = {
 
 const Settings: React.FC = () => {
 	const { state, dispatch } = useAppState();
-	const darkMode: boolean = state.dark_mode;
+	// const darkMode: boolean = state.dark_mode;
 	const open: boolean = state.settings_open;
 	const handleSettingsToggle = () => dispatch({ type: actions.SETTINGS_OPEN });
-	const handleModeToggle = () => {
-		dispatch({ type: actions.DARK_MODE });
-	};
+	// const handleModeToggle = () => {
+	// 	dispatch({ type: actions.DARK_MODE });
+	// };
 
 	return (
 		<Box sx={{ width: 'fit-content', height: '100%' }}>
 			<Tooltip title="Settings (S)" placement="left">
 				<IconButton
 					onClick={handleSettingsToggle}
-					sx={{ width: 'fit-content', height: '100%', color: 'grey.300' }}
+					sx={{
+						width: 'fit-content',
+						height: '100%',
+						color: 'grey.300',
+						padding: state.window_height < H_BREAKPOINT ? '0px' : '10px',
+					}}
 				>
 					<SettingsIcon sx={iconStyles} />
 				</IconButton>
@@ -44,16 +49,16 @@ const Settings: React.FC = () => {
 				onClose={handleSettingsToggle}
 				aria-labelledby="modal-modal-title"
 				aria-describedby="modal-modal-description"
-				sx={{ position: 'absolute' }}
+				sx={{ position: 'absolute', overflow: 'scroll', display: 'block' }}
 			>
 				<Box sx={modalStyle}>
 					<Stack direction="column" spacing="10px">
 						<Typography variant="h4">Settings</Typography>
 						<MetroSettings />
 						<DroneSettings />
-						<IconButton onClick={handleModeToggle}>
+						{/* <IconButton onClick={handleModeToggle}>
 							{darkMode ? <LightModeIcon /> : <DarkModeIcon />}
-						</IconButton>
+						</IconButton> */}
 					</Stack>
 				</Box>
 			</Modal>
