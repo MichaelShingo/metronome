@@ -9,6 +9,7 @@ import {
 	Tooltip,
 } from '@mui/material';
 import GainSlider from './GainSlider';
+import { SELECT_MARGIN } from './Settings';
 
 const generateOctaves = (): React.JSX.Element[] => {
 	const res: React.JSX.Element[] = [];
@@ -74,7 +75,7 @@ const DroneSettings = () => {
 		<>
 			<Typography variant="h5">Drone</Typography>
 			<Typography variant="subtitle1">Pitch</Typography>
-			<Stack direction="row" sx={{ width: '50%' }}>
+			<Stack direction="row" sx={{ width: '50%', marginBottom: SELECT_MARGIN }}>
 				<Tooltip title="Pitch (Up/Down Arrow)" placement="left">
 					<Select value={pitch} onChange={handlePitchChange} fullWidth>
 						{generatePitches()}

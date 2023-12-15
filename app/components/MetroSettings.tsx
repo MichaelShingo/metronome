@@ -15,6 +15,7 @@ import {
 	SUBDIVISION,
 } from '../context/AppStateContext';
 import GainSlider from './GainSlider';
+import { SELECT_MARGIN } from './Settings';
 
 const generateMenuItems = (items: Record<string, string>): JSX.Element[] => {
 	const res: JSX.Element[] = [];
@@ -79,7 +80,11 @@ const MetroSettings: React.FC = () => {
 	return (
 		<>
 			<Typography variant="h5">Metronome</Typography>
-			<Stack spacing="5px" direction="row" sx={{ width: '100%' }}>
+			<Stack
+				spacing="5px"
+				direction="row"
+				sx={{ width: '100%', marginBottom: SELECT_MARGIN }}
+			>
 				<Box sx={{ width: '50%' }}>
 					<Typography variant="subtitle1">Sound Sample</Typography>
 					<Select value={state.sound_type} onChange={handleSoundTypeChange} fullWidth>
@@ -105,7 +110,11 @@ const MetroSettings: React.FC = () => {
 					handleGainChange={handleSubGainChange}
 				/>
 			</Stack>
-			<Stack spacing="5px" direction="row" sx={{ width: '100%' }}>
+			<Stack
+				spacing="5px"
+				direction="row"
+				sx={{ width: '100%', marginBottom: SELECT_MARGIN }}
+			>
 				<Stack direction="column" sx={{ width: '50%' }}>
 					<Typography variant="subtitle1">Polyrhythm</Typography>
 					<Select

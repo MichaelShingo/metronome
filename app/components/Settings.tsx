@@ -1,26 +1,32 @@
 import SettingsIcon from '@mui/icons-material/Settings';
-import { IconButton, Modal, Typography, Box, Tooltip, Stack } from '@mui/material';
+import {
+	IconButton,
+	Typography,
+	Box,
+	Tooltip,
+	Stack,
+	Dialog,
+	DialogProps,
+	DialogContent,
+	DialogTitle,
+	Slide,
+} from '@mui/material';
 import DroneSettings from './DroneSettings';
 import React from 'react';
 import { iconStyles } from './Drone';
+import CloseIcon from '@mui/icons-material/Close';
 // import DarkModeIcon from '@mui/icons-material/DarkMode';
 // import LightModeIcon from '@mui/icons-material/LightMode';
 import { H_BREAKPOINT, actions, useAppState } from '../context/AppStateContext';
 import MetroSettings from './MetroSettings';
+import { TransitionProps } from '@mui/material/transitions';
 
-const modalStyle = {
-	position: 'absolute' as const,
-	top: '50%',
-	left: '50%',
-	transform: 'translate(-50%, -50%)',
-	width: 400,
-	bgcolor: 'background.paper',
-	boxShadow: 24,
-	p: 4,
-};
+export const SELECT_MARGIN = '10px';
 
 const Settings: React.FC = () => {
 	const { state, dispatch } = useAppState();
+	const [scroll] = React.useState<DialogProps['scroll']>('paper');
+
 	// const darkMode: boolean = state.dark_mode;
 	const open: boolean = state.settings_open;
 	const handleSettingsToggle = () => dispatch({ type: actions.SETTINGS_OPEN });
@@ -44,24 +50,37 @@ const Settings: React.FC = () => {
 				</IconButton>
 			</Tooltip>
 
-			<Modal
+			<Dialog
 				open={open}
+				keepMounted
 				onClose={handleSettingsToggle}
+				scroll={scroll}
+				maxWidth="xs"
+				fullWidth={true}
 				aria-labelledby="modal-modal-title"
 				aria-describedby="modal-modal-description"
-				sx={{ position: 'absolute', overflow: 'scroll', display: 'block' }}
+				sx={{ paper: 'primary.dark' }}
 			>
-				<Box sx={modalStyle}>
-					<Stack direction="column" spacing="10px">
+				<DialogTitle sx={{ backgroundColor: 'background.default' }}>
+					<Stack direction="row" justifyContent="space-between">
 						<Typography variant="h4">Settings</Typography>
-						<MetroSettings />
-						<DroneSettings />
-						{/* <IconButton onClick={handleModeToggle}>
+						<IconButton
+							size="small"
+							onClick={handleSettingsToggle}
+							sx={{ width: '10%', height: '10%' }}
+						>
+							<CloseIcon sx={{ width: '100%', height: '100%' }} />
+						</IconButton>
+					</Stack>
+				</DialogTitle>
+				<DialogContent sx={{ backgroundColor: 'background.default' }}>
+					<MetroSettings />
+					<DroneSettings />
+					{/* <IconButton onClick={handleModeToggle}>
 							{darkMode ? <LightModeIcon /> : <DarkModeIcon />}
 						</IconButton> */}
-					</Stack>
-				</Box>
-			</Modal>
+				</DialogContent>
+			</Dialog>
 		</Box>
 	);
 };

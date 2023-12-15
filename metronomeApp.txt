@@ -1,9 +1,6 @@
 TODO before V1 Deploy
-	- settings should be scrollab
-	- settings needs close button
 	- beat margins consistent to show poly relationship
 
-	
 	- dropdown on tempo text
 	- add keyboard shortcuts to all functions
 
