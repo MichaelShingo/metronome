@@ -5,43 +5,64 @@ import { MAX_TEMPO, MIN_TEMPO, actions, useAppState } from '../context/AppStateC
 import TapTempo from './TapTempo';
 import TempoArrow from './TempoArrow';
 
+export const TEMPO_MAP: Record<string, [string, number]> = {
+	LARGHISSIMO: ['Larghissimo', MIN_TEMPO],
+	GRAVE: ['Grave', 20],
+	LENTO: ['Lento', 41],
+	LARGO: ['Largo', 46],
+	LARGHETTO: ['Larghetto', 51],
+	ADAGIO: ['Adagio', 56],
+	ADAGIETTO: ['Adagietto', 66],
+	ANDANTE: ['Andante', 70],
+	ANDANTINO: ['Andantino', 78],
+	MARCIA_MODERATO: ['Marcia moderato', 84],
+	MODERATO: ['Moderato', 86],
+	ALLEGRETTO: ['Allegretto', 98],
+	ALLEGRO: ['Allegro', 110],
+	VIVACE: ['Vivace', 133],
+	VIVACISSIMO: ['Vivacissimo', 141],
+	ALLEGRISSIMO: ['Allegrissimo', 151],
+	PRESTO: ['Presto', 168],
+	PRESTISSIMO: ['Prestissimo', 178],
+};
+
 export const getTempoMarking = (tempo: number): string => {
-	if (tempo < 20) {
-		return 'Larghissimo';
-	} else if (tempo <= 40) {
-		return 'Grave';
-	} else if (tempo <= 45) {
-		return 'Lento';
-	} else if (tempo <= 50) {
-		return 'Largo';
-	} else if (tempo <= 55) {
-		return 'Larghetto';
-	} else if (tempo <= 65) {
-		return 'Adagio';
-	} else if (tempo <= 69) {
-		return 'Adagietto';
-	} else if (tempo <= 77) {
-		return 'Andante';
-	} else if (tempo <= 83) {
-		return 'Andantino';
-	} else if (tempo <= 85) {
-		return 'Marcia moderato';
-	} else if (tempo <= 97) {
-		return 'Moderato';
-	} else if (tempo <= 109) {
-		return 'Allegretto';
-	} else if (tempo <= 132) {
-		return 'Allegro';
-	} else if (tempo <= 140) {
-		return 'Vivace';
-	} else if (tempo <= 150) {
-		return 'Vivacissimo';
-	} else if (tempo <= 167) {
-		return 'Allegrissimo';
-	} else if (tempo <= 177) {
-		return 'Presto';
+	if (tempo < TEMPO_MAP.GRAVE[1]) {
+		return TEMPO_MAP.LARGHISSIMO[0];
+	} else if (tempo < TEMPO_MAP.LENTO[1]) {
+		return TEMPO_MAP.GRAVE[0];
+	} else if (tempo < TEMPO_MAP.LARGO[1]) {
+		return TEMPO_MAP.LENTO[0];
+	} else if (tempo < TEMPO_MAP.LARGHETTO[1]) {
+		return TEMPO_MAP.LARGO[0];
+	} else if (tempo < TEMPO_MAP.ADAGIO[1]) {
+		return TEMPO_MAP.LARGHETTO[0];
+	} else if (tempo < TEMPO_MAP.ADAGIETTO[1]) {
+		return TEMPO_MAP.ADAGIO[0];
+	} else if (tempo < TEMPO_MAP.ANDANTE[1]) {
+		return TEMPO_MAP.ADAGIETTO[0];
+	} else if (tempo < TEMPO_MAP.ANDANTINO[1]) {
+		return TEMPO_MAP.ANDANTE[0];
+	} else if (tempo < TEMPO_MAP.MARCIA_MODERATO[1]) {
+		return TEMPO_MAP.ANDANTINO[0];
+	} else if (tempo < TEMPO_MAP.MODERATO[1]) {
+		return TEMPO_MAP.MARCIA_MODERATO[0];
+	} else if (tempo < TEMPO_MAP.ALLEGRETTO[1]) {
+		return TEMPO_MAP.MODERATO[0];
+	} else if (tempo < TEMPO_MAP.ALLEGRO[1]) {
+		return TEMPO_MAP.ALLEGRETTO[0];
+	} else if (tempo < TEMPO_MAP.VIVACE[1]) {
+		return TEMPO_MAP.ALLEGRO[0];
+	} else if (tempo < TEMPO_MAP.VIVACISSIMO[1]) {
+		return TEMPO_MAP.VIVACE[0];
+	} else if (tempo < TEMPO_MAP.ALLEGRISSIMO[1]) {
+		return TEMPO_MAP.VIVACISSIMO[0];
+	} else if (tempo < TEMPO_MAP.PRESTO[1]) {
+		return TEMPO_MAP.ALLEGRISSIMO[0];
+	} else if (tempo < TEMPO_MAP.PRESTISSIMO[1]) {
+		return TEMPO_MAP.PRESTO[0];
 	} else {
-		return 'Prestissimo';
+		return TEMPO_MAP.PRESTISSIMO[0];
 	}
 };
 

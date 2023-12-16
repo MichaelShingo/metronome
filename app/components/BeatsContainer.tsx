@@ -1,10 +1,11 @@
 import Beats from './Beats';
 import { H_BREAKPOINT, actions, useAppState } from '../context/AppStateContext';
-import { Stack, Tooltip, IconButton, Typography } from '@mui/material';
+import { Stack, Tooltip, IconButton, Typography, Button } from '@mui/material';
 import { useTheme } from '@mui/material';
 import { getTempoMarking } from './Tempo';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import TempoSelectDialog from './TempoSelectDialog';
 
 const iconButtonStyles = {
 	width: 'fit-content',
@@ -44,6 +45,10 @@ const BeatsContainer: React.FC = () => {
 		}
 	};
 
+	const toggleTempoDialog = () => {
+		dispatch({ type: actions.TOGGLE_TEMPO_DIALOG });
+	};
+
 	return (
 		<Stack
 			direction="column"
@@ -76,17 +81,31 @@ const BeatsContainer: React.FC = () => {
 						<RemoveCircleIcon sx={iconStyles} />
 					</IconButton>
 				</Tooltip>
-				<Typography
+				<Button
+					onClick={toggleTempoDialog}
 					sx={{
-						mt: '10px',
-						fontSize: calcFontSize(),
-						transform: 'translateY(-18px)',
-						textAlign: 'center',
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+						height: 'fit-content',
+						color: 'common.white',
+						'&:hover': {
+							color: 'primary.light',
+						},
 					}}
-					variant="h3"
 				>
-					{getTempoMarking(state.tempo)}
-				</Typography>
+					<Typography
+						sx={{
+							fontSize: calcFontSize(),
+							textAlign: 'center',
+							textTransform: 'none',
+						}}
+						variant="h3"
+					>
+						{getTempoMarking(state.tempo)}
+					</Typography>
+				</Button>
+				<TempoSelectDialog />
 				<Tooltip title="+Beat (Shift + R Arrow)" placement="top">
 					<IconButton
 						sx={iconButtonStyles}

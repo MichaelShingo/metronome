@@ -13,6 +13,7 @@ export const theme = createTheme({
 			darkBlue: '#0d3c72',
 			mediumLight: '#337bb5',
 			shadow: '#071e38',
+			white: '#ffffff',
 		},
 		primary: {
 			main: '#1976d2',

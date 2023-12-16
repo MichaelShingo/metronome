@@ -4,5 +4,6 @@ declare module '@mui/material/styles/createPalette' {
 		darkBlue: string;
 		mediumLight: string;
 		shadow: string;
+		white: string;
 	}
 }

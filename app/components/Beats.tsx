@@ -50,8 +50,10 @@ const Beats: React.FC<BeatsProps> = ({
 						style={{
 							minWidth: `${100 / beats}%`,
 							width: `${100 / beats}%`,
-							paddingLeft: i === 0 ? 0 : `${7 / beats}%`,
-							paddingRight: i === beats - 1 ? 0 : `${7 / beats}%`,
+							// paddingLeft: i === 0 ? 0 : `${7 / beats}%`,
+							// paddingRight: i === beats - 1 ? 0 : `${7 / beats}%`,
+							paddingLeft: '3px',
+							paddingRight: '3px',
 							marginLeft: '0px',
 							marginRight: '0px',
 							marginBottom: '-15px',

@@ -38,6 +38,7 @@ export const SUBDIVISION: Record<string, Subdivision> = {
 };
 
 interface GlobalState {
+	tempo_dialog: boolean;
 	window_height: number;
 	window_width: number;
 	metro_on: boolean;
@@ -67,6 +68,7 @@ interface GlobalState {
 	beat_map_poly: Record<number, number>;
 }
 const initialState: GlobalState = {
+	tempo_dialog: false,
 	window_height: window.innerHeight,
 	window_width: window.innerWidth,
 	metro_on: false,
@@ -114,6 +116,7 @@ interface AppStateContextType {
 }
 
 export const actions: Record<string, string> = {
+	TOGGLE_TEMPO_DIALOG: 'TOGGLE_TEMPO_DIALOG',
 	SET_WIN_WIDTH: 'SET_WIN_WIDTH',
 	SET_WIN_HEIGHT: 'SET_WIN_HEIGHT',
 	METRO_ON: 'METRO_ON',
@@ -180,6 +183,8 @@ const createBeatMap = (
 
 const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 	switch (action.type) {
+		case actions.TOGGLE_TEMPO_DIALOG:
+			return { ...state, tempo_dialog: !state.tempo_dialog };
 		case actions.SET_WIN_HEIGHT:
 			return { ...state, window_height: action.payload as number };
 		case actions.SET_WIN_WIDTH:

@@ -1,20 +1,16 @@
 TODO before V1 Deploy
-	- beat margins consistent to show poly relationship
-
-	- dropdown on tempo text
 	- add keyboard shortcuts to all functions
-
 	- why slight delay on first start, after not starting for a while
 	- sample start time doesn't match synth start time
 
-
 Extra features
+- use localStorage to save last settings on device.
 - isn't there some crackle in the audio when you start drone or adjust volume? 
 - light/dark modes
-- dropdown menu for tempo texts?
-- use localStorage to save last settings on device.
-- custom sound sample upload?
 - MUI bottom right + icon for my contact info, suggestions, etc.
+
+Advanced features
+- custom sound sample upload?
 - create click tracks
 - create practice sessions (after 4 beats, increase tempo...)
 - can you include a tuner on here as well?
