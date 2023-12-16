@@ -23,7 +23,7 @@ const TempoSelectDialog = () => {
 			const tempoText = TEMPO_MAP[tempo][0];
 			const tempoNum = TEMPO_MAP[tempo][1];
 			res.push(
-				<Grid item>
+				<Grid item key={tempo}>
 					<Chip
 						label={`${tempoNum} ${tempoText}`}
 						variant="outlined"

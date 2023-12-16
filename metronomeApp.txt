@@ -1,14 +1,13 @@
 TODO before V1 Deploy
-	- add keyboard shortcuts to all functions
-	- why slight delay on first start, after not starting for a while
-	- sample start time doesn't match synth start time
+	- sample start time doesn't match synth start time on polyrhyths only
+	- wouldn't it be nice if changing beatNUm didn't restart metro? 	
 
 Extra features
 - use localStorage to save last settings on device.
 - isn't there some crackle in the audio when you start drone or adjust volume? 
 - light/dark modes
 - MUI bottom right + icon for my contact info, suggestions, etc.
-
+- shouldn't there be + - buttons for both polyrhythms and regular beat ? And a way to set it by dropdown for main? 
 Advanced features
 - custom sound sample upload?
 - create click tracks

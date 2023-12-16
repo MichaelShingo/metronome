@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import * as Tone from 'tone';
-import { droneOsc } from './DroneAudio';
+import { continuousOsc, droneOsc } from './DroneAudio';
 import {
 	actions,
 	useAppState,
@@ -150,6 +150,9 @@ const AudioComponent: React.FC = () => {
 
 	// toggle metronome
 	useEffect(() => {
+		if (continuousOsc.state === 'stopped') {
+			continuousOsc.start();
+		}
 		if (state.metro_on) {
 			startMetronome();
 		} else {

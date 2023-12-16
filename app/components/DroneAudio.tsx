@@ -3,7 +3,13 @@ import { useAppState } from '../context/AppStateContext';
 import * as Tone from 'tone';
 import { mapRange } from './AudioResources';
 
-export const droneOsc = new Tone.Oscillator({
+export const continuousOsc: Tone.Oscillator = new Tone.Oscillator({
+	frequency: 0,
+	type: 'sine',
+	volume: -500,
+}).toDestination();
+
+export const droneOsc: Tone.Oscillator = new Tone.Oscillator({
 	frequency: 440,
 	type: 'sine',
 }).toDestination();

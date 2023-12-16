@@ -4,6 +4,7 @@ export const MAX_TEMPO = 300;
 export const MIN_TEMPO = 10;
 export const MAX_BEATS = 21;
 export const MIN_BEATS = 1;
+export const MAX_BEATS_POLY = 15;
 export const BEAT_PITCH_MAX = 3;
 export const BEAT_PITCH_MIN = 0;
 export const H_BREAKPOINT = 440;
@@ -159,10 +160,24 @@ const incStr = (numericString: string, increment: boolean): string => {
 	return (parseInt(numericString) - 1).toString();
 };
 
-const generatePolyBeatMap = (numOfBeats: number): Record<number, number> => {
-	const res: Record<number, number> = { 0: 3 };
-	for (let i = 1; i < numOfBeats; i++) {
-		res[i] = 1;
+const generatePolyBeatMap = (
+	numOfBeats: number,
+	curMap: Record<number, number>
+): Record<number, number> => {
+	let res: Record<number, number> = { ...curMap };
+	const curLen: number = Object.keys(curMap).length;
+	if (numOfBeats === curLen) {
+		return curMap;
+	} else if (numOfBeats > curLen) {
+		res = { ...curMap };
+		for (let i = curLen; i < numOfBeats; i++) {
+			res[i] = i === 0 ? 3 : 1;
+		}
+		return res;
+	} else {
+		for (let i = curLen; i > numOfBeats; i--) {
+			delete res[i];
+		}
 	}
 	return res;
 };
@@ -308,12 +323,22 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 			return { ...state, tapped: !state.tapped };
 		case actions.SUBDIVISION:
 			return { ...state, subdivision: action.payload as Subdivision };
-		case actions.POLYRHYTHM:
+		case actions.POLYRHYTHM: {
+			const value: number = action.payload as number;
+			let res: string;
+			if (value < 0) {
+				res = '0';
+			} else if (value > MAX_BEATS_POLY) {
+				res = MAX_BEATS_POLY.toString();
+			} else {
+				res = value.toString();
+			}
 			return {
 				...state,
-				beat_map_poly: generatePolyBeatMap(action.payload as number),
-				polyrhythm: action.payload as string,
+				beat_map_poly: generatePolyBeatMap(action.payload as number, state.beat_map_poly),
+				polyrhythm: res,
 			};
+		}
 		case actions.CURRENT_BEAT_POLY:
 			return { ...state, current_beat_poly: action.payload as number };
 		case actions.SOUND_TYPE_POLY:

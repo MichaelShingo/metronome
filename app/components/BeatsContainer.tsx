@@ -6,6 +6,7 @@ import { getTempoMarking } from './Tempo';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import TempoSelectDialog from './TempoSelectDialog';
+import { Box } from '@mui/system';
 
 const iconButtonStyles = {
 	width: 'fit-content',
@@ -51,11 +52,12 @@ const BeatsContainer: React.FC = () => {
 
 	return (
 		<Stack
+			id="beat-container"
 			direction="column"
 			sx={{
 				backgroundColor: 'none',
 				width: '100%',
-				height: state.polyrhythm !== '0' ? '20%' : '15%',
+				height: state.polyrhythm !== '0' ? '25%' : '15%',
 			}}
 			alignItems="center"
 			justifyContent="space-between"
@@ -126,14 +128,57 @@ const BeatsContainer: React.FC = () => {
 			/>
 
 			{state.polyrhythm !== '0' ? (
-				<Beats
-					beats={parseInt(state.polyrhythm)}
-					currentBeat={state.current_beat_poly}
-					beatMap={state.beat_map_poly}
-					beatMapAction={actions.BEAT_MAP_POLY}
-					colorDefault={theme.palette.common.darkBlue}
-					colorActive={theme.palette.common.mediumLight}
-				/>
+				<Box
+					id="polyrhythm-stack"
+					sx={{
+						bgcolor: 'blue',
+						width: '100%',
+						height: '',
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}
+				>
+					<Beats
+						beats={parseInt(state.polyrhythm)}
+						currentBeat={state.current_beat_poly}
+						beatMap={state.beat_map_poly}
+						beatMapAction={actions.BEAT_MAP_POLY}
+						colorDefault={theme.palette.common.darkBlue}
+						colorActive={theme.palette.common.mediumLight}
+					/>
+					<Stack
+						id="polyrhythm-add-btn-row"
+						direction="row"
+						justifyContent="space-between"
+						sx={{
+							bgcolor: 'navy',
+							width: '100%',
+							position: 'relative',
+							maxWidth: `${beatsContainerMaxWidth}px`,
+						}}
+					>
+						<Tooltip title="-Beat (Ctrl + Down Arrow)" placement="top">
+							<IconButton
+								sx={iconButtonStyles}
+								size="large"
+								onClick={() => handleClick(false)}
+							>
+								<RemoveCircleIcon sx={iconStyles} />
+							</IconButton>
+						</Tooltip>
+						<Tooltip title="+Beat (Ctrl + Up Arrow)" placement="top">
+							<IconButton
+								sx={iconButtonStyles}
+								size="large"
+								onClick={() => handleClick(true)}
+							>
+								<AddCircleIcon sx={iconStyles} />
+							</IconButton>
+						</Tooltip>
+					</Stack>
+				</Box>
 			) : (
 				<></>
 			)}

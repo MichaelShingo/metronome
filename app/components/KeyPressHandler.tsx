@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { actions, useAppState } from '../context/AppStateContext';
 
 const KeyPressHandler: React.FC = () => {
-	const { dispatch } = useAppState();
+	const { state, dispatch } = useAppState();
 
 	const handleKeyPress = (event: KeyboardEvent): void => {
 		if (event.key === 'd') {
@@ -17,6 +17,10 @@ const KeyPressHandler: React.FC = () => {
 			dispatch({ type: actions.INCREASE_BEATS });
 		} else if (event.shiftKey && event.key === 'ArrowLeft') {
 			dispatch({ type: actions.DECREASE_BEATS });
+		} else if (event.ctrlKey && event.key === 'ArrowUp') {
+			dispatch({ type: actions.POLYRHYTHM, payload: parseInt(state.polyrhythm) + 1 });
+		} else if (event.ctrlKey && event.key === 'ArrowDown') {
+			dispatch({ type: actions.POLYRHYTHM, payload: parseInt(state.polyrhythm) - 1 });
 		} else if (event.key === 'ArrowRight') {
 			dispatch({ type: actions.INCREASE_TEMPO });
 		} else if (event.key === 'ArrowLeft') {

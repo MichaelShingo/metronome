@@ -5,6 +5,7 @@ import {
 	SelectChangeEvent,
 	Stack,
 	Switch,
+	Tooltip,
 	Typography,
 } from '@mui/material';
 import React from 'react';
@@ -13,6 +14,7 @@ import {
 	useAppState,
 	SOUND_TYPE,
 	SUBDIVISION,
+	MAX_BEATS_POLY,
 } from '../context/AppStateContext';
 import GainSlider from './GainSlider';
 import { SELECT_MARGIN } from './Settings';
@@ -31,7 +33,7 @@ const generateMenuItems = (items: Record<string, string>): JSX.Element[] => {
 
 const generatePolyrhythmMenu = (): JSX.Element[] => {
 	const res: JSX.Element[] = [];
-	for (let i = 0; i <= 9; i++) {
+	for (let i = 0; i <= MAX_BEATS_POLY; i++) {
 		res.push(
 			<MenuItem key={i} value={i.toString()}>
 				{i === 0 ? 'None' : i.toString()}
@@ -79,14 +81,14 @@ const MetroSettings: React.FC = () => {
 
 	return (
 		<>
-			<Typography variant="h5">Metronome</Typography>
+			<Typography variant="h5">Main Beat</Typography>
 			<Stack
 				spacing="5px"
 				direction="row"
 				sx={{ width: '100%', marginBottom: SELECT_MARGIN }}
 			>
 				<Box sx={{ width: '50%' }}>
-					<Typography variant="subtitle1">Sound Sample</Typography>
+					<Typography variant="subtitle1">Sample</Typography>
 					<Select value={state.sound_type} onChange={handleSoundTypeChange} fullWidth>
 						{generateMenuItems(SOUND_TYPE)}
 					</Select>
@@ -110,23 +112,27 @@ const MetroSettings: React.FC = () => {
 					handleGainChange={handleSubGainChange}
 				/>
 			</Stack>
+			<Typography variant="h6">Polyrhythm</Typography>
+
 			<Stack
 				spacing="5px"
 				direction="row"
 				sx={{ width: '100%', marginBottom: SELECT_MARGIN }}
 			>
 				<Stack direction="column" sx={{ width: '50%' }}>
-					<Typography variant="subtitle1">Polyrhythm</Typography>
-					<Select
-						value={state.polyrhythm.toString()}
-						onChange={handlePolyrhythmChange}
-						fullWidth
-					>
-						{generatePolyrhythmMenu()}
-					</Select>
+					<Typography variant="subtitle1">Beats</Typography>
+					<Tooltip title=" (Ctrl + Up/Down Arrow)" placement="left">
+						<Select
+							value={state.polyrhythm.toString()}
+							onChange={handlePolyrhythmChange}
+							fullWidth
+						>
+							{generatePolyrhythmMenu()}
+						</Select>
+					</Tooltip>
 				</Stack>
 				<Box sx={{ width: '50%' }}>
-					<Typography variant="subtitle1">Polyrhythm Sound</Typography>
+					<Typography variant="subtitle1">Sample</Typography>
 					<Select
 						value={state.sound_type_poly}
 						onChange={handlePolySoundTypeChange}
@@ -138,13 +144,15 @@ const MetroSettings: React.FC = () => {
 			</Stack>
 			<Stack direction="row" sx={{ width: '100%' }}>
 				<GainSlider
-					title="Polyrhythm Volume"
+					title="Volume"
 					gain={state.poly_gain}
 					handleGainChange={handlePolyGainChange}
 				/>
 				<Stack direction="column" sx={{ width: '50%' }}>
 					<Typography variant="subtitle1">Flash on Beat</Typography>
-					<Switch checked={flash} onChange={handleFlashToggle} />
+					<Tooltip title="Toggle Flash (F)" placement="right">
+						<Switch checked={flash} onChange={handleFlashToggle} />
+					</Tooltip>
 				</Stack>
 			</Stack>
 		</>

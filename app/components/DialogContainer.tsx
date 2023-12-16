@@ -5,6 +5,8 @@ import {
 	Stack,
 	DialogContent,
 	IconButton,
+	useMediaQuery,
+	Theme,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { MouseEvent, ReactNode, useState } from 'react';
@@ -24,6 +26,7 @@ const DialogContainer: React.FC<DialogContainerProps> = ({
 	children,
 }) => {
 	const [scroll] = useState<DialogProps['scroll']>('paper');
+	const isSmallScreen = useMediaQuery<Theme>((theme) => theme.breakpoints.down('sm'));
 	return (
 		<Dialog
 			open={open}
@@ -42,7 +45,7 @@ const DialogContainer: React.FC<DialogContainerProps> = ({
 					<IconButton
 						size="small"
 						onClick={handleToggle}
-						sx={{ width: '10%', height: '10%' }}
+						sx={{ width: isSmallScreen ? '15%' : '10%', height: '10%' }}
 					>
 						<CloseIcon sx={{ width: '100%', height: '100%' }} />
 					</IconButton>
