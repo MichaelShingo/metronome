@@ -147,6 +147,8 @@ export const actions: Record<string, string> = {
 	DETECT_TAP: 'DETECT_TAP',
 	SUBDIVISION: 'SUBDIVISION',
 	POLYRHYTHM: 'POLYRHYTHM',
+	INCREASE_POLY_BEAT: 'INCREASE_POLY_BEAT',
+	DECREASE_POLY_BEAT: 'DECREASE_POLY_BEAT',
 	CURRENT_BEAT_POLY: 'CURRENT_BEAT_POLY',
 	BEAT_MAP_POLY: 'BEAT_MAP_POLY',
 	SOUND_TYPE_POLY: 'SOUND_TYPE_POLY',
@@ -339,6 +341,7 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 				polyrhythm: res,
 			};
 		}
+
 		case actions.CURRENT_BEAT_POLY:
 			return { ...state, current_beat_poly: action.payload as number };
 		case actions.SOUND_TYPE_POLY:

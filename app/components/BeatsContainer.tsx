@@ -1,35 +1,17 @@
 import Beats from './Beats';
-import { H_BREAKPOINT, actions, useAppState } from '../context/AppStateContext';
-import { Stack, Tooltip, IconButton, Typography, Button } from '@mui/material';
+import { actions, useAppState } from '../context/AppStateContext';
+import { Stack, Typography, Button } from '@mui/material';
 import { useTheme } from '@mui/material';
 import { getTempoMarking } from './Tempo';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import TempoSelectDialog from './TempoSelectDialog';
 import { Box } from '@mui/system';
-
-const iconButtonStyles = {
-	width: 'fit-content',
-	minWidth: '20px',
-	minHeight: '20px',
-	height: 'fit-content',
-	maxHeight: '90%',
-	padding: '5px',
-};
+import IncrementBeatButton from './IncrementBeatButton';
 
 export const beatsContainerMaxWidth: number = 420;
 
 const BeatsContainer: React.FC = () => {
 	const theme = useTheme();
 	const { state, dispatch } = useAppState();
-
-	const iconStyles = {
-		maxWidth: '30px',
-		minWidth: '20px',
-		minHeight: '20px',
-		width: state.window_height < H_BREAKPOINT ? '4vh' : '100%',
-		height: state.window_height < H_BREAKPOINT ? '4vh' : '100%',
-	};
 
 	const calcFontSize = (): string => {
 		if (state.window_height < 750) {
@@ -74,15 +56,12 @@ const BeatsContainer: React.FC = () => {
 					backgroundColor: 'none',
 				}}
 			>
-				<Tooltip title="-Beat (Shift + L Arrow)" placement="top">
-					<IconButton
-						sx={iconButtonStyles}
-						size="large"
-						onClick={() => handleClick(false)}
-					>
-						<RemoveCircleIcon sx={iconStyles} />
-					</IconButton>
-				</Tooltip>
+				<IncrementBeatButton
+					handleClick={() => handleClick(false)}
+					tooltipPlacement="top"
+					tooltipTitle="-Beat (Shift + L Arrow)"
+					plus={false}
+				/>
 				<Button
 					onClick={toggleTempoDialog}
 					sx={{
@@ -91,12 +70,14 @@ const BeatsContainer: React.FC = () => {
 						alignItems: 'center',
 						height: 'fit-content',
 						color: 'common.white',
+						bottom: '10px',
 						'&:hover': {
 							color: 'primary.light',
 						},
 					}}
 				>
 					<Typography
+						id="tempo-text"
 						sx={{
 							fontSize: calcFontSize(),
 							textAlign: 'center',
@@ -108,15 +89,12 @@ const BeatsContainer: React.FC = () => {
 					</Typography>
 				</Button>
 				<TempoSelectDialog />
-				<Tooltip title="+Beat (Shift + R Arrow)" placement="top">
-					<IconButton
-						sx={iconButtonStyles}
-						size="large"
-						onClick={() => handleClick(true)}
-					>
-						<AddCircleIcon sx={iconStyles} />
-					</IconButton>
-				</Tooltip>
+				<IncrementBeatButton
+					handleClick={() => handleClick(true)}
+					tooltipPlacement="top"
+					tooltipTitle="+Beat (Shift + R Arrow)"
+					plus={true}
+				/>
 			</Stack>
 			<Beats
 				beats={state.beats}
@@ -128,18 +106,7 @@ const BeatsContainer: React.FC = () => {
 			/>
 
 			{state.polyrhythm !== '0' ? (
-				<Box
-					id="polyrhythm-stack"
-					sx={{
-						bgcolor: 'blue',
-						width: '100%',
-						height: '',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}
-				>
+				<>
 					<Beats
 						beats={parseInt(state.polyrhythm)}
 						currentBeat={state.current_beat_poly}
@@ -149,36 +116,46 @@ const BeatsContainer: React.FC = () => {
 						colorActive={theme.palette.common.mediumLight}
 					/>
 					<Stack
-						id="polyrhythm-add-btn-row"
 						direction="row"
+						alignItems="center"
 						justifyContent="space-between"
 						sx={{
-							bgcolor: 'navy',
-							width: '100%',
-							position: 'relative',
+							mb: '0px',
+							height: state.polyrhythm !== '0' ? '40%' : '60%',
+							width: '95%',
 							maxWidth: `${beatsContainerMaxWidth}px`,
+							backgroundColor: 'none',
 						}}
 					>
-						<Tooltip title="-Beat (Ctrl + Down Arrow)" placement="top">
-							<IconButton
-								sx={iconButtonStyles}
-								size="large"
-								onClick={() => handleClick(false)}
-							>
-								<RemoveCircleIcon sx={iconStyles} />
-							</IconButton>
-						</Tooltip>
-						<Tooltip title="+Beat (Ctrl + Up Arrow)" placement="top">
-							<IconButton
-								sx={iconButtonStyles}
-								size="large"
-								onClick={() => handleClick(true)}
-							>
-								<AddCircleIcon sx={iconStyles} />
-							</IconButton>
-						</Tooltip>
+						<IncrementBeatButton
+							handleClick={() =>
+								dispatch({
+									type: actions.POLYRHYTHM,
+									payload: parseInt(state.polyrhythm) - 1,
+								})
+							}
+							tooltipPlacement="bottom"
+							tooltipTitle="-Beat (Ctrl + Down Arrow)"
+							plus={false}
+						/>
+						<Box
+							sx={{
+								height: 'fit-content',
+							}}
+						></Box>
+						<IncrementBeatButton
+							handleClick={() =>
+								dispatch({
+									type: actions.POLYRHYTHM,
+									payload: parseInt(state.polyrhythm) + 1,
+								})
+							}
+							tooltipPlacement="bottom"
+							tooltipTitle="+Beat (Ctrl + Up Arrow)"
+							plus={true}
+						/>
 					</Stack>
-				</Box>
+				</>
 			) : (
 				<></>
 			)}

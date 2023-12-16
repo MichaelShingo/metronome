@@ -49,7 +49,7 @@ const TapTempo = () => {
 				width: '50%',
 			}}
 		>
-			<Tooltip title="Tap Tempo (T)" placement="bottom">
+			<Tooltip title="Tap Tempo (T)" placement="right">
 				<Button
 					ref={buttonRef}
 					sx={{
