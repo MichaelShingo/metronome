@@ -3,16 +3,9 @@ import { useAppState } from '../context/AppStateContext';
 import * as Tone from 'tone';
 import { mapRange } from './AudioResources';
 
-export const continuousOsc: Tone.Oscillator = new Tone.Oscillator({
-	frequency: 0,
-	type: 'sine',
-	volume: -500,
-}).toDestination();
+export let continuousOsc: Tone.Oscillator;
 
-export const droneOsc: Tone.Oscillator = new Tone.Oscillator({
-	frequency: 440,
-	type: 'sine',
-}).toDestination();
+export let droneOsc: Tone.Oscillator;
 
 const changeDronePitch = (pitch: string, octave: string) => {
 	const BASE_FREQ = 440; // A4
@@ -25,6 +18,18 @@ const changeDronePitch = (pitch: string, octave: string) => {
 const DroneAudio = () => {
 	const { state } = useAppState();
 
+	useEffect(() => {
+		continuousOsc = new Tone.Oscillator({
+			frequency: 0,
+			type: 'sine',
+			volume: -500,
+		}).toDestination();
+
+		droneOsc = new Tone.Oscillator({
+			frequency: 440,
+			type: 'sine',
+		}).toDestination();
+	}, []);
 	// toggle
 	useEffect(() => {
 		if (state.drone_on) {

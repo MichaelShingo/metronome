@@ -18,22 +18,14 @@ import {
 } from './AudioResources';
 
 const defaultSound: string = 'tap2';
-const limiter = new Tone.Limiter(-10).toDestination();
-let synth: SynthType = new Tone.MembraneSynth().connect(limiter);
-let synthSub: SynthType = new Tone.MembraneSynth().connect(limiter);
-const synthPoly: SynthType = new Tone.Synth(beepSynthSettings).connect(limiter);
-const buffers: Tone.ToneAudioBuffers = new Tone.Buffers(bufferUrls);
-const samplePlayer: Tone.Player = new Tone.Player({
-	url: `/${defaultSound}.mp3`,
-}).toDestination();
-const samplePlayerSub: Tone.Player = new Tone.Player({
-	url: `/${defaultSound}.mp3`,
-}).toDestination();
-const samplePlayerPoly: Tone.Player = new Tone.Player({
-	url: `/${defaultSound}.mp3`,
-}).toDestination();
-
-droneOsc.connect(limiter);
+let limiter;
+let synth: SynthType;
+let synthSub: SynthType;
+let synthPoly: SynthType;
+let buffers: Tone.ToneAudioBuffers;
+let samplePlayer: Tone.Player;
+let samplePlayerSub: Tone.Player;
+let samplePlayerPoly: Tone.Player;
 
 const AudioComponent: React.FC = () => {
 	const { state, dispatch } = useAppState();
@@ -148,9 +140,28 @@ const AudioComponent: React.FC = () => {
 		Tone.Transport.start();
 	};
 
+	// instantiate and connect audio components
+	useEffect(() => {
+		buffers = new Tone.Buffers(bufferUrls);
+
+		limiter = new Tone.Limiter(-10).toDestination();
+		synth = new Tone.MembraneSynth().connect(limiter);
+		synthSub = new Tone.MembraneSynth().connect(limiter);
+		synthPoly = new Tone.Synth(beepSynthSettings).connect(limiter);
+		samplePlayer = new Tone.Player({
+			url: `/${defaultSound}.mp3`,
+		}).toDestination();
+		samplePlayerSub = new Tone.Player({
+			url: `/${defaultSound}.mp3`,
+		}).toDestination();
+		samplePlayerPoly = new Tone.Player({
+			url: `/${defaultSound}.mp3`,
+		}).toDestination();
+		droneOsc && droneOsc.connect(limiter);
+	}, []);
 	// toggle metronome
 	useEffect(() => {
-		if (continuousOsc.state === 'stopped') {
+		if (continuousOsc && continuousOsc.state === 'stopped') {
 			continuousOsc.start();
 		}
 		if (state.metro_on) {
@@ -228,16 +239,18 @@ const AudioComponent: React.FC = () => {
 
 	// sound type
 	useEffect(() => {
-		samplePlayer.buffer = recordedSample
-			? buffers.get(`${state.sound_type.toLowerCase()}0`)
-			: buffers.get(defaultSound);
+		samplePlayer.buffer =
+			buffers && recordedSample
+				? buffers.get(`${state.sound_type.toLowerCase()}0`)
+				: buffers.get(defaultSound);
 	}, [state.sound_type]);
 
 	// sound type polyrhythm
 	useEffect(() => {
-		samplePlayerPoly.buffer = recordedSamplePoly
-			? buffers.get(`${state.sound_type_poly.toLowerCase()}0`)
-			: buffers.get(defaultSound);
+		samplePlayerPoly.buffer =
+			buffers && recordedSamplePoly
+				? buffers.get(`${state.sound_type_poly.toLowerCase()}0`)
+				: buffers.get(defaultSound);
 	}, [state.sound_type_poly]);
 
 	return <></>;
