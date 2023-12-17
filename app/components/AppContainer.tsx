@@ -1,11 +1,16 @@
 import { Box } from '@mui/system';
 import { ReactNode } from 'react';
+import { useAppState } from '../context/AppStateContext';
+import { useMediaQuery, Theme } from '@mui/material';
 
 interface AppContainerProps {
 	children: ReactNode;
 }
 
 const AppContainer: React.FC<AppContainerProps> = ({ children }) => {
+	const { state } = useAppState();
+	const isSmallScreen = useMediaQuery<Theme>((theme) => theme.breakpoints.down('sm'));
+
 	return (
 		<Box
 			data-label="app-container"
@@ -14,8 +19,8 @@ const AppContainer: React.FC<AppContainerProps> = ({ children }) => {
 				backgroundColor: 'none',
 				color: 'white',
 				overflowX: 'hidden',
-				overflowY: 'auto',
-				height: '100vh',
+				overflowY: 'hidden',
+				height: isSmallScreen ? '95vh' : '100vh',
 				width: '100vw',
 				mt: '0px',
 				mb: '0px',

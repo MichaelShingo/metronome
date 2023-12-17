@@ -15,7 +15,6 @@ export const TEMPO_MAP: Record<string, [string, number]> = {
 	ADAGIETTO: ['Adagietto', 66],
 	ANDANTE: ['Andante', 70],
 	ANDANTINO: ['Andantino', 78],
-	MARCIA_MODERATO: ['Marcia moderato', 84],
 	MODERATO: ['Moderato', 86],
 	ALLEGRETTO: ['Allegretto', 98],
 	ALLEGRO: ['Allegro', 110],
@@ -43,10 +42,8 @@ export const getTempoMarking = (tempo: number): string => {
 		return TEMPO_MAP.ADAGIETTO[0];
 	} else if (tempo < TEMPO_MAP.ANDANTINO[1]) {
 		return TEMPO_MAP.ANDANTE[0];
-	} else if (tempo < TEMPO_MAP.MARCIA_MODERATO[1]) {
-		return TEMPO_MAP.ANDANTINO[0];
 	} else if (tempo < TEMPO_MAP.MODERATO[1]) {
-		return TEMPO_MAP.MARCIA_MODERATO[0];
+		return TEMPO_MAP.ANDANTINO[0];
 	} else if (tempo < TEMPO_MAP.ALLEGRETTO[1]) {
 		return TEMPO_MAP.MODERATO[0];
 	} else if (tempo < TEMPO_MAP.ALLEGRO[1]) {
