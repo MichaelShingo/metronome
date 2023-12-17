@@ -11,7 +11,7 @@ const GainSlider: React.FC<GainSliderProps> = ({ title, gain, handleGainChange }
 		<Stack direction="column" sx={{ width: '50%' }}>
 			<Typography variant="subtitle1">{title}</Typography>
 			<Slider
-				sx={{ width: '85%', mt: '4px' }}
+				sx={{ width: '85%', mt: '4px', ml: '4px' }}
 				min={0}
 				max={100}
 				valueLabelDisplay="auto"
