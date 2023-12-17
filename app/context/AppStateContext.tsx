@@ -8,6 +8,7 @@ export const MAX_BEATS_POLY = 15;
 export const BEAT_PITCH_MAX = 3;
 export const BEAT_PITCH_MIN = 0;
 export const H_BREAKPOINT = 440;
+export const SETTINGS_ROW_SPACING: string = '10px';
 
 export type SoundType = 'Tap' | 'Low Beep' | 'Ring' | 'Beep' | 'Hihat' | 'Silent';
 export const SOUND_TYPE: Record<string, SoundType> = {

@@ -90,7 +90,7 @@ const DroneSettings = () => {
 			<Stack direction="row" sx={{ width: '100%' }}>
 				<GainSlider title="Volume" gain={gain} handleGainChange={handleGainChange} />
 				<Stack direction="column">
-					<Typography variant="subtitle1">Toggle Drone</Typography>
+					<Typography variant="subtitle1">Toggle</Typography>
 					<Tooltip title="Toggle Drone (D)" placement="right">
 						<Switch checked={on} onChange={handleToggle} />
 					</Tooltip>

@@ -15,6 +15,7 @@ import {
 	SOUND_TYPE,
 	SUBDIVISION,
 	MAX_BEATS_POLY,
+	SETTINGS_ROW_SPACING,
 } from '../context/AppStateContext';
 import GainSlider from './GainSlider';
 import { SELECT_MARGIN } from './Settings';
@@ -83,7 +84,7 @@ const MetroSettings: React.FC = () => {
 		<>
 			<Typography variant="h5">Main Beat</Typography>
 			<Stack
-				spacing="5px"
+				spacing={SETTINGS_ROW_SPACING}
 				direction="row"
 				sx={{ width: '100%', marginBottom: SELECT_MARGIN }}
 			>
@@ -93,21 +94,17 @@ const MetroSettings: React.FC = () => {
 						{generateMenuItems(SOUND_TYPE)}
 					</Select>
 				</Box>
+				<GainSlider title="Volume" gain={gain} handleGainChange={handleGainChange} />
+			</Stack>
+			<Stack direction="row" spacing={SETTINGS_ROW_SPACING} sx={{ width: '100%' }}>
 				<Box sx={{ width: '50%' }}>
 					<Typography variant="subtitle1">Subdivision</Typography>
 					<Select value={state.subdivision} onChange={handleSubdivisionChange} fullWidth>
 						{generateMenuItems(SUBDIVISION)}
 					</Select>
 				</Box>
-			</Stack>
-			<Stack direction="row" sx={{ width: '100%' }}>
 				<GainSlider
-					title="Main Beat Volume"
-					gain={gain}
-					handleGainChange={handleGainChange}
-				/>
-				<GainSlider
-					title="Subdivision Volume"
+					title="Volume"
 					gain={state.subdivision_gain}
 					handleGainChange={handleSubGainChange}
 				/>
@@ -115,7 +112,7 @@ const MetroSettings: React.FC = () => {
 			<Typography variant="h6">Polyrhythm</Typography>
 
 			<Stack
-				spacing="5px"
+				spacing={SETTINGS_ROW_SPACING}
 				direction="row"
 				sx={{ width: '100%', marginBottom: SELECT_MARGIN }}
 			>
@@ -149,7 +146,7 @@ const MetroSettings: React.FC = () => {
 					handleGainChange={handlePolyGainChange}
 				/>
 				<Stack direction="column" sx={{ width: '50%' }}>
-					<Typography variant="subtitle1">Flash on Beat</Typography>
+					<Typography variant="subtitle1">Flash</Typography>
 					<Tooltip title="Toggle Flash (F)" placement="right">
 						<Switch checked={flash} onChange={handleFlashToggle} />
 					</Tooltip>
