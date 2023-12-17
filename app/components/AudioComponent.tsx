@@ -143,7 +143,6 @@ const AudioComponent: React.FC = () => {
 	// instantiate and connect audio components
 	useEffect(() => {
 		buffers = new Tone.Buffers(bufferUrls);
-
 		limiter = new Tone.Limiter(-10).toDestination();
 		synth = new Tone.MembraneSynth().connect(limiter);
 		synthSub = new Tone.MembraneSynth().connect(limiter);
