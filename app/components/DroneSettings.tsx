@@ -1,7 +1,6 @@
-import { actions, useAppState } from '../context/AppStateContext';
+import { SETTINGS_ROW_SPACING, actions, useAppState } from '../context/AppStateContext';
 import {
 	Stack,
-	Switch,
 	MenuItem,
 	Typography,
 	Select,
@@ -10,6 +9,7 @@ import {
 } from '@mui/material';
 import GainSlider from './GainSlider';
 import { SELECT_MARGIN } from './Settings';
+import { Box } from '@mui/system';
 
 const generateOctaves = (): React.JSX.Element[] => {
 	const res: React.JSX.Element[] = [];
@@ -51,13 +51,9 @@ const generatePitches = (): React.JSX.Element[] => {
 
 const DroneSettings = () => {
 	const { state, dispatch } = useAppState();
-	const on: boolean = state.drone_on;
 	const pitch: string = state.drone_pitch;
 	const octave: string = state.drone_octave;
 	const gain: number = state.drone_gain;
-	const handleToggle = () => {
-		dispatch({ type: actions.DRONE_ON });
-	};
 
 	const handlePitchChange = (e: SelectChangeEvent) => {
 		dispatch({ type: actions.DRONE_PITCH, payload: e.target.value });
@@ -74,27 +70,36 @@ const DroneSettings = () => {
 	return (
 		<>
 			<Typography variant="h5">Drone</Typography>
-			<Typography variant="subtitle1">Pitch</Typography>
-			<Stack direction="row" sx={{ width: '50%', marginBottom: SELECT_MARGIN }}>
-				<Tooltip title="Pitch (Up/Down Arrow)" placement="left">
-					<Select value={pitch} onChange={handlePitchChange} fullWidth>
-						{generatePitches()}
-					</Select>
-				</Tooltip>
-				<Tooltip title="Octave (Shift + Up/Down Arrow)" placement="right">
-					<Select value={octave} onChange={handleOctaveChange} fullWidth>
-						{generateOctaves()}
-					</Select>
-				</Tooltip>
-			</Stack>
-			<Stack direction="row" sx={{ width: '100%' }}>
-				<GainSlider title="Volume" gain={gain} handleGainChange={handleGainChange} />
-				<Stack direction="column">
-					<Typography variant="subtitle1">Toggle</Typography>
-					<Tooltip title="Toggle Drone (D)" placement="right">
-						<Switch checked={on} onChange={handleToggle} />
+			<Stack
+				direction="row"
+				spacing={SETTINGS_ROW_SPACING}
+				sx={{ width: '100%', marginBottom: SELECT_MARGIN }}
+			>
+				<Box id="drone-pitch-box" sx={{ width: '50%' }}>
+					<Typography variant="subtitle1">Pitch</Typography>
+
+					<Tooltip title="Pitch (Up/Down Arrow)" placement="left">
+						<Select
+							value={pitch}
+							sx={{ width: '50%' }}
+							onChange={handlePitchChange}
+							fullWidth
+						>
+							{generatePitches()}
+						</Select>
 					</Tooltip>
-				</Stack>
+					<Tooltip title="Octave (Shift + Up/Down Arrow)" placement="right">
+						<Select
+							sx={{ width: '50%' }}
+							value={octave}
+							onChange={handleOctaveChange}
+							fullWidth
+						>
+							{generateOctaves()}
+						</Select>
+					</Tooltip>
+				</Box>
+				<GainSlider title="Volume" gain={gain} handleGainChange={handleGainChange} />
 			</Stack>
 		</>
 	);
