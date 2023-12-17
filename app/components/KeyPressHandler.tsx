@@ -51,6 +51,7 @@ const KeyPressHandler: React.FC = () => {
 			window.removeEventListener('resize', handleResize);
 		};
 	});
+
 	return <></>;
 };
 

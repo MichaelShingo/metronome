@@ -70,8 +70,8 @@ interface GlobalState {
 }
 const initialState: GlobalState = {
 	tempo_dialog: false,
-	window_height: window.innerHeight,
-	window_width: window.innerWidth,
+	window_height: 1000,
+	window_width: 1000,
 	metro_on: false,
 	drone_on: false,
 	drone_pitch: '9',
