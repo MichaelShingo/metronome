@@ -6,7 +6,7 @@ const TapTempoTimeout = () => {
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
 			dispatch({ type: actions.RESET_TAPS });
-		}, 4000);
+		}, 2500);
 
 		return () => clearTimeout(timeoutId);
 	}, [state.tapped]);

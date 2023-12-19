@@ -342,7 +342,6 @@ const appReducer = (state: GlobalState, action: AppAction): GlobalState => {
 				polyrhythm: res,
 			};
 		}
-
 		case actions.CURRENT_BEAT_POLY:
 			return { ...state, current_beat_poly: action.payload as number };
 		case actions.SOUND_TYPE_POLY:

@@ -1,8 +1,12 @@
-TODO before V1 Deploy
-	- sample start time doesn't match synth start time on polyrhyths only
-	- wouldn't it be nice if changing beatNUm didn't restart metro? 	
+TODO before public announcement
+- prevent screen turn off 
+- PWA stuff
+- contact info/feedback component
+-- check the settings box on iphone and galaxy fold, you need to make the selects smaller
+- seo? 
 
 Extra features
+- vibration trigger 
 - use localStorage to save last settings on device.
 - isn't there some crackle in the audio when you start drone or adjust volume? 
 - light/dark modes

@@ -6,9 +6,9 @@ import ThemeRegistry from '@/utils/ThemeRegistry';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-	title: 'Web Metronome',
+	title: 'Miitronome | Online Metronome',
 	description:
-		'Customizable web metronome controllable from your keyboard. Great for desktop, mobile, and tablet.',
+		'Miitronome, a customizable web metronome controllable from your keyboard. Great for desktop, mobile, and tablet.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
