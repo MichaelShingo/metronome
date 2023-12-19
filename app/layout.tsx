@@ -6,6 +6,7 @@ import ThemeRegistry from '@/utils/ThemeRegistry';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+	manifest: '/manifest.json',
 	title: 'Miitronome | Online Metronome',
 	description:
 		'Miitronome, a customizable web metronome controllable from your keyboard. Great for desktop, mobile, and tablet.',
