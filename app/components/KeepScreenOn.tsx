@@ -9,7 +9,6 @@ const KeepScreenOn: React.FC = () => {
 	const lockWakeState = async () => {
 		// if (!canWakeLock()) return;
 		try {
-			console.log('nav obj', navigatorObj);
 			wakeLock = navigatorObj && (await navigatorObj.wakeLock.request());
 			console.log(wakeLock);
 			wakeLock &&
@@ -18,16 +17,16 @@ const KeepScreenOn: React.FC = () => {
 				});
 			console.log('Screen wake state locked.', wakeLock && !wakeLock.released);
 		} catch (error: unknown) {
-			console.error('Failed to lock wake staet with reason:', error);
+			console.error('Failed to lock wake state with reason:', error);
 		}
 	};
 
 	const releaseWakeState = () => {
-		if (wakeLock) {
+		if (wakeLock !== null) {
 			wakeLock.release();
 		}
 		wakeLock = null;
-		console.log('Wake state released.');
+		console.log('Wake state released.', wakeLock);
 	};
 
 	useEffect(() => {
