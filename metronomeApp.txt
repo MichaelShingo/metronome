@@ -1,9 +1,13 @@
 TODO before public announcement
 - prevent screen turn off 
-- PWA stuff
 - contact info/feedback component
 -- check the settings box on iphone and galaxy fold, you need to make the selects smaller
 - seo? 
+
+
+PWA
+- https://blog.stackademic.com/adding-pwa-to-next-js-with-app-directory-simple-guide-73284be7b7c1
+- require bug - https://stackoverflow.com/questions/59278151/eslint-require-statement-not-part-of-import-statement-typescript-eslint-no-va
 
 Extra features
 - vibration trigger 
