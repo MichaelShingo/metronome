@@ -12,13 +12,11 @@ import TapTempoTimeout from './components/TapTempoTimeout';
 import BeatsContainer from './components/BeatsContainer';
 import SettingsDroneRow from './components/SettingsDroneRow';
 import AppContainer from './components/AppContainer';
-import KeepScreenOn from './components/KeepScreenOn';
 
 export default function Home() {
 	return (
 		<ThemeProvider theme={theme}>
 			<AppStateProvider>
-				<KeepScreenOn />
 				<Flash />
 				<TapTempoTimeout />
 				<KeyPressHandler />
