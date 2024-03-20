@@ -10,6 +10,10 @@ export const metadata: Metadata = {
 	title: 'Miitronome | Online Metronome',
 	description:
 		'Miitronome, a customizable web metronome controllable from your keyboard. Great for desktop, mobile, and tablet.',
+	metadataBase: new URL('https://metronome.michaelshingo.com/'),
+	twitter: {
+		card: 'summary_large_image',
+	},
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
