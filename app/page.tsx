@@ -12,23 +12,26 @@ import TapTempoTimeout from './components/TapTempoTimeout';
 import BeatsContainer from './components/BeatsContainer';
 import SettingsDroneRow from './components/SettingsDroneRow';
 import AppContainer from './components/AppContainer';
+import { Box } from '@mui/system';
 
 export default function Home() {
 	return (
-		<ThemeProvider theme={theme}>
-			<AppStateProvider>
-				<Flash />
-				<TapTempoTimeout />
-				<KeyPressHandler />
-				<AudioComponent />
-				<DroneAudio />
-				<AppContainer>
-					<Tempo />
-					<BeatsContainer />
-					<StartButton />
-					<SettingsDroneRow />
-				</AppContainer>
-			</AppStateProvider>
-		</ThemeProvider>
+		<Box sx={{ overflow: 'hidden' }}>
+			<ThemeProvider theme={theme}>
+				<AppStateProvider>
+					<Flash />
+					<TapTempoTimeout />
+					<KeyPressHandler />
+					<AudioComponent />
+					<DroneAudio />
+					<AppContainer>
+						<Tempo />
+						<BeatsContainer />
+						<StartButton />
+						<SettingsDroneRow />
+					</AppContainer>
+				</AppStateProvider>
+			</ThemeProvider>
+		</Box>
 	);
 }
