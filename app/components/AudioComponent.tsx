@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as Tone from 'tone';
 import { continuousOsc, droneOsc } from './DroneAudio';
 import {
@@ -29,6 +29,7 @@ let samplePlayerPoly: Tone.Player;
 
 const AudioComponent: React.FC = () => {
 	const { state, dispatch } = useAppState();
+	const nativeAudioRef = useRef<HTMLAudioElement | null>(null);
 	const recordedSample: boolean = recordedSamples.has(state.sound_type);
 	const recordedSamplePoly: boolean = recordedSamples.has(state.sound_type_poly);
 	const mappedVolume: number = mapRange(state.metro_gain, 0, 100, -90, 0);
@@ -42,6 +43,9 @@ const AudioComponent: React.FC = () => {
 	};
 
 	const startMetronome = async () => {
+		if (nativeAudioRef.current) {
+			nativeAudioRef.current.play();
+		}
 		await Tone.start();
 		const getCurrentBeat = (): number => {
 			return parseInt(Tone.Transport.position.toString().split(':')[1]);
@@ -252,7 +256,11 @@ const AudioComponent: React.FC = () => {
 				: buffers.get(defaultSound);
 	}, [state.sound_type_poly]);
 
-	return <></>;
+	return (
+		<audio ref={nativeAudioRef}>
+			<source src="/silent.mp3" type="audio/mp3"></source>
+		</audio>
+	);
 };
 
 export default AudioComponent;
